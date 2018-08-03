@@ -1,0 +1,34 @@
+{
+  "name": "bon_appetit",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-app-rewired start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.4.1",
+    "react-app-rewired": "^1.5.2",
+    "react-native": "0.56.0",
+    "reactotron-react-native": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "babel-jest": "23.4.2",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-preset-react-native": "^5",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-import-resolver-babel-module": "^4.0.0",
+    "eslint-import-resolver-babel-root-import": "^0.0.2",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1",
+    "eslint-plugin-react-native": "^3.2.1",
+    "jest": "23.4.2",
+    "react-test-renderer": "16.4.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
