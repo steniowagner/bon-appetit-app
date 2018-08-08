@@ -4,23 +4,14 @@
     "browser": true,
     "jest": true
   },
-  "plugins": [
-    "react-native",
-    "jsx-a11y",
-    "import"
-  ],
-  "extends": [
-    "airbnb",
-    "plugin:react-native/all"
-  ],
+  "plugins": ["react-native", "jsx-a11y", "import"],
+  "extends": ["airbnb", "plugin:react-native/all"],
   "rules": {
+    "no-plusplus": 0,
     "react/jsx-filename-extension": [
       "error",
       {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
+        "extensions": [".js", ".jsx"]
       }
     ],
     "global-require": "off",
@@ -35,6 +26,9 @@
   },
   "settings": {
     "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      },
       "babel-module": {}
     }
   },
