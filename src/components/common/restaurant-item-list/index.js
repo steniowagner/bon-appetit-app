@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import {
   View,
@@ -7,12 +9,16 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
-import StarGrade from 'components/common/StarGrade';
+import ReviewStars from 'components/common/ReviewStars';
+import ImageCached from './components/ImageCached';
 import FoodTypes from './components/FoodTypes';
 
 const CardContainer = styled(View)`
-  height: ${({ theme }) => theme.metrics.height / 3};
-  width: ${({ theme }) => theme.metrics.width - 16};
+  margin: ${({ theme }) => {
+    const { smallPadding, extraSmallPadding } = theme.metrics;
+
+    return `${extraSmallPadding}px ${smallPadding}px ${extraSmallPadding}px ${smallPadding}px`;
+  }};
   border-radius: 10px;
 `;
 
@@ -56,6 +62,7 @@ const AddressIcon = styled(Image).attrs({
 const Address = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: 12px;
+  font-weight: 700;
 `;
 
 const getRestaurantAddress = (rawAddress) => {
@@ -64,27 +71,34 @@ const getRestaurantAddress = (rawAddress) => {
   return `${rawAddress.substring(0, lastCommaIndex + 1)}\n${rawAddress.substring(lastCommaIndex + 2, rawAddress.length)}`;
 };
 
-const RestaurantItemList = () => (
+const RestaurantItemList = ({
+  name,
+  address,
+  stars,
+  foodTypes,
+  picURL,
+}) => (
   <TouchableOpacity>
     <CardContainer>
+      <ImageCached uri={picURL} />
       <DarkLayer />
       <Content>
         <Name>
-          Cabaña del Primo
+          {name}
         </Name>
-        <StarGrade
-          grade={3.5}
+        <ReviewStars
+          stars={stars}
           shouldShowReviewsText
           reviews={1}
-          color="light"
+          textColor="white"
         />
         <AddressWrapper>
           <AddressIcon />
           <Address>
-            {getRestaurantAddress('Maria Tomásia st., 503 - Aldeota, Fortaleza')}
+            {getRestaurantAddress(address)}
           </Address>
         </AddressWrapper>
-        <FoodTypes types={['Churrascaria', 'Sobremesas', 'Massas', 'Frutos do Mar', 'Pastelaria', 'Pizzas']} />
+        <FoodTypes types={foodTypes} />
       </Content>
     </CardContainer>
   </TouchableOpacity>

@@ -11,8 +11,9 @@ const Wrapper = styled(View)`
 `;
 
 const Reviews = styled(Text)`
-  color: ${({ theme, color }) => (color === 'light' ? theme.colors.defaultWhite : theme.colors.darkText)};
+  color: ${({ theme, textColor }) => theme.colors[textColor]};
   margin: 2px 0 0 8px;
+  font-weight: 600;
   font-size: 12px;
 `;
 
@@ -44,23 +45,23 @@ const WrapperStars = styled(View)`
   flex-direction: row;
 `;
 
-const getStars = (grade) => {
+const getStars = (stars) => {
   const MAX_GRADE = 5;
-  const quantityEmptyStars = MAX_GRADE - Math.ceil(grade);
+  const quantityEmptyStars = MAX_GRADE - Math.ceil(stars);
   const starsFromGrade = [];
 
-  let currentGrade = grade;
+  let currentStars = stars;
 
-  if (currentGrade > MAX_GRADE) {
-    return Array(MAX_GRADE).fill(<FullStar />);
+  if (currentStars >= MAX_GRADE) {
+    return Array(MAX_GRADE).fill().map(_empty => <FullStar key={Math.random()} />);
   }
 
-  while (currentGrade >= 1) {
+  while (currentStars >= 1) {
     starsFromGrade.push(<FullStar key={Math.random()} />);
-    currentGrade--;
+    currentStars--;
   }
 
-  if (currentGrade === 0.5) {
+  if (currentStars === 0.5) {
     starsFromGrade.push(<HalfStar key={Math.random()} />);
   }
 
@@ -76,34 +77,32 @@ const renderStars = (grade: number): any => {
 
   return (
     <WrapperStars>
-      {starsFromGrade.map(star => (
-        star
-      ))}
+      {starsFromGrade.map(star => star)}
     </WrapperStars>
   );
 };
 
 type Props = {
-  grade: number,
-  shouldShowReviewsText: boolean,
-  reviews: number,
-  color: string,
+  shouldShowReviewsText: ?boolean,
+  reviews: ?number,
+  textColor: ?string,
+  stars: number,
 };
 
-const StarGrade = ({
-  grade,
+const ReviewStars = ({
+  stars,
   shouldShowReviewsText,
   reviews,
-  color,
+  textColor,
 } : Props) => (
   <Wrapper>
-    {renderStars(grade)}
+    {renderStars(stars)}
     {shouldShowReviewsText
       && (
-      <Reviews color={color}>
+      <Reviews textColor={textColor}>
         {`${reviews} Reviews`}
       </Reviews>)}
   </Wrapper>
 );
 
-export default StarGrade;
+export default ReviewStars;

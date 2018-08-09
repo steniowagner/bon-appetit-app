@@ -5,9 +5,9 @@ import { View, Text } from 'react-native';
 import styled from 'styled-components';
 
 const Wrapper = styled(View)`
-  flex-wrap: wrap;
-  align-items: flex-start;
   flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: wrap;
 `;
 
 const ItemWrapper = styled(View)`
@@ -19,8 +19,10 @@ const ItemWrapper = styled(View)`
 `;
 
 const ItemText = styled(Text)`
-  color: ${({ theme }) => theme.colors.defaultWhite};
   padding: ${({ theme }) => `${theme.metrics.extraSmallPadding}px ${theme.metrics.mediumPadding}px`};
+  color: ${({ theme }) => theme.colors.defaultWhite};
+  font-size: 12px;
+  font-weight: 900;
 `;
 
 const sortFoodTypesByLegth = (foodTypes) => {
