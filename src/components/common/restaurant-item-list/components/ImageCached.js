@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Image } from 'react-native';
-
-import RNFetchBlob from 'rn-fetch-blob';
+import { Image, Platform } from 'react-native';
 import styled from 'styled-components';
 
-const SHA1 = require('crypto-js/sha1');
+import CacheManager from 'components/utils/CacheManager';
+
+const FILE_PREFIX = Platform.OS === 'ios' ? '' : 'file://';
 
 const Pic = styled(Image).attrs({
-  source: ({ uri }) => ({ uri }),
+  source: ({ uri }) => ({ uri: FILE_PREFIX + uri }),
 })`
-  resizeMode: center;
+  resizeMode: cover;
   position: absolute;
   border-radius: 10px;
   height: 100%;
@@ -24,45 +24,11 @@ class ImageCached extends Component {
   async componentDidMount() {
     const { uri } = this.props;
 
-    const imageURI = await this.getImage(uri);
+    const imageURI = await CacheManager.getItemFromCache(uri, 'images', 'jpg');
 
     this.setState({
       imageURI,
     });
-  }
-
-  getImage = async (uri) => {
-    const directoryPath = `${RNFetchBlob.fs.dirs.DocumentDir}/bon_appetit`;
-    const fileName = `${SHA1(uri)}'.jpg'`;
-    const pathToFile = `${directoryPath}/${fileName}`;
-
-    const isImageAlreadyCached = await this.verifyResourceAlreadyExists(pathToFile);
-
-    if (isImageAlreadyCached) {
-      return pathToFile;
-    }
-
-    const isDirectoryAlreadyCreated = await this.verifyResourceAlreadyExists(pathToFile);
-
-    if (isDirectoryAlreadyCreated) {
-      await RNFetchBlob.fs.mkdir(directoryPath);
-    }
-
-    const result = await RNFetchBlob.config({ path: pathToFile, trusty: true }).fetch('GET', uri);
-
-    const { respInfo, data } = result;
-
-    if (respInfo.status === 200) {
-      return data;
-    }
-
-    return '';
-  }
-
-  verifyResourceAlreadyExists = async (pathToImage) => {
-    const imageAlreadyExists = await RNFetchBlob.fs.exists(pathToImage);
-
-    return imageAlreadyExists;
   }
 
   render() {
