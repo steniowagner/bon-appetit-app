@@ -13,7 +13,7 @@ const Wrapper = styled(View)`
 const Reviews = styled(Text)`
   color: ${({ theme, textColor }) => theme.colors[textColor]};
   margin: 2px 0 0 8px;
-  font-weight: 600;
+  fontFamily: CircularStd-Book;
   font-size: 12px;
 `;
 
@@ -100,7 +100,7 @@ const ReviewStars = ({
     {shouldShowReviewsText
       && (
       <Reviews textColor={textColor}>
-        {`${reviews} Reviews`}
+        {`${reviews}  ${reviews > 1 ? 'Reviews' : 'Review'}`}
       </Reviews>)}
   </Wrapper>
 );

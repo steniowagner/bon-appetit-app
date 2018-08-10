@@ -38,6 +38,11 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		167691843C7D44A489960839 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 064B67576C5740B79FE2CD1B /* libRNFetchBlob.a */; };
+		23E05BE524B2429BA4041EA4 /* CircularStd-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = FF7ECC8C63904A688796BD8A /* CircularStd-Black.otf */; };
+		BF0D2926A77B4C0F9D93E551 /* CircularStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3537577C26804F8395024657 /* CircularStd-Bold.otf */; };
+		23902EF7AD0A4E8BBBA2376D /* CircularStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 137291F9B89241CBA3B5E95D /* CircularStd-Book.otf */; };
+		F91D8576CBEA475D9293BF25 /* CircularStd-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 297381E56ABA4754BA46F1C7 /* CircularStd-Medium.otf */; };
+		3C05FEC93685463A848EFD47 /* Modesta-Script.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 704AB065F9B44DFD88C7D471 /* Modesta-Script.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -345,6 +350,11 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		77328A8812A64088998B6EFA /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../node_modules/rn-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		064B67576C5740B79FE2CD1B /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		FF7ECC8C63904A688796BD8A /* CircularStd-Black.otf */ = {isa = PBXFileReference; name = "CircularStd-Black.otf"; path = "../assets/fonts/CircularStd-Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3537577C26804F8395024657 /* CircularStd-Bold.otf */ = {isa = PBXFileReference; name = "CircularStd-Bold.otf"; path = "../assets/fonts/CircularStd-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		137291F9B89241CBA3B5E95D /* CircularStd-Book.otf */ = {isa = PBXFileReference; name = "CircularStd-Book.otf"; path = "../assets/fonts/CircularStd-Book.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		297381E56ABA4754BA46F1C7 /* CircularStd-Medium.otf */ = {isa = PBXFileReference; name = "CircularStd-Medium.otf"; path = "../assets/fonts/CircularStd-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		704AB065F9B44DFD88C7D471 /* Modesta-Script.ttf */ = {isa = PBXFileReference; name = "Modesta-Script.ttf"; path = "../assets/fonts/Modesta-Script.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -582,6 +592,7 @@
 				00E356EF1AD99517003FC87E /* bon_appetitTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				BB38C44D7E9A435EAC538B0B /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -607,6 +618,19 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		BB38C44D7E9A435EAC538B0B /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				FF7ECC8C63904A688796BD8A /* CircularStd-Black.otf */,
+				3537577C26804F8395024657 /* CircularStd-Bold.otf */,
+				137291F9B89241CBA3B5E95D /* CircularStd-Book.otf */,
+				297381E56ABA4754BA46F1C7 /* CircularStd-Medium.otf */,
+				704AB065F9B44DFD88C7D471 /* Modesta-Script.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -1054,6 +1078,11 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				23E05BE524B2429BA4041EA4 /* CircularStd-Black.otf in Resources */,
+				BF0D2926A77B4C0F9D93E551 /* CircularStd-Bold.otf in Resources */,
+				23902EF7AD0A4E8BBBA2376D /* CircularStd-Book.otf in Resources */,
+				F91D8576CBEA475D9293BF25 /* CircularStd-Medium.otf in Resources */,
+				3C05FEC93685463A848EFD47 /* Modesta-Script.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

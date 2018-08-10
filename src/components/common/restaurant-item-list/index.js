@@ -41,8 +41,8 @@ const Content = styled(View)`
 const Name = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   margin-bottom: ${({ theme }) => theme.metrics.smallPadding}
-  font-weight: 900;
-  font-size: 16px;
+  fontFamily: CircularStd-Black;
+  font-size: 18px;
 `;
 
 const AddressWrapper = styled(View)`
@@ -61,8 +61,8 @@ const AddressIcon = styled(Image).attrs({
 
 const Address = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
+  fontFamily: CircularStd-Medium;
   font-size: 12px;
-  font-weight: 700;
 `;
 
 const getRestaurantAddress = (rawAddress) => {
@@ -71,13 +71,21 @@ const getRestaurantAddress = (rawAddress) => {
   return `${rawAddress.substring(0, lastCommaIndex + 1)}\n${rawAddress.substring(lastCommaIndex + 2, rawAddress.length)}`;
 };
 
+type Props = {
+  foodTypes: Array<string>,
+  name: string,
+  address: string,
+  picURL: string,
+  stars: number,
+};
+
 const RestaurantItemList = ({
   name,
   address,
   stars,
   foodTypes,
   picURL,
-}) => (
+}: Props) => (
   <TouchableOpacity>
     <CardContainer>
       <ImageCached uri={picURL} />

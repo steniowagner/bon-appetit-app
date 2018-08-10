@@ -6,6 +6,9 @@
     "start": "react-app-rewired start",
     "test": "jest"
   },
+  "rnpm":{
+    "assets":["./assets/fonts/"]
+  },
   "dependencies": {
     "react": "16.4.1",
     "react-app-rewired": "^1.5.2",

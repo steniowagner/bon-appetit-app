@@ -21,8 +21,8 @@ const ItemWrapper = styled(View)`
 const ItemText = styled(Text)`
   padding: ${({ theme }) => `${theme.metrics.extraSmallPadding}px ${theme.metrics.mediumPadding}px`};
   color: ${({ theme }) => theme.colors.defaultWhite};
+  fontFamily: CircularStd-Bold;
   font-size: 12px;
-  font-weight: 900;
 `;
 
 const sortFoodTypesByLegth = (foodTypes) => {
