@@ -6,13 +6,16 @@
     "start": "react-app-rewired start",
     "test": "jest"
   },
-  "rnpm":{
-    "assets":["./assets/fonts/"]
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   },
   "dependencies": {
     "react": "16.4.1",
     "react-app-rewired": "^1.5.2",
     "react-native": "0.56.0",
+    "react-navigation": "^2.11.2",
     "reactotron-react-native": "^2.0.0",
     "rn-fetch-blob": "joltup/rn-fetch-blob",
     "shorthash": "^0.0.2",

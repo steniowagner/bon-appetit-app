@@ -11,4 +11,9 @@ export default {
   starHalf: require('./img/star-half.png'),
   starEmpty: require('./img/star-empty.png'),
   starFull: require('./img/star-full.png'),
+  home: require('./img/home.png'),
+  search: require('./img/search.png'),
+  map: require('./img/map.png'),
+  user_profile: require('./img/user_profile.png'),
+  settings: require('./img/settings.png'),
 };

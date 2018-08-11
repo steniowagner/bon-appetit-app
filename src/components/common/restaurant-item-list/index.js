@@ -62,7 +62,7 @@ const AddressIcon = styled(Image).attrs({
 const Address = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   fontFamily: CircularStd-Medium;
-  font-size: 12px;
+  font-size: 14px;
 `;
 
 const getRestaurantAddress = (rawAddress) => {
