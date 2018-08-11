@@ -1,8 +1,11 @@
 // @flow
 
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text } from 'react-native';
 import styled from 'styled-components';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import appStyle from 'styles';
 
 const Wrapper = styled(View)`
   flex-direction: row;
@@ -17,33 +20,15 @@ const Reviews = styled(Text)`
   font-size: 14px;
 `;
 
-const FullStar = styled(Image).attrs({
-  source: ({ theme }) => theme.images.starFull,
-})`
-  tint-color: ${({ theme }) => theme.colors.yellow};
-  width: 18;
-  height: 18;
-`;
-
-const HalfStar = styled(Image).attrs({
-  source: ({ theme }) => theme.images.starHalf,
-})`
-  tint-color: ${({ theme }) => theme.colors.yellow};
-  width: 18;
-  height: 18;
-`;
-
-const EmptyStar = styled(Image).attrs({
-  source: ({ theme }) => theme.images.starEmpty,
-})`
-  tint-color: ${({ theme }) => theme.colors.yellow};
-  width: 18;
-  height: 18;
-`;
-
 const WrapperStars = styled(View)`
   flex-direction: row;
 `;
+
+const FullStar = <Icon name="star" size={16} color={appStyle.colors.yellow} />;
+
+const HalfStar = <Icon name="star-half" size={16} color={appStyle.colors.yellow} />;
+
+const EmptyStar = <Icon name="star-outline" size={16} color={appStyle.colors.yellow} />;
 
 const getStars = (stars) => {
   const MAX_GRADE = 5;
@@ -57,16 +42,16 @@ const getStars = (stars) => {
   }
 
   while (currentStars >= 1) {
-    starsFromGrade.push(<FullStar key={Math.random()} />);
+    starsFromGrade.push(FullStar);
     currentStars--;
   }
 
   if (currentStars === 0.5) {
-    starsFromGrade.push(<HalfStar key={Math.random()} />);
+    starsFromGrade.push(HalfStar);
   }
 
   for (let i = 0; i < quantityEmptyStars; i++) {
-    starsFromGrade.push(<EmptyStar key={Math.random()} />);
+    starsFromGrade.push(EmptyStar);
   }
 
   return starsFromGrade;
@@ -74,10 +59,13 @@ const getStars = (stars) => {
 
 const renderStars = (grade: number): any => {
   const starsFromGrade = getStars(grade);
-
   return (
     <WrapperStars>
-      {starsFromGrade.map(star => star)}
+      {starsFromGrade.map(star => (
+        <React.Fragment key={Math.random()}>
+          {star}
+        </React.Fragment>
+      ))}
     </WrapperStars>
   );
 };

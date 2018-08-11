@@ -4,10 +4,12 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
 } from 'react-native';
+
 import styled from 'styled-components';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import appStyle from 'styles';
 
 import ReviewStars from 'components/common/ReviewStars';
 import ImageCached from './components/ImageCached';
@@ -40,7 +42,7 @@ const Content = styled(View)`
 
 const Name = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  margin-bottom: ${({ theme }) => theme.metrics.smallPadding}
+  margin-bottom: ${({ theme }) => theme.metrics.extraSmallPadding}
   fontFamily: CircularStd-Black;
   font-size: 18px;
 `;
@@ -50,13 +52,8 @@ const AddressWrapper = styled(View)`
    margin: ${({ theme }) => `${theme.metrics.mediumPadding}px 0 ${theme.metrics.mediumPadding}px 0`}
 `;
 
-const AddressIcon = styled(Image).attrs({
-  source: ({ theme }) => theme.images.mapMarker,
-})`
-  tint-color: ${({ theme }) => theme.colors.defaultWhite};
+const AddressIconWrapper = styled(View)`
   margin: 2px 8px 0 0;
-  width: 18;
-  height: 18;
 `;
 
 const Address = styled(Text)`
@@ -101,7 +98,13 @@ const RestaurantItemList = ({
           textColor="white"
         />
         <AddressWrapper>
-          <AddressIcon />
+          <AddressIconWrapper>
+            <Icon
+              color={appStyle.colors.defaultWhite}
+              name="map-marker"
+              size={20}
+            />
+          </AddressIconWrapper>
           <Address>
             {getRestaurantAddress(address)}
           </Address>

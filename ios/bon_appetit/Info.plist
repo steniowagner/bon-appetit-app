@@ -39,7 +39,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -54,6 +54,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>CircularStd-Black.otf</string>
+		<string>MaterialCommunityIcons.ttf</string>
 		<string>CircularStd-Bold.otf</string>
 		<string>CircularStd-Book.otf</string>
 		<string>CircularStd-Medium.otf</string>

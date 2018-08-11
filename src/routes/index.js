@@ -11,16 +11,7 @@ import Settings from 'components/screens/settings';
 
 import styles from 'styles';
 
-import { Image } from 'react-native';
-import styled from 'styled-components';
-
-const Icon = styled(Image).attrs({
-  source: ({ theme, icon }) => theme.images[icon],
-})`
-  tint-color: ${({ tintColor }) => tintColor};
-  width: 18;
-  height: 18;
-`;
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
   tintColor: string,
@@ -44,7 +35,7 @@ const getStackNavigatorConfig = (headerTitle: string, fontFamily: string = 'Circ
 
 const getTabIcon = (icon: string): Object => ({
   tabBarIcon: ({ tintColor }: Props) => (
-    <Icon tintColor={tintColor} icon={icon} />
+    <Icon name={icon} size={28} color={tintColor} />
   ),
 });
 
@@ -55,7 +46,7 @@ const RootNavigator = () => createBottomTabNavigator({
     }, {
       navigationOptions: getStackNavigatorConfig('Bon Appetit', 'Modesta-Script', 22),
     }),
-    navigationOptions: getTabIcon('home'),
+    navigationOptions: getTabIcon('home-outline'),
   },
 
   Search: {
@@ -64,7 +55,7 @@ const RootNavigator = () => createBottomTabNavigator({
     }, {
       navigationOptions: getStackNavigatorConfig('Search'),
     }),
-    navigationOptions: getTabIcon('search'),
+    navigationOptions: getTabIcon('magnify'),
   },
 
   NearYou: {
@@ -73,7 +64,7 @@ const RootNavigator = () => createBottomTabNavigator({
     }, {
       navigationOptions: getStackNavigatorConfig('Near You'),
     }),
-    navigationOptions: getTabIcon('map'),
+    navigationOptions: getTabIcon('map-outline'),
   },
 
   UserProfile: {
@@ -82,7 +73,7 @@ const RootNavigator = () => createBottomTabNavigator({
     }, {
       navigationOptions: getStackNavigatorConfig('Profile'),
     }),
-    navigationOptions: getTabIcon('user_profile'),
+    navigationOptions: getTabIcon('account-outline'),
   },
 
   Settings: {
@@ -91,7 +82,7 @@ const RootNavigator = () => createBottomTabNavigator({
     }, {
       navigationOptions: getStackNavigatorConfig('Settings'),
     }),
-    navigationOptions: getTabIcon('settings'),
+    navigationOptions: getTabIcon('settings-outline'),
   },
 },
 {
