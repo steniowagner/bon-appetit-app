@@ -1,29 +1,15 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
-import styled from 'styled-components';
+import { View, Text } from 'react-native';
 
-const Icon = styled(Image).attrs({
-  source: ({ theme }) => theme.images.user_profile,
-})`
-  tint-color: ${({ tintColor }) => tintColor};
-  margin: 2px 8px 0 0;
-  width: 18;
-  height: 18;
-`;
+import NavigationHeader from 'components/common/NavigationHeader';
 
 const Profile = () => (
   <View>
+    <NavigationHeader title="Profile" />
     <Text>
       User Profile
     </Text>
   </View>
 );
-
-Profile.navigationOptions = {
-  tabBarIcon: ({ tintColor }) => (
-    <Icon tintColor={tintColor} />
-  ),
-};
-
 
 export default Profile;

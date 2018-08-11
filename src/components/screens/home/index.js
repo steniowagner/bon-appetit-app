@@ -1,27 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text } from 'react-native';
 import styled from 'styled-components';
 
-const Icon = styled(Image).attrs({
-  source: ({ theme }) => theme.images.home,
-})`
-  tint-color: ${({ tintColor }) => tintColor};
-  margin: 2px 8px 0 0;
-  width: 18;
-  height: 18;
-`;
+import NavigationHeader from 'components/common/NavigationHeader';
 
 class Home extends Component {
-  static navigationOptions = {
-    tabBarIcon: ({ tintColor }) => (
-      <Icon tintColor={tintColor} />
-    ),
-  };
-
   render() {
-    console.log(this.props);
     return (
       <View style={{flex: 1,backgroundColor: '#FDFDFD'}}>
+        <NavigationHeader isHome title="Bon Appetit" />
         <Text>
           Home
         </Text>

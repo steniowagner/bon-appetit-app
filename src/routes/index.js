@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation';
 
 import Home from 'components/screens/home';
 import Search from 'components/screens/search';
@@ -17,79 +17,42 @@ type Props = {
   tintColor: string,
 };
 
-const getStackNavigatorConfig = (headerTitle: string, fontFamily: string = 'CircularStd-Bold', fontSize: number = 16): Object => {
-  const { primaryColor, defaultWhite } = styles.colors;
-
-  return {
-    headerTitle,
-    headerStyle: {
-      backgroundColor: primaryColor,
-    },
-    headerTintColor: defaultWhite,
-    headerTitleStyle: {
-      fontFamily,
-      fontSize,
-    },
-  };
-};
-
 const getTabIcon = (icon: string): Object => ({
   tabBarIcon: ({ tintColor }: Props) => (
     <Icon name={icon} size={28} color={tintColor} />
   ),
+  swipeEnabled: true,
 });
 
 const RootNavigator = () => createBottomTabNavigator({
   Home: {
-    screen: createStackNavigator({
-      screen: Home,
-    }, {
-      navigationOptions: getStackNavigatorConfig('Bon Appetit', 'Modesta-Script', 22),
-    }),
+    screen: Home,
     navigationOptions: getTabIcon('home-outline'),
   },
 
   Search: {
-    screen: createStackNavigator({
-      screen: Search,
-    }, {
-      navigationOptions: getStackNavigatorConfig('Search'),
-    }),
+    screen: Search,
     navigationOptions: getTabIcon('magnify'),
   },
 
   NearYou: {
-    screen: createStackNavigator({
-      screen: NearYou,
-    }, {
-      navigationOptions: getStackNavigatorConfig('Near You'),
-    }),
+    screen: NearYou,
     navigationOptions: getTabIcon('map-outline'),
   },
 
   UserProfile: {
-    screen: createStackNavigator({
-      screen: UserProfile,
-    }, {
-      navigationOptions: getStackNavigatorConfig('Profile'),
-    }),
+    screen: UserProfile,
     navigationOptions: getTabIcon('account-outline'),
   },
 
   Settings: {
-    screen: createStackNavigator({
-      screen: Settings,
-    }, {
-      navigationOptions: getStackNavigatorConfig('Settings'),
-    }),
+    screen: Settings,
     navigationOptions: getTabIcon('settings-outline'),
   },
-},
-{
+}, {
   swipeEnabled: true,
   tabBarOptions: {
     style: {
-      elevation: 4,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 10,

@@ -15,7 +15,7 @@ const Wrapper = styled(View)`
 
 const Reviews = styled(Text)`
   color: ${({ theme, textColor }) => theme.colors[textColor]};
-  margin: 2px 0 0 8px;
+  margin-left: 8px;
   fontFamily: CircularStd-Book;
   font-size: 14px;
 `;
