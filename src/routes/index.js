@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation';
 
 import Home from 'components/screens/home';
 import Search from 'components/screens/search';
@@ -24,7 +24,9 @@ const getTabIcon = (icon: string): Object => ({
   swipeEnabled: true,
 });
 
-const RootNavigator = () => createBottomTabNavigator({
+const { colors } = styles;
+
+const RootNavigator = () => createMaterialTopTabNavigator({
   Home: {
     screen: Home,
     navigationOptions: getTabIcon('home-outline'),
@@ -50,20 +52,23 @@ const RootNavigator = () => createBottomTabNavigator({
     navigationOptions: getTabIcon('settings-outline'),
   },
 }, {
+  tabBarPosition: 'bottom',
+  animationEnabled: true,
   swipeEnabled: true,
   tabBarOptions: {
+    showIcon: true,
+    showLabel: false,
     style: {
+      backgroundColor: colors.white,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 10,
     },
-    tabStyle: {
-      backgroundColor: styles.colors.white,
+    indicatorStyle: {
+      backgroundColor: 'transparent',
     },
-    inactiveTintColor: styles.colors.lightGray,
-    activeTintColor: styles.colors.red,
-    showLabel: false,
-    showIcon: true,
+    inactiveTintColor: colors.lightGray,
+    activeTintColor: colors.red,
   },
 });
 
