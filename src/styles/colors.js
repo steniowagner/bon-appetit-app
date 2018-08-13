@@ -8,4 +8,6 @@ export default {
   green: '#1DB954',
   yellow: '#F8C330',
   lightGray: '#D3D3D3',
+  linkedin: '#0077B5',
+  github: '#333333',
 };
