@@ -11,7 +11,7 @@ const Pic = styled(Image).attrs({
 })`
   resizeMode: cover;
   position: absolute;
-  border-radius: 10px;
+  border-radius: 6px;
   height: 100%;
   width: 100%;
 `;

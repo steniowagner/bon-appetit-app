@@ -8,28 +8,21 @@ import CreateNavigation from 'routes';
 import AppTheme from 'styles';
 
 import './config/ReactotronConfig';
-
-import RestaurantItemList from 'components/common/restaurant-item-list';
+import InYourCity from 'components/screens/InYourCity';
 
 const Application = CreateNavigation();
+// <StatusBar barStyle="light-content" />
 
 const App = () => (
   <React.Fragment>
-    <StatusBar barStyle="light-content" />
     <ThemeProvider theme={AppTheme}>
-      <Application />
+      <InYourCity
+        eventImageURL="https://images.unsplash.com/photo-1473093226795-af9932fe5856?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=3bf6fd384a4045ad91b8f08279f02ab8&auto=format&fit=crop&w=985&q=80"
+        eventTitle="Pasta Festival"
+        eventDescription="An amazing event with most extensive variety of the best of Itaian cuisine!"
+      />
     </ThemeProvider>
   </React.Fragment>
 );
 
 export default App;
-
-/*
-  <RestaurantItemList
-        name="Cabaña del Primo"
-        address="Maria Tomásia st., 503 - Aldeota, Fortaleza"
-        foodTypes={['Churrascaria', 'Sobremesas', 'Massas', 'Frutos do Mar', 'Pastelaria', 'Pizzas']}
-        picURL="https://images.unsplash.com/photo-1533854964478-588049c5084e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9a3f43bf5f66dc44d7780904913a7fb3&auto=format&fit=crop&w=967&q=80"
-        stars={4.5}
-      />
-*/

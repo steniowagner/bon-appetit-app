@@ -8,7 +8,11 @@ export default {
   smallPadding: 8,
   mediumPadding: 12,
   largePadding: 16,
+  extraIntermediateLargePadding: 24,
   extraLargePadding: 36,
+
+  titleTextSize: width > 320 ? 22 : 20,
+  descriptionTextSize: width > 320 ? 14 : 12,
   width,
   height,
 };

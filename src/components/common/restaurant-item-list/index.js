@@ -9,67 +9,101 @@ import {
 
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import appStyle from 'styles';
 
 import ReviewStars from 'components/common/ReviewStars';
 import ImageCached from './components/ImageCached';
-import FoodTypes from './components/FoodTypes';
 
 const CardContainer = styled(View)`
-  margin: ${({ theme }) => {
-    const { smallPadding, extraSmallPadding } = theme.metrics;
-
-    return `${extraSmallPadding}px ${smallPadding}px ${extraSmallPadding}px ${smallPadding}px`;
-  }};
-  border-radius: 10px;
+  margin-horizontal: ${({ theme }) => theme.metrics.extraSmallPadding}px;
+  margin-bottom: ${({ theme }) => theme.metrics.extraSmallPadding}px;
 `;
 
 const DarkLayer = styled(View)`
   background-color: ${({ theme }) => theme.colors.darkLayer};
   position: absolute;
-  border-radius: 10px;
+  border-radius: 6px;
   height: 100%;
   width: 100%;
 `;
 
 const Content = styled(View)`
-  padding:  ${({ theme }) => {
-    const { extraLargePadding, largePadding } = theme.metrics;
-
-    return `${extraLargePadding}px 0 ${largePadding}px ${largePadding}px`;
-  }}
+  padding: ${({ theme }) => `${theme.metrics.extraLargePadding}px ${theme.metrics.largePadding}px ${theme.metrics.largePadding}px ${theme.metrics.largePadding}px`};
 `;
 
 const Name = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   margin-bottom: ${({ theme }) => theme.metrics.extraSmallPadding}
+  font-size: ${({ theme }) => theme.metrics.titleTextSize}px;
   fontFamily: CircularStd-Black;
-  font-size: 18px;
 `;
 
 const AddressWrapper = styled(View)`
+  margin-top: ${({ theme }) => theme.metrics.mediumPadding}
   flex-direction: row;
-   margin: ${({ theme }) => `${theme.metrics.mediumPadding}px 0 ${theme.metrics.mediumPadding}px 0`}
+  width: 70%;
 `;
 
 const AddressIconWrapper = styled(View)`
-  margin: 2px 8px 0 0;
+  margin: ${({ theme }) => `${theme.metrics.smallPadding / 2}px ${theme.metrics.smallPadding}px 0 0`}
 `;
 
 const Address = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  fontFamily: CircularStd-Medium;
-  font-size: 14px;
+  font-size: ${({ theme }) => theme.metrics.descriptionTextSize}px;
+  fontFamily: CircularStd-Book;
 `;
 
-const getRestaurantAddress = (rawAddress) => {
-  const lastCommaIndex = rawAddress.lastIndexOf(',');
+const BottomRowWrapper = styled(View)`
+  justify-content: space-between;
+  flex-direction: row;
+`;
 
-  return `${rawAddress.substring(0, lastCommaIndex + 1)}\n${rawAddress.substring(lastCommaIndex + 2, rawAddress.length)}`;
-};
+const LearnMoreButtonWrapper = styled(TouchableOpacity)`
+  width: 54px;
+  height: 54px;
+  border-radius: ${54 / 2}px;
+  background-color: ${({ theme }) => theme.colors.yellow};
+  align-self: flex-end;
+  align-items: center;
+  justify-content: center;
+`;
+
+const LearnMoreIcon = styled(Icon).attrs({
+  color: ({ theme }) => theme.colors.defaultWhite,
+  name: 'arrow-right-thick',
+  size: 28,
+})`
+  width: 28px;
+  height: 28px;
+`;
+
+const AddressIcon = styled(Icon).attrs({
+  color: ({ theme }) => theme.colors.defaultWhite,
+  name: 'map-marker',
+  size: 20,
+})``;
+
+const renderLearnMoreButton = () => (
+  <LearnMoreButtonWrapper>
+    <LearnMoreIcon />
+  </LearnMoreButtonWrapper>
+);
+
+const renderBottomRow = (address: string) => (
+  <BottomRowWrapper>
+    <AddressWrapper>
+      <AddressIconWrapper>
+        <AddressIcon />
+      </AddressIconWrapper>
+      <Address>
+        {address}
+      </Address>
+    </AddressWrapper>
+    {renderLearnMoreButton()}
+  </BottomRowWrapper>
+);
 
 type Props = {
-  foodTypes: Array<string>,
   name: string,
   address: string,
   picURL: string,
@@ -80,39 +114,24 @@ const RestaurantItemList = ({
   name,
   address,
   stars,
-  foodTypes,
   picURL,
 }: Props) => (
-  <TouchableOpacity>
-    <CardContainer>
-      <ImageCached uri={picURL} />
-      <DarkLayer />
-      <Content>
-        <Name>
-          {name}
-        </Name>
-        <ReviewStars
-          stars={stars}
-          shouldShowReviewsText
-          reviews={1}
-          textColor="white"
-        />
-        <AddressWrapper>
-          <AddressIconWrapper>
-            <Icon
-              color={appStyle.colors.defaultWhite}
-              name="map-marker"
-              size={20}
-            />
-          </AddressIconWrapper>
-          <Address>
-            {getRestaurantAddress(address)}
-          </Address>
-        </AddressWrapper>
-        <FoodTypes types={foodTypes} />
-      </Content>
-    </CardContainer>
-  </TouchableOpacity>
+  <CardContainer>
+    <ImageCached uri={picURL} />
+    <DarkLayer />
+    <Content>
+      <Name>
+        {name}
+      </Name>
+      <ReviewStars
+        stars={stars}
+        shouldShowReviewsText
+        reviews={1}
+        textColor="white"
+      />
+      {renderBottomRow(address)}
+    </Content>
+  </CardContainer>
 );
 
 export default RestaurantItemList;
