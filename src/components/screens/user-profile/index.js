@@ -27,10 +27,10 @@ const Content = styled(View)`
 const ProfileAvatarWrapper = styled(Image).attrs({
   source: require('../../../styles/img/steniowagner.png'),
 })`
-  margin: ${({ theme }) => `${theme.metrics.largePadding}px 0 ${theme.metrics.largePadding}px 0`}
-  width: 90px;
-  height: 90px;
-  border-radius: 45px;
+  margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
 `;
 
 const ContetTitleWrapper = styled(View)`
@@ -43,31 +43,31 @@ const ContetTitleWrapper = styled(View)`
 const BigText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-family: CircularStd-Black;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')};
 `;
 
 const SmallText = styled(Text)`
-  margin: ${({ theme }) => `${theme.metrics.largePadding}px ${theme.metrics.largePadding}px 0 ${theme.metrics.largePadding}px`};
+  margin: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px`};
   color: ${({ theme }) => theme.colors.darkText};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')};
   text-align: center;
-  font-size: 12px;
   font-family: CircularStd-Bold;
 `;
 
 const TextWrapper = styled(View)`
-  margin-top: ${({ theme }) => theme.metrics.largePadding}
+  margin-top: ${({ theme }) => theme.metrics.largeSize}
   align-items: center;
 `;
 
 const SocialContactsWrapper = styled(View)`
+  margin-top: ${({ theme }) => theme.metrics.getWidthFromDP('8%')}
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.extraLargePadding}
 `;
 
 const SocialButtonsWrapper = styled(View)`
-  margin: ${({ theme }) => `${theme.metrics.largePadding}px 0 ${theme.metrics.extraLargePadding}px 0`}
+  margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.extraLargeSize}px 0`}
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -81,7 +81,7 @@ const ButtonWrapper = styled(View)`
 
 const SocialButton = styled(TouchableOpacity)`
   background-color: ${({ theme, type }) => (type === 'linkedin' ? theme.colors.linkedin : theme.colors.github)};
-  margin: ${({ theme }) => `0 ${theme.metrics.smallPadding}px`};
+  margin: ${({ theme }) => `0 ${theme.metrics.smallSize}px`};
   justify-content: center;
   align-items: center;
   width: 50px;

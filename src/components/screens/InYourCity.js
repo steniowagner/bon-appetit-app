@@ -25,7 +25,7 @@ const HeaderCotainer = styled(Animated.View)`
 const ContentWrapper = styled(View)`
   justify-content: flex-end;
   position: absolute;
-  padding: ${({ theme }) => `0 ${theme.metrics.largePadding}px ${theme.metrics.largePadding}px ${theme.metrics.smallPadding}px`};
+  padding: ${({ theme }) => `0 ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px ${theme.metrics.smallSize}px`};
 `;
 
 const EventImage = styled(Image).attrs({
@@ -43,13 +43,13 @@ const DarkLayer = styled(View)`
 `;
 
 const EventTitle = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.titleTextSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-family: CircularStd-Black;
 `;
 
 const EventDescription = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.descriptionTextSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-family: CircularStd-Medium;
 `;
@@ -63,12 +63,12 @@ const ArrowBackIcon = styled(Icon).attrs({
 const ArrowBackButtonWrapper = styled(TouchableOpacity)`
   position: absolute;
   margin-left: 4px;
-  margin-top: ${({ theme }) => theme.metrics.extraLargePadding}px;
+  margin-top: ${({ theme }) => theme.metrics.getWidthFromDP('10%')}px;
 `;
 
 const ListWrapper = styled(View)`
   flex: 1;
-  padding-top: ${({ theme }) => theme.metrics.extraSmallPadding}px;
+  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const getTestData = () => {

@@ -8,32 +8,32 @@ import {
 import styled from 'styled-components';
 
 const Container = styled(TouchableOpacity)`
-  height: ${({ theme }) => (theme.metrics.height / 5)}px;
-  width: ${({ theme }) => (theme.metrics.width / 1.5)}px;
-  margin-left: ${({ theme, index }) => (index === 0 ? theme.metrics.largePadding : 0)}px;
-  margin-right: ${({ theme }) => theme.metrics.smallPadding}
-  border-radius: 6px;
+  height: ${({ theme }) => (theme.metrics.getHeightFromDP('20%'))}px;
+  width: ${({ theme }) => (theme.metrics.getWidthFromDP('70%'))}px;
+  margin-left: ${({ theme, index }) => (index === 0 ? theme.metrics.largeSize : 0)}px;
+  margin-right: ${({ theme }) => theme.metrics.smallSize}
+  border-radius: ${({ theme }) => theme.metrics.borderRadius};
 `;
 
 const DarkLayer = styled(View)`
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.darkLayer};
-  border-radius: 6px;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius};
 `;
 
 const EventTitle = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')};
+  padding-bottom: ${({ theme }) => theme.metrics.getWidthFromDP('1%')};
   font-family: CircularStd-Black;
-  font-size: 16px;
-  padding-bottom: 4px;
 `;
 
 const EventDescription = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')};
   font-family: CircularStd-Medium;
   text-align: center;
-  font-size: 12px;
 `;
 
 const EventImage = styled(Image).attrs({
@@ -42,16 +42,16 @@ const EventImage = styled(Image).attrs({
   width: 100%;
   height: 100%;
   position: absolute;
-  border-radius: 6px;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius};
 `;
 
 const AboutEventWrapper = styled(View)`
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
-  padding: 12px;
-  align-items: center;
-  justify-content: center;
   position: absolute;
+  padding: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
 `;
 
 type Props = {

@@ -5,15 +5,15 @@ import styled from 'styled-components';
 import InYourCityListItem from './InYourCityListItem';
 
 const Container = styled(View)`
-  height: ${({ theme }) => (theme.metrics.height / 3)};
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('33%')};
   justify-content: space-between;
   width: 100%;
 `;
 
 const SectionTitle = styled(Text)`
-  padding: ${({ theme }) => `${theme.metrics.largePadding}px 0 ${theme.metrics.smallPadding}px ${theme.metrics.largePadding}px`}
+  padding: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.smallSize}px ${theme.metrics.largeSize}px`}
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.titleTextSize};
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.5%')};
   font-family: CircularStd-Black;
 `;
 

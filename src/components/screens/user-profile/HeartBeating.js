@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import style from 'styles';
 
 const Wrapper = styled(View)`
-  margin: 0 ${({ theme }) => theme.metrics.extraSmallPadding}px;
-  width: 30px;
   align-items: center;
+  margin: 0 ${({ theme }) => theme.metrics.extraSmallSize}px;
+  width: 30px;
 `;
 
 class HeartBeating extends Component {

@@ -16,11 +16,11 @@ import styles from 'styles';
 const SectionTitleText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-family: CircularStd-Bold;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
 `;
 
 const ItemWrapper = styled(View)`
-  padding: ${({ theme }) => theme.metrics.largePadding}px;
+  padding: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const LineSeparator = styled(View)`
@@ -37,14 +37,14 @@ const LanguageSectionWrapper = styled(View)`
 const SelectedLanguageText = styled(Text)`
   color: ${({ theme }) => theme.colors.red};
   font-family: CircularStd-Medium;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
 `;
 
 const SmallText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
-  margin: ${({ theme }) => `${theme.metrics.extraSmallPadding}px 0`}
+  margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px 0`}
   font-family: CircularStd-Medium;
-  font-size: 12px;
+  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
 `;
 
 const OptionWrapper = styled(View)`
@@ -59,19 +59,19 @@ const OptionTextWrapper = styled(View)`
 
 const MediumText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
-  margin-top: ${({ theme }) => theme.metrics.extraSmallPadding}
+  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}
   font-family: CircularStd-Bold;
-  font-size: 14px;
+  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
 `;
 
 const OptionWithouDescriptionWrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
-  margin: ${({ theme }) => theme.metrics.largePadding}px;
+  margin: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const MultipleOptionsTitleWrapper = styled(View)`
-  padding: ${({ theme }) => `${theme.metrics.largePadding}px 0 ${theme.metrics.mediumPadding}px ${theme.metrics.largePadding}px`};
+  padding: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.mediumSize}px ${theme.metrics.largeSize}px`};
 `;
 
 const receivePromotionsOptionDescription = 'By enabling this option, the app will periodically use your current location and will show promotions that are happening near you.';

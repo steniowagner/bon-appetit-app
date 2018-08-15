@@ -14,8 +14,8 @@ import ReviewStars from 'components/common/ReviewStars';
 import ImageCached from './components/ImageCached';
 
 const CardContainer = styled(View)`
-  margin-horizontal: ${({ theme }) => theme.metrics.extraSmallPadding}px;
-  margin-bottom: ${({ theme }) => theme.metrics.extraSmallPadding}px;
+  margin-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const DarkLayer = styled(View)`
@@ -27,30 +27,30 @@ const DarkLayer = styled(View)`
 `;
 
 const Content = styled(View)`
-  padding: ${({ theme }) => `${theme.metrics.extraLargePadding}px ${theme.metrics.largePadding}px ${theme.metrics.largePadding}px ${theme.metrics.largePadding}px`};
+  padding: ${({ theme }) => `${theme.metrics.extraLargeSize}px ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px`};
 `;
 
 const Name = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  margin-bottom: ${({ theme }) => theme.metrics.extraSmallPadding}
-  font-size: ${({ theme }) => theme.metrics.titleTextSize}px;
+  margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
   fontFamily: CircularStd-Black;
 `;
 
 const AddressWrapper = styled(View)`
-  margin-top: ${({ theme }) => theme.metrics.mediumPadding}
+  margin-top: ${({ theme }) => theme.metrics.mediumSize}
   flex-direction: row;
   width: 70%;
 `;
 
 const AddressIconWrapper = styled(View)`
-  margin: ${({ theme }) => `${theme.metrics.smallPadding / 2}px ${theme.metrics.smallPadding}px 0 0`}
+  margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px ${theme.metrics.smallSize}px 0 0`}
 `;
 
 const Address = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.descriptionTextSize}px;
-  fontFamily: CircularStd-Book;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
+  fontFamily: CircularStd-Medium;
 `;
 
 const BottomRowWrapper = styled(View)`

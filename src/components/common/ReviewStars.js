@@ -15,9 +15,9 @@ const Wrapper = styled(View)`
 
 const Reviews = styled(Text)`
   color: ${({ theme, textColor }) => theme.colors[textColor]};
-  margin-left: 8px;
-  fontFamily: CircularStd-Book;
-  font-size: 14px;
+  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')};
+  fontFamily: CircularStd-Medium;
 `;
 
 const WrapperStars = styled(View)`
@@ -59,6 +59,7 @@ const getStars = (stars) => {
 
 const renderStars = (grade: number): any => {
   const starsFromGrade = getStars(grade);
+
   return (
     <WrapperStars>
       {starsFromGrade.map(star => (
