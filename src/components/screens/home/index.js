@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import styled from 'styled-components';
 
 import NavigationHeader from 'components/common/NavigationHeader';
+import InYourCitySection from './components/in-your-city/InYourCitySection';
 
-class Home extends Component {
-  render() {
-    return (
-      <View style={{flex: 1,backgroundColor: '#FDFDFD'}}>
-        <NavigationHeader isHome title="Bon Appetit" />
-        <Text>
-          Home
-        </Text>
-      </View>
-    );
-  }
-}
+const Container = styled(View)`
+  flex: 1;
+`;
+
+const Home = () => (
+  <Container>
+    <NavigationHeader isHome title="Bon Appetit" />
+    <InYourCitySection />
+  </Container>
+);
 
 export default Home;

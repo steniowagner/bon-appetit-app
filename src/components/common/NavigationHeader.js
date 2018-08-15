@@ -23,9 +23,7 @@ type Props = {
 
 const NavigationHeader = ({ isHome, title }: Props) => (
   <Wrapper>
-    <Title
-      isHome={isHome}
-    >
+    <Title isHome={isHome}>
       {title}
     </Title>
   </Wrapper>
