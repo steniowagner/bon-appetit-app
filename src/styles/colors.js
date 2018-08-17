@@ -10,5 +10,5 @@ export default {
   lightGray: '#D3D3D3',
   linkedin: '#0077B5',
   github: '#333333',
-  subText: '#ACACAC',
+  subText: '#ADADAD',
 };

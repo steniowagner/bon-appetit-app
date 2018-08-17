@@ -1,20 +1,15 @@
 import React from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import styled from 'styled-components';
 
+import HomeRouter from 'components/screens/home/routes';
 import InYourCityListItem from './InYourCityListItem';
+import SectionHeader from '../common/SectionHeader';
 
 const Container = styled(View)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('33%')};
   justify-content: space-between;
   width: 100%;
-`;
-
-const SectionTitle = styled(Text)`
-  padding: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.smallSize}px ${theme.metrics.largeSize}px`}
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.5%')};
-  font-family: CircularStd-Black;
 `;
 
 const ListWrapper = styled(View)`
@@ -57,9 +52,10 @@ const renderList = () => (
 
 const InYourCitySection = () => (
   <Container>
-    <SectionTitle>
-      In Your City
-    </SectionTitle>
+    <SectionHeader
+      title="In Your City"
+      nextRoute={HomeRouter.routeNames.ALL_EVENTS}
+    />
     <ListWrapper>
       {renderList()}
     </ListWrapper>
