@@ -1,18 +1,23 @@
 import React from 'react';
-import { View } from 'react-native';
-import styled from 'styled-components';
+import { View, StatusBar, Platform } from 'react-native';
 
+import styled from 'styled-components';
 import appStyle from 'styles';
+
 import InYourCitySection from './components/in-your-city/InYourCitySection';
 
 const Container = styled(View)`
   flex: 1;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const HomeMainContent = () => (
-  <Container>
-    <InYourCitySection />
-  </Container>
+  <React.Fragment>
+    <StatusBar barStyle="light-content" />
+    <Container>
+      <InYourCitySection />
+    </Container>
+  </React.Fragment>
 );
 
 HomeMainContent.navigationOptions = {
@@ -25,7 +30,7 @@ HomeMainContent.navigationOptions = {
     color: appStyle.colors.defaultWhite,
     fontFamily: 'Modesta-Script',
     fontWeight: '200',
-    fontSize: 28,
+    fontSize: Platform.OS === 'ios' ? 26 : 30,
   },
 };
 

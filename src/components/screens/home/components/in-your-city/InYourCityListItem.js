@@ -73,7 +73,7 @@ const InYourCityListItem = ({
   navigation,
 }: Props) => (
   <Container
-    onPress={() => navigation.navigate(Router.routesNames.EVENT_INFO, {
+    onPress={() => navigation.navigate(Router.routeNames.EVENT_INFO, {
       eventTitle,
       eventDescription,
       eventImage,

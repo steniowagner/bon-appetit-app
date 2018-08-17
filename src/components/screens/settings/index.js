@@ -8,10 +8,14 @@ import {
   AsyncStorage,
   Platform,
 } from 'react-native';
-import styled from 'styled-components';
 
-import NavigationHeader from 'components/common/NavigationHeader';
-import styles from 'styles';
+import styled from 'styled-components';
+import appStyle from 'styles';
+
+const Container = styled(View)`
+  flex: 1;
+  background-color: ${({ theme }) => theme.colors.white};
+`;
 
 const SectionTitleText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
@@ -79,6 +83,20 @@ const notificationsSoundOptionDescription = 'Enable the sound of the Notificatio
 const APP_STORAGE_KEY = '@BON_APPETIT';
 
 class Settings extends Component {
+  static navigationOptions = {
+    title: 'Settings',
+    headerStyle: {
+      backgroundColor: appStyle.colors.primaryColor,
+    },
+    headerTintColor: appStyle.colors.defaultWhite,
+    headerTitleStyle: {
+      color: appStyle.colors.defaultWhite,
+      fontFamily: 'CircularStd-Bold',
+      fontWeight: '900',
+      fontSize: appStyle.metrics.navigationHeaderFontSize,
+    },
+  };
+
   state = {
     receiveNearMe: false,
     notificationsSound: false,
@@ -158,13 +176,13 @@ class Settings extends Component {
   );
 
   renderSwitch = (id: string): Object => {
-    const thumbTintColor = (Platform.OS === 'android') ? styles.colors.red : '';
+    const thumbTintColor = (Platform.OS === 'android') ? appStyle.colors.red : '';
     const value = this.state[id];
 
     return (
       <Switch
         onValueChange={() => this.handleSwitchToggle(id)}
-        onTintColor={styles.colors.red}
+        onTintColor={appStyle.colors.red}
         thumbTintColor={thumbTintColor}
         value={value}
       />
@@ -173,8 +191,7 @@ class Settings extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <NavigationHeader title="Settings" />
+      <Container>
         <ScrollView>
           {this.renderSelectLanguageSection()}
           <LineSeparator />
@@ -209,7 +226,7 @@ class Settings extends Component {
 
           {this.renderOptionWithoutDescription('When is about promotions', 'whenAboutPromotions')}
         </ScrollView>
-      </React.Fragment>
+      </Container>
     );
   }
 }

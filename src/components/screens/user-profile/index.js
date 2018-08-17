@@ -7,13 +7,12 @@ import {
   ScrollView,
   Linking,
 } from 'react-native';
-import styled from 'styled-components';
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import style from 'styles';
 
-import NavigationHeader from 'components/common/NavigationHeader';
-import HeartBeating from './HeartBeating';
+import styled from 'styled-components';
+import appStyle from 'styles';
+
+import HeartBeating from './components/HeartBeating';
 
 const Container = styled(View)`
   flex: 1;
@@ -138,7 +137,7 @@ const renderSocialButton = (type: string, iconName: string, size: number): Objec
       <Icon
         name={iconName}
         size={size}
-        color={style.colors.defaultWhite}
+        color={appStyle.colors.defaultWhite}
       />
     </SocialButton>
   </ButtonWrapper>
@@ -158,7 +157,6 @@ const renderSocialContactsSection = () => (
 
 const Profile = () => (
   <Container>
-    <NavigationHeader title="Profile" />
     <ScrollView>
       <Content>
         <ProfileAvatarWrapper />
@@ -169,5 +167,19 @@ const Profile = () => (
     </ScrollView>
   </Container>
 );
+
+Profile.navigationOptions = {
+  title: 'Profile',
+  headerStyle: {
+    backgroundColor: appStyle.colors.primaryColor,
+  },
+  headerTintColor: appStyle.colors.defaultWhite,
+  headerTitleStyle: {
+    color: appStyle.colors.defaultWhite,
+    fontFamily: 'CircularStd-Bold',
+    fontWeight: '900',
+    fontSize: appStyle.metrics.navigationHeaderFontSize,
+  },
+};
 
 export default Profile;

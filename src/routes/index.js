@@ -5,11 +5,11 @@ import { createMaterialTopTabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import HomeRouter from 'components/screens/home/routes';
+import NearYouRouter from 'components/screens/near-you/routes';
+import UserProfileRouter from 'components/screens/user-profile/routes';
+import SettingsRouter from 'components/screens/settings/routes';
 
-import Search from 'components/screens/search';
-import NearYou from 'components/screens/near-you';
-import UserProfile from 'components/screens/user-profile';
-import Settings from 'components/screens/settings';
+import SearchRouter from 'components/screens/search/routes';
 
 import appStyles from 'styles';
 
@@ -30,28 +30,28 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
   },
 
   Search: {
-    screen: Search,
+    screen: SearchRouter.routes,
     navigationOptions: {
       tabBarIcon: getTabIcon('magnify'),
     },
   },
 
   NearYou: {
-    screen: NearYou,
+    screen: NearYouRouter.routes,
     navigationOptions: {
       tabBarIcon: getTabIcon('map-outline'),
     },
   },
 
   UserProfile: {
-    screen: UserProfile,
+    screen: UserProfileRouter.routes,
     navigationOptions: {
       tabBarIcon: getTabIcon('account-outline'),
     },
   },
 
   Settings: {
-    screen: Settings,
+    screen: SettingsRouter.routes,
     navigationOptions: {
       tabBarIcon: getTabIcon('settings-outline'),
     },
@@ -61,8 +61,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
   tabBarPosition: 'bottom',
   optimizationsEnabled: true,
   animationEnabled: true,
-  swipeEnabled: false,
-  lazy: true,
+  swipeEnabled: true,
   tabBarOptions: {
     showLabel: false,
     showIcon: true,

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Animated,
+  Platform,
 } from 'react-native';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,7 +26,7 @@ const HeaderCotainer = styled(Animated.View)`
 const ContentWrapper = styled(View)`
   justify-content: flex-end;
   position: absolute;
-  padding: ${({ theme }) => `0 ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px ${theme.metrics.smallSize}px`};
+  padding: ${({ theme }) => `0 ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px ${theme.metrics.mediumSize}px`};
 `;
 
 const EventImage = styled(Image).attrs({
@@ -62,8 +63,8 @@ const ArrowBackIcon = styled(Icon).attrs({
 
 const ArrowBackButtonWrapper = styled(TouchableOpacity)`
   position: absolute;
-  margin-left: 4px;
-  margin-top: ${({ theme }) => theme.metrics.getWidthFromDP('10%')}px;
+  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-top: ${({ marginTop }) => marginTop}px;
 `;
 
 const ListWrapper = styled(View)`
@@ -89,6 +90,7 @@ const getTestData = () => {
 };
 
 const MAX_HEADER_SCROLL_DISTANCE = 136;
+const MIN_HEADER_SCROLL_DISTANCE = Platform.OS === 'ios' ? 64 : 54;
 
 type Props = {
   navigation: Function,
@@ -110,8 +112,15 @@ class EventInfo extends Component<Props, State> {
   renderArrowBack = () => {
     const { navigation } = this.props;
 
+    const IOS_ARROW_ICON_MARGIN_TOP = (MIN_HEADER_SCROLL_DISTANCE / 2) - 8;
+    const ANDROID_ARROW_ICON_MARGIN_TOP = (MIN_HEADER_SCROLL_DISTANCE / 2) - 16;
+    const ARROW_ICON_MARGIN_TOP = Platform.OS === 'ios' ? IOS_ARROW_ICON_MARGIN_TOP : ANDROID_ARROW_ICON_MARGIN_TOP;
+
     return (
-      <ArrowBackButtonWrapper onPress={() => navigation.goBack()}>
+      <ArrowBackButtonWrapper
+        onPress={() => navigation.goBack()}
+        marginTop={ARROW_ICON_MARGIN_TOP}
+      >
         <ArrowBackIcon iconName="arrow-left" />
       </ArrowBackButtonWrapper>
     );
@@ -156,7 +165,7 @@ class EventInfo extends Component<Props, State> {
       <Animated.View style={{
         height: scrollOffset.interpolate({
           inputRange: [0, MAX_HEADER_SCROLL_DISTANCE],
-          outputRange: [140, 90],
+          outputRange: [145, MIN_HEADER_SCROLL_DISTANCE],
           extrapolate: 'clamp',
         }),
       }}
@@ -201,9 +210,10 @@ class EventInfo extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <StatusBar translucent barStyle="light-content" backgroundColor="rgba(0,0,0,0)" />
+        <StatusBar barStyle="light-content" />
         {this.renderHeader()}
         {this.renderArrowBack()}
+        {this.renderRestaurantList()}
       </Container>
     );
   }

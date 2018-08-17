@@ -4,8 +4,9 @@ import { Platform } from 'react-native';
 import EventInfo from './components/in-your-city/EventInfo';
 import Home from './index';
 
-const routesNames = {
+const routeNames = {
   EVENT_INFO: 'EventInfo',
+  HOME: 'Home',
 };
 
 const routes = createStackNavigator({
@@ -19,6 +20,7 @@ const routes = createStackNavigator({
 },
 {
   mode: Platform.OS === 'ios' ? 'card' : 'modal',
+  headerMode: 'screen',
 });
 
 routes.navigationOptions = ({ navigation }) => {
@@ -31,6 +33,6 @@ routes.navigationOptions = ({ navigation }) => {
 };
 
 export default {
-  routesNames,
+  routeNames,
   routes,
 };
