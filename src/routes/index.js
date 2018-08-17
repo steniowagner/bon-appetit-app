@@ -2,64 +2,72 @@
 
 import React from 'react';
 import { createMaterialTopTabNavigator } from 'react-navigation';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Home from 'components/screens/home';
+import HomeRouter from 'components/screens/home/routes';
+
 import Search from 'components/screens/search';
 import NearYou from 'components/screens/near-you';
 import UserProfile from 'components/screens/user-profile';
 import Settings from 'components/screens/settings';
 
-import styles from 'styles';
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import appStyles from 'styles';
 
 type Props = {
   tintColor: string,
 };
 
-const getTabIcon = (icon: string): Object => ({
-  tabBarIcon: ({ tintColor }: Props) => (
-    <Icon name={icon} size={28} color={tintColor} />
-  ),
-  swipeEnabled: true,
-});
+const getTabIcon = (icon: string): Object => ({ tintColor }: Props) => (
+  <Icon name={icon} size={28} color={tintColor} />
+);
 
-const { colors } = styles;
-
-const RootNavigator = () => createMaterialTopTabNavigator({
+const ApplicationTabs = () => createMaterialTopTabNavigator({
   Home: {
-    screen: Home,
-    navigationOptions: getTabIcon('home-outline'),
+    screen: HomeRouter.routes,
+    navigationOptions: {
+      tabBarIcon: getTabIcon('home-outline'),
+    },
   },
 
   Search: {
     screen: Search,
-    navigationOptions: getTabIcon('magnify'),
+    navigationOptions: {
+      tabBarIcon: getTabIcon('magnify'),
+    },
   },
 
   NearYou: {
     screen: NearYou,
-    navigationOptions: getTabIcon('map-outline'),
+    navigationOptions: {
+      tabBarIcon: getTabIcon('map-outline'),
+    },
   },
 
   UserProfile: {
     screen: UserProfile,
-    navigationOptions: getTabIcon('account-outline'),
+    navigationOptions: {
+      tabBarIcon: getTabIcon('account-outline'),
+    },
   },
 
   Settings: {
     screen: Settings,
-    navigationOptions: getTabIcon('settings-outline'),
+    navigationOptions: {
+      tabBarIcon: getTabIcon('settings-outline'),
+    },
   },
 }, {
+  initialRouteName: 'Home',
   tabBarPosition: 'bottom',
+  optimizationsEnabled: true,
   animationEnabled: true,
-  swipeEnabled: true,
+  swipeEnabled: false,
+  lazy: true,
   tabBarOptions: {
-    showIcon: true,
     showLabel: false,
+    showIcon: true,
     style: {
-      backgroundColor: colors.white,
+      backgroundColor: appStyles.colors.white,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 10,
@@ -67,9 +75,9 @@ const RootNavigator = () => createMaterialTopTabNavigator({
     indicatorStyle: {
       backgroundColor: 'transparent',
     },
-    inactiveTintColor: colors.lightGray,
-    activeTintColor: colors.red,
+    inactiveTintColor: appStyles.colors.lightGray,
+    activeTintColor: appStyles.colors.red,
   },
 });
 
-export default RootNavigator;
+export default ApplicationTabs;

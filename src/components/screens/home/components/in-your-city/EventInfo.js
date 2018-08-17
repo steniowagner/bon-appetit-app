@@ -91,28 +91,38 @@ const getTestData = () => {
 const MAX_HEADER_SCROLL_DISTANCE = 136;
 
 type Props = {
-  eventImageURL: string,
-  eventTitle: string,
-  eventDescription: string,
+  navigation: Function,
 };
 
 type State = {
   scrollOffset: Object,
 }
 
-class InYourCity extends Component<Props, State> {
+class EventInfo extends Component<Props, State> {
+  static navigationOptions = {
+    header: null,
+  };
+
   state = {
     scrollOffset: new Animated.Value(0),
   };
 
-  renderArrowBack = () => (
-    <ArrowBackButtonWrapper>
-      <ArrowBackIcon iconName="arrow-left" />
-    </ArrowBackButtonWrapper>
-  );
+  renderArrowBack = () => {
+    const { navigation } = this.props;
+
+    return (
+      <ArrowBackButtonWrapper onPress={() => navigation.goBack()}>
+        <ArrowBackIcon iconName="arrow-left" />
+      </ArrowBackButtonWrapper>
+    );
+  }
 
   renderEventInfo = () => {
-    const { eventTitle, eventDescription } = this.props;
+    const { navigation } = this.props;
+
+    const eventTitle = navigation.getParam('eventTitle', '');
+    const eventDescription = navigation.getParam('eventDescription', '');
+
     const { scrollOffset } = this.state;
 
     return (
@@ -137,20 +147,22 @@ class InYourCity extends Component<Props, State> {
   }
 
   renderHeader = () => {
-    const { eventImageURL } = this.props;
+    const { navigation } = this.props;
+    const eventImage = navigation.getParam('eventImage');
+
     const { scrollOffset } = this.state;
 
     return (
       <Animated.View style={{
         height: scrollOffset.interpolate({
           inputRange: [0, MAX_HEADER_SCROLL_DISTANCE],
-          outputRange: [160, 72],
+          outputRange: [140, 90],
           extrapolate: 'clamp',
         }),
       }}
       >
         <HeaderCotainer>
-          <EventImage imageURL={eventImageURL} />
+          <EventImage imageURL={eventImage} />
           <DarkLayer />
           {this.renderEventInfo()}
         </HeaderCotainer>
@@ -192,10 +204,9 @@ class InYourCity extends Component<Props, State> {
         <StatusBar translucent barStyle="light-content" backgroundColor="rgba(0,0,0,0)" />
         {this.renderHeader()}
         {this.renderArrowBack()}
-        {this.renderRestaurantList()}
       </Container>
     );
   }
 }
 
-export default InYourCity;
+export default EventInfo;

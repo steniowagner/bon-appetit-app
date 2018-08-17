@@ -59,18 +59,16 @@ const BottomRowWrapper = styled(View)`
 `;
 
 const LearnMoreButtonWrapper = styled(TouchableOpacity)`
-  width: 54px;
-  height: 54px;
-  border-radius: ${54 / 2}px;
-  background-color: ${({ theme }) => theme.colors.yellow};
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('12%')}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('8%')}px;
   align-self: flex-end;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-end;
 `;
 
 const LearnMoreIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.defaultWhite,
-  name: 'arrow-right-thick',
+  name: 'arrow-right',
   size: 28,
 })`
   width: 28px;

@@ -5,7 +5,10 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import styled from 'styled-components';
+
+import Router from '../../routes';
 
 const Container = styled(TouchableOpacity)`
   height: ${({ theme }) => (theme.metrics.getHeightFromDP('20%'))}px;
@@ -59,6 +62,7 @@ type Props = {
   eventDescription: string,
   eventImage: string,
   index: number,
+  navigation: Function,
 };
 
 const InYourCityListItem = ({
@@ -66,8 +70,16 @@ const InYourCityListItem = ({
   eventDescription,
   eventImage,
   index,
+  navigation,
 }: Props) => (
-  <Container index={index}>
+  <Container
+    onPress={() => navigation.navigate(Router.routesNames.EVENT_INFO, {
+      eventTitle,
+      eventDescription,
+      eventImage,
+    })}
+    index={index}
+  >
     <EventImage imageURL={eventImage} />
     <DarkLayer />
     <AboutEventWrapper>
@@ -81,4 +93,4 @@ const InYourCityListItem = ({
   </Container>
 );
 
-export default InYourCityListItem;
+export default withNavigation(InYourCityListItem);
