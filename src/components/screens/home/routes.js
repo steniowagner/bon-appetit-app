@@ -21,12 +21,16 @@ const routes = createStackNavigator({
 
   EventInfo: {
     screen: EventInfo,
+    navigationOptions: () => ({
+      headerBackTitle: null,
+    }),
   },
 
   AllEvents: {
     screen: AllEvents,
     navigationOptions: () => ({
       gesturesEnabled: false,
+      headerBackTitle: null,
     }),
   },
 },

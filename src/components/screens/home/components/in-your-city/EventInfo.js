@@ -9,8 +9,10 @@ import {
   Animated,
   Platform,
 } from 'react-native';
-import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import styled from 'styled-components';
+import appStyle from 'styles';
 
 import RestaurantItemList from 'components/common/restaurant-item-list';
 
@@ -102,7 +104,9 @@ type State = {
 
 class EventInfo extends Component<Props, State> {
   static navigationOptions = {
-    header: null,
+    headerTransparent: true,
+    headerBackTitle: null,
+    headerTintColor: appStyle.colors.defaultWhite,    
   };
 
   state = {
@@ -212,7 +216,6 @@ class EventInfo extends Component<Props, State> {
       <Container>
         <StatusBar barStyle="light-content" />
         {this.renderHeader()}
-        {this.renderArrowBack()}
         {this.renderRestaurantList()}
       </Container>
     );
