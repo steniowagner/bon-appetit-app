@@ -2,9 +2,9 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 import styled from 'styled-components';
 
-import HomeRouter from 'components/screens/home/routes';
-import InYourCityListItem from './InYourCityListItem';
-import SectionHeader from '../common/SectionHeader';
+import { ROUTE_NAMES } from 'components/screens/home/routes';
+import ListItem from './ListItem';
+import SectionHeader from '../../common/SectionHeader';
 
 const Container = styled(View)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('33%')};
@@ -39,7 +39,7 @@ const renderList = () => (
       data={getTestData()}
       keyExtractor={item => item.id}
       renderItem={({ item, index }) => (
-        <InYourCityListItem
+        <ListItem
           index={index}
           eventTitle={item.eventTitle}
           eventDescription={item.eventDescription}
@@ -54,7 +54,7 @@ const InYourCitySection = () => (
   <Container>
     <SectionHeader
       title="In Your City"
-      nextRoute={HomeRouter.routeNames.ALL_EVENTS}
+      nextRoute={ROUTE_NAMES.ALL_EVENTS}
     />
     <ListWrapper>
       {renderList()}

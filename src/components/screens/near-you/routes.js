@@ -2,17 +2,14 @@ import { createStackNavigator } from 'react-navigation';
 
 import NearYou from './index';
 
-const routeNames = {
-  NEAR_YOU: 'NearYou',
+export const ROUTE_NAMES = {
+  NEAR_YOU: 'NEAR_YOU',
 };
 
-const routes = createStackNavigator({
-  NearYou: {
+const ROUTES = createStackNavigator({
+  [ROUTE_NAMES.NEAR_YOU]: {
     screen: NearYou,
   },
 });
 
-export default {
-  routeNames,
-  routes,
-};
+export default ROUTES;

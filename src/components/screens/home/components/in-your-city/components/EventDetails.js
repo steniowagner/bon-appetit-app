@@ -106,7 +106,7 @@ class EventInfo extends Component<Props, State> {
   static navigationOptions = {
     headerTransparent: true,
     headerBackTitle: null,
-    headerTintColor: appStyle.colors.defaultWhite,    
+    headerTintColor: appStyle.colors.defaultWhite,
   };
 
   state = {

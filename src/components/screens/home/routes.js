@@ -1,32 +1,34 @@
 import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
-import EventInfo from './components/in-your-city/EventInfo';
-import AllEvents from './components/all-events';
+import EventDetails from './components/in-your-city/components/EventDetails';
+import AllEvents from './components/in-your-city/components/all-events-list';
 import Home from './index';
 
-const routeNames = {
-  HOME: 'Home',
-  EVENT_INFO: 'EventInfo',
-  ALL_EVENTS: 'AllEvents',
+export const ROUTE_NAMES = {
+  HOME: 'HOME',
+  EVENT_DETAILS: 'EVENT_DETAILS',
+  ALL_EVENTS: 'ALL_EVENTS',
 };
 
-const routes = createStackNavigator({
-  Home: {
+const ROUTES = createStackNavigator({
+  [ROUTE_NAMES.HOME]: {
     screen: Home,
     navigationOptions: () => ({
       headerBackTitle: null,
+      borderBottomWidth: 0,
     }),
   },
 
-  EventInfo: {
-    screen: EventInfo,
+  [ROUTE_NAMES.EVENT_DETAILS]: {
+    screen: EventDetails,
     navigationOptions: () => ({
       headerBackTitle: null,
+      borderBottomWidth: 0,
     }),
   },
 
-  AllEvents: {
+  [ROUTE_NAMES.ALL_EVENTS]: {
     screen: AllEvents,
     navigationOptions: () => ({
       gesturesEnabled: false,
@@ -35,11 +37,12 @@ const routes = createStackNavigator({
   },
 },
 {
+  initialRouteName: ROUTE_NAMES.HOME,
   mode: Platform.OS === 'ios' ? 'card' : 'modal',
   headerMode: 'screen',
 });
 
-routes.navigationOptions = ({ navigation }) => {
+ROUTES.navigationOptions = ({ navigation }) => {
   const isTabView = navigation.state.index <= 0;
   const tabBarVisible = isTabView;
 
@@ -48,7 +51,4 @@ routes.navigationOptions = ({ navigation }) => {
   };
 };
 
-export default {
-  routeNames,
-  routes,
-};
+export default ROUTES;

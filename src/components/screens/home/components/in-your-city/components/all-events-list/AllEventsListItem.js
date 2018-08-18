@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 import { withNavigation } from 'react-navigation';
-import HomeRouter from 'components/screens/home/routes';
+import { ROUTE_NAMES } from 'components/screens/home/routes';
 
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -112,7 +112,7 @@ const onPressSeeAllRestaurants = (
   eventImage: string,
   navigation: Function,
 ): Object => {
-  navigation.navigate(HomeRouter.routeNames.EVENT_INFO, {
+  navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
     eventTitle,
     eventDescription,
     eventImage,

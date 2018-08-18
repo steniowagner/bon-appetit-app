@@ -8,7 +8,7 @@ import {
 import { withNavigation } from 'react-navigation';
 import styled from 'styled-components';
 
-import Router from '../../routes';
+import { ROUTE_NAMES } from 'components/screens/home/routes';
 
 const Container = styled(TouchableOpacity)`
   height: ${({ theme }) => (theme.metrics.getHeightFromDP('20%'))}px;
@@ -73,7 +73,7 @@ const InYourCityListItem = ({
   navigation,
 }: Props) => (
   <Container
-    onPress={() => navigation.navigate(Router.routeNames.EVENT_INFO, {
+    onPress={() => navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
       eventTitle,
       eventDescription,
       eventImage,

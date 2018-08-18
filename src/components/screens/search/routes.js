@@ -2,17 +2,14 @@ import { createStackNavigator } from 'react-navigation';
 
 import Search from './index';
 
-const routeNames = {
-  SEARCH: 'Search',
+export const ROUTES_NAMES = {
+  SEARCH: 'SEARCH',
 };
 
-const routes = createStackNavigator({
-  Search: {
+const ROUTES = createStackNavigator({
+  [ROUTES_NAMES.SEARCH]: {
     screen: Search,
   },
 });
 
-export default {
-  routeNames,
-  routes,
-};
+export default ROUTES;

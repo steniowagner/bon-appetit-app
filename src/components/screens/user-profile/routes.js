@@ -2,17 +2,14 @@ import { createStackNavigator } from 'react-navigation';
 
 import UserProfile from './index';
 
-const routeNames = {
-  USER_PROFILE: 'UserProfile',
+export const ROUTE_NAMES = {
+  USER_PROFILE: 'USER_PROFILE',
 };
 
-const routes = createStackNavigator({
-  UserProfile: {
+const ROUTES = createStackNavigator({
+  [ROUTE_NAMES.USER_PROFILE]: {
     screen: UserProfile,
   },
 });
 
-export default {
-  routeNames,
-  routes,
-};
+export default ROUTES;

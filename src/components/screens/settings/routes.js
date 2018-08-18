@@ -1,17 +1,14 @@
 import { createStackNavigator } from 'react-navigation';
 import Settings from './index';
 
-const routeNames = {
-  SETTINGS: 'Settings',
+export const ROUTE_NAMES = {
+  SETTINGS: 'SETTINGS',
 };
 
-const routes = createStackNavigator({
-  Settings: {
+const ROUTES = createStackNavigator({
+  [ROUTE_NAMES.SETTINGS]: {
     screen: Settings,
   },
 });
 
-export default {
-  routeNames,
-  routes,
-};
+export default ROUTES;

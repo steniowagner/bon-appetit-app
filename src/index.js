@@ -9,14 +9,13 @@ import AppTheme from 'styles';
 
 import './config/ReactotronConfig';
 
-const ApplicationNavigation = CreateNavigation();
-// <InYourCity eventDescription="An amazing event with most extensive variety of the best of Itaian cuisine!" eventTitle="Title of Event" eventImageURL="https://cdn-images-1.medium.com/max/1000/1*-mATSPFuFKGCf9DdOZrD2g.jpeg" />
+const ApplicationNavigator = CreateNavigation();
 
 const App = () => (
   <React.Fragment>
     <StatusBar barStyle="light-content" />
-    <ThemeProvider isHome theme={AppTheme}>
-      <ApplicationNavigation />
+    <ThemeProvider theme={AppTheme}>
+      <ApplicationNavigator />
     </ThemeProvider>
   </React.Fragment>
 );

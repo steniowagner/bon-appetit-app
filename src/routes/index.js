@@ -4,12 +4,11 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import HomeRouter from 'components/screens/home/routes';
-import NearYouRouter from 'components/screens/near-you/routes';
-import UserProfileRouter from 'components/screens/user-profile/routes';
-import SettingsRouter from 'components/screens/settings/routes';
-
-import SearchRouter from 'components/screens/search/routes';
+import HomeRoutes from 'components/screens/home/routes';
+import SearchRoutes from 'components/screens/search/routes';
+import NearYouRoutes from 'components/screens/near-you/routes';
+import UserProfileRoutes from 'components/screens/user-profile/routes';
+import SettingsRoutes from 'components/screens/settings/routes';
 
 import appStyles from 'styles';
 
@@ -23,35 +22,35 @@ const getTabIcon = (icon: string): Object => ({ tintColor }: Props) => (
 
 const ApplicationTabs = () => createMaterialTopTabNavigator({
   Home: {
-    screen: HomeRouter.routes,
+    screen: HomeRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('home-outline'),
     },
   },
 
   Search: {
-    screen: SearchRouter.routes,
+    screen: SearchRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('magnify'),
     },
   },
 
   NearYou: {
-    screen: NearYouRouter.routes,
+    screen: NearYouRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('map-outline'),
     },
   },
 
   UserProfile: {
-    screen: UserProfileRouter.routes,
+    screen: UserProfileRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('account-outline'),
     },
   },
 
   Settings: {
-    screen: SettingsRouter.routes,
+    screen: SettingsRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('settings-outline'),
     },

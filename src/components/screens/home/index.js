@@ -4,7 +4,7 @@ import { View, StatusBar, Platform } from 'react-native';
 import styled from 'styled-components';
 import appStyle from 'styles';
 
-import InYourCitySection from './components/in-your-city/InYourCitySection';
+import InYourCitySection from './components/in-your-city/components/Section';
 
 const Container = styled(View)`
   flex: 1;

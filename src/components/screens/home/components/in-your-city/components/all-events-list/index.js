@@ -28,7 +28,7 @@ class AllEvents extends Component {
 
   getTestData = () => {
     const data = [];
-  
+
     for (let i = 0; i < 12; i++) {
       data.push({
         id: `${i}`,
@@ -38,14 +38,14 @@ class AllEvents extends Component {
         eventDescription: 'An amazing event with most extensive variety of the best of Itaian cuisine!',
       });
     }
-  
+
     return data;
   };
 
   render() {
     return (
       <Container>
-        <FlatList          
+        <FlatList
           data={this.getTestData()}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
