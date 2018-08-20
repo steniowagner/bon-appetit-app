@@ -47,7 +47,7 @@ const ROUTES = createStackNavigator({
   },
 },
 {
-  initialRouteName: ROUTE_NAMES.RESTAURANT_DETAIL,
+  initialRouteName: ROUTE_NAMES.HOME,
   mode: Platform.OS === 'ios' ? 'card' : 'modal',
   headerMode: 'screen',
 });

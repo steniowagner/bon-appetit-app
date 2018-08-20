@@ -3,12 +3,6 @@ import { View, Text } from 'react-native';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Wrapper = styled(View)`
-  width: 100%;
-  background-color: ${({ theme }) => theme.colors.primaryColor};
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
-`;
-
 const EstablishmentInfoContainer = styled(View)`
   width: 80%;
 `;
@@ -28,8 +22,8 @@ const EstablishmentInfoText = styled(Text)`
 
 const RestaurantAboutText = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.7%')}px;
-  padding-top: ${({ theme }) => theme.metrics.mediumSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
+  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   fontFamily: CircularStd-Medium;
 `;
 
@@ -43,7 +37,7 @@ const InfoIcon = styled(Icon).attrs({
 `;
 
 const AboutRestaurantSection = () => (
-  <Wrapper>
+  <React.Fragment>
     <EstablishmentInfoContainer>
       <EstablishmentInfoWrapper>
         <InfoIcon iconTitle="map-marker-outline" />
@@ -61,7 +55,7 @@ const AboutRestaurantSection = () => (
     <RestaurantAboutText>
       Gastronomia requintada de carnes nobres argentinas, ambiente chique e intimista convidativo a longas estadias.
     </RestaurantAboutText>
-  </Wrapper>
+  </React.Fragment>
 );
 
 export default AboutRestaurantSection;

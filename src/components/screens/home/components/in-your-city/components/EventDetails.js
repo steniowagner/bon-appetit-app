@@ -4,12 +4,10 @@ import {
   View,
   StatusBar,
   Image,
-  TouchableOpacity,
   FlatList,
   Animated,
   Platform,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styled from 'styled-components';
 import appStyle from 'styles';
@@ -57,18 +55,6 @@ const EventDescription = styled(Text)`
   font-family: CircularStd-Medium;
 `;
 
-const ArrowBackIcon = styled(Icon).attrs({
-  name: ({ iconName }) => iconName,
-  color: ({ theme }) => theme.colors.defaultWhite,
-  size: 28,
-})``;
-
-const ArrowBackButtonWrapper = styled(TouchableOpacity)`
-  position: absolute;
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
-  margin-top: ${({ marginTop }) => marginTop}px;
-`;
-
 const ListWrapper = styled(View)`
   flex: 1;
   padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
@@ -112,23 +98,6 @@ class EventInfo extends Component<Props, State> {
   state = {
     scrollOffset: new Animated.Value(0),
   };
-
-  renderArrowBack = () => {
-    const { navigation } = this.props;
-
-    const IOS_ARROW_ICON_MARGIN_TOP = (MIN_HEADER_SCROLL_DISTANCE / 2) - 8;
-    const ANDROID_ARROW_ICON_MARGIN_TOP = (MIN_HEADER_SCROLL_DISTANCE / 2) - 16;
-    const ARROW_ICON_MARGIN_TOP = Platform.OS === 'ios' ? IOS_ARROW_ICON_MARGIN_TOP : ANDROID_ARROW_ICON_MARGIN_TOP;
-
-    return (
-      <ArrowBackButtonWrapper
-        onPress={() => navigation.goBack()}
-        marginTop={ARROW_ICON_MARGIN_TOP}
-      >
-        <ArrowBackIcon iconName="arrow-left" />
-      </ArrowBackButtonWrapper>
-    );
-  }
 
   renderEventInfo = () => {
     const { navigation } = this.props;

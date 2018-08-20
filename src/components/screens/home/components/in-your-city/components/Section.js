@@ -36,6 +36,7 @@ const renderList = () => (
   <ListWrapper>
     <FlatList
       horizontal
+      showsHorizontalScrollIndicator={false}
       data={getTestData()}
       keyExtractor={item => item.id}
       renderItem={({ item, index }) => (
