@@ -31,4 +31,7 @@ export default {
 
   getWidthFromDP,
   getHeightFromDP,
+
+  width,
+  height,
 };

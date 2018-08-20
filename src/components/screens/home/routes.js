@@ -1,6 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
+import RestaurantDetail from 'components/common/restaurant-detail';
 import EventDetails from './components/in-your-city/components/EventDetails';
 import AllEvents from './components/in-your-city/components/all-events-list';
 import Home from './index';
@@ -9,6 +10,7 @@ export const ROUTE_NAMES = {
   HOME: 'HOME',
   EVENT_DETAILS: 'EVENT_DETAILS',
   ALL_EVENTS: 'ALL_EVENTS',
+  RESTAURANT_DETAIL: 'RESTAURANT_DETAIL',
 };
 
 const ROUTES = createStackNavigator({
@@ -35,9 +37,17 @@ const ROUTES = createStackNavigator({
       headerBackTitle: null,
     }),
   },
+
+  [ROUTE_NAMES.RESTAURANT_DETAIL]: {
+    screen: RestaurantDetail,
+    navigationOptions: () => ({
+      gesturesEnabled: false,
+      headerBackTitle: null,
+    }),
+  },
 },
 {
-  initialRouteName: ROUTE_NAMES.HOME,
+  initialRouteName: ROUTE_NAMES.RESTAURANT_DETAIL,
   mode: Platform.OS === 'ios' ? 'card' : 'modal',
   headerMode: 'screen',
 });

@@ -136,6 +136,8 @@ const renderSocialButton = (type: string, iconName: string, size: number): Objec
     >
       <Icon
         name={iconName}
+        width={size}
+        height={size}
         size={size}
         color={appStyle.colors.defaultWhite}
       />

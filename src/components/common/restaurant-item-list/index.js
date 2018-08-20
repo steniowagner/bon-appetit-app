@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { withNavigation } from 'react-navigation';
+import { ROUTE_NAMES } from 'components/screens/home/routes';
+
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -21,7 +24,7 @@ const CardContainer = styled(View)`
 const DarkLayer = styled(View)`
   background-color: ${({ theme }) => theme.colors.darkLayer};
   position: absolute;
-  border-radius: 6px;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   height: 100%;
   width: 100%;
 `;
@@ -81,14 +84,8 @@ const AddressIcon = styled(Icon).attrs({
   size: 20,
 })``;
 
-const renderLearnMoreButton = () => (
-  <LearnMoreButtonWrapper>
-    <LearnMoreIcon />
-  </LearnMoreButtonWrapper>
-);
-
 const renderBottomRow = (address: string) => (
-  <BottomRowWrapper>
+  <React.Fragment>
     <AddressWrapper>
       <AddressIconWrapper>
         <AddressIcon />
@@ -97,8 +94,7 @@ const renderBottomRow = (address: string) => (
         {address}
       </Address>
     </AddressWrapper>
-    {renderLearnMoreButton()}
-  </BottomRowWrapper>
+  </React.Fragment>
 );
 
 type Props = {
@@ -106,6 +102,7 @@ type Props = {
   address: string,
   picURL: string,
   stars: number,
+  navigation: Function,
 };
 
 const RestaurantItemList = ({
@@ -113,6 +110,7 @@ const RestaurantItemList = ({
   address,
   stars,
   picURL,
+  navigation,
 }: Props) => (
   <CardContainer>
     <ImageCached uri={picURL} />
@@ -127,9 +125,16 @@ const RestaurantItemList = ({
         reviews={1}
         textColor="white"
       />
-      {renderBottomRow(address)}
+      <BottomRowWrapper>
+        {renderBottomRow(address)}
+        <LearnMoreButtonWrapper
+          onPress={() => navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL)}
+        >
+          <LearnMoreIcon />
+        </LearnMoreButtonWrapper>
+      </BottomRowWrapper>
     </Content>
   </CardContainer>
 );
 
-export default RestaurantItemList;
+export default withNavigation(RestaurantItemList);
