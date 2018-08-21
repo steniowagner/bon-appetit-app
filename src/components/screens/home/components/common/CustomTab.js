@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   Animated,
+  FlatList,
 } from 'react-native';
 
 import styled from 'styled-components';
@@ -16,8 +17,7 @@ const Container = styled(View)`
   background-color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-
-const Cell = styled(View)`
+const Cell = styled(TouchableOpacity)`
   justify-content: center;
   align-items: center;
   width: ${({ width }) => width};
@@ -46,20 +46,19 @@ const OptionText = styled(Text)`
 `;
 
 const test = [
-  { id: 1, item: 'Pizzas' },
-  { id: 2, item: 'Churrascos' },
-  { id: 3, item: 'Sobremesas' },
-  { id: 4, item: 'Petiscos' },
-  { id: 5, item: 'Frutos do Mar' },
-  { id: 6, item: 'Sanduíches' },
-  { id: 7, item: 'Sopas' },
-  { id: 8, item: 'Saladas' },
+  { id: '1', item: 'Pizzas' },
+  { id: '2', item: 'Churrascos' },
+  { id: '3', item: 'Sobremesas' },
+  { id: '4', item: 'Petiscos' },
+  { id: '5', item: 'Frutos do Mar' },
+  { id: '6', item: 'Sanduíches' },
+  { id: '7', item: 'Sopas' },
+  { id: '8', item: 'Saladas' },
 ];
 
 class CustomTab extends Component {
   state = {
     markerMarginLeft: new Animated.Value(0),
-    cellMarginLeft: new Animated.Value(0),
     itemSelectedIndex: 0,
     cellWidth: 0,
     clickTimestamp: 0,
@@ -73,9 +72,9 @@ class CustomTab extends Component {
     });
   }
 
-  onCellPress = (newIndexSelected: number): Object => {
-    const shouldAllowClick = this.shouldAllowClick();
-    if (!shouldAllowClick) {
+  onCellPress = (newIndexSelected: number): void => {
+    const shouldAllowPress = this.shouldAllowPress();
+    if (!shouldAllowPress) {
       return;
     }
 
@@ -85,7 +84,7 @@ class CustomTab extends Component {
       return;
     }
 
-    this.setCellsWrapperPosition(itemSelectedIndex, newIndexSelected);
+    this.onMoveList(newIndexSelected);
 
     this.setMarkerPosition(newIndexSelected);
 
@@ -95,45 +94,23 @@ class CustomTab extends Component {
     });
   }
 
+  onMoveList = (indexSelected: number): void => {
+    const isFirstCell = indexSelected === 0;
+    const isLastCell = indexSelected === test.length - 1;
+
+    if (isFirstCell || isLastCell) {
+      return;
+    }
+
+    this.flatListRef.scrollToIndex({ animated: true, index: indexSelected - 1 });
+  }
+
   getCellWidth = (): number => {
     const screenWidth = appStyles.metrics.width;
     const datasetLength = test.length;
     const cellWidth = (datasetLength >= 3) ? (screenWidth / 3) : (screenWidth / datasetLength);
 
     return cellWidth;
-  }
-
-  setCellsWrapperPosition = (previousIndex: number, newIndex: number): number => {
-    if (test.length <= 3) {
-      return;
-    }
-
-    if (newIndex === test.length - 1) {
-      return;
-    }
-
-    if (newIndex === 0) {
-      return;
-    }
-
-    const { cellWidth, cellMarginLeft } = this.state;
-
-    const shouldMoveForward = (newIndex > 1) && (newIndex > previousIndex);
-    const shouldMoveBackwards = (newIndex !== test.length - 2) && (newIndex < previousIndex);
-
-    if (shouldMoveForward) {
-      Animated.timing(cellMarginLeft, {
-        toValue: cellMarginLeft._value - cellWidth,
-        duration: 300,
-      }).start();
-    }
-
-    if (shouldMoveBackwards) {
-      Animated.timing(cellMarginLeft, {
-        toValue: cellMarginLeft._value + cellWidth,
-        duration: 300,
-      }).start();
-    }
   }
 
   setMarkerPosition = (newIndexSelected: number): Object => {
@@ -163,15 +140,15 @@ class CustomTab extends Component {
     }).start();
   }
 
-  getCellTextColor = (itemSelectedIndex: number, cellIndex): string => {
+  getCellTextColor = (itemSelectedIndex: number, cellIndex: number): string => {
     const { red, darkText } = appStyles.colors;
 
-    const cellTextColor = itemSelectedIndex === cellIndex ? red : darkText;
+    const cellTextColor = (itemSelectedIndex === cellIndex) ? red : darkText;
 
     return cellTextColor;
   }
 
-  shouldAllowClick = () => {
+  shouldAllowPress = () => {
     const { clickTimestamp } = this.state;
     const now = Date.now();
 
@@ -184,30 +161,31 @@ class CustomTab extends Component {
     const {
       itemSelectedIndex,
       markerMarginLeft,
-      cellMarginLeft,
       cellWidth,
     } = this.state;
 
-    const ItemsWrapper = Animated.createAnimatedComponent(View);
-
     return (
       <Container>
-        <Animated.View style={{ marginLeft: cellMarginLeft, flexDirection: 'row' }}>
-          {test.map(({ item, id }, index) => (
-            <TouchableWithoutFeedback
-              key={id}
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          ref={(ref) => { this.flatListRef = ref; }}
+          horizontal
+          data={test}
+          keyExtractor={item => item.id}
+          extraData={this.state}
+          renderItem={({ item, index }) => (
+            <Cell
+              width={cellWidth}
               onPress={() => this.onCellPress(index)}
             >
-              <Cell width={cellWidth}>
-                <OptionText
-                  color={this.getCellTextColor(itemSelectedIndex, index)}
-                >
-                  {item}
-                </OptionText>
-              </Cell>
-            </TouchableWithoutFeedback>
-          ))}
-        </Animated.View>
+              <OptionText
+                color={this.getCellTextColor(itemSelectedIndex, index)}
+              >
+                {item.item}
+              </OptionText>
+            </Cell>
+          )}
+        />
         <MarkerWrapper style={{ marginLeft: markerMarginLeft }}>
           <Marker
             width={cellWidth}
