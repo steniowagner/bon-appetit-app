@@ -10,7 +10,7 @@ const EstablishmentInfoContainer = styled(View)`
 const EstablishmentInfoWrapper = styled(View)`
   flex-direction: row;
   align-items: center;
-  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const EstablishmentInfoText = styled(Text)`
@@ -23,7 +23,8 @@ const EstablishmentInfoText = styled(Text)`
 const RestaurantAboutText = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
-  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  padding-top: ${({ theme }) => theme.metrics.smallSize}px;
+  padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
   fontFamily: CircularStd-Medium;
 `;
 

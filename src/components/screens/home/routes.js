@@ -33,7 +33,6 @@ const ROUTES = createStackNavigator({
   [ROUTE_NAMES.ALL_EVENTS]: {
     screen: AllEvents,
     navigationOptions: () => ({
-      gesturesEnabled: false,
       headerBackTitle: null,
     }),
   },
@@ -41,13 +40,12 @@ const ROUTES = createStackNavigator({
   [ROUTE_NAMES.RESTAURANT_DETAIL]: {
     screen: RestaurantDetail,
     navigationOptions: () => ({
-      gesturesEnabled: false,
       headerBackTitle: null,
     }),
   },
 },
 {
-  initialRouteName: ROUTE_NAMES.RESTAURANT_DETAIL,
+  initialRouteName: ROUTE_NAMES.HOME,
   mode: Platform.OS === 'ios' ? 'card' : 'modal',
   headerMode: 'screen',
 });

@@ -9,7 +9,7 @@ import ReviewStars from 'components/common/ReviewStars';
 
 const Container = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('20%')}px;
 `;
 
 const DarkLayer = styled(View)`

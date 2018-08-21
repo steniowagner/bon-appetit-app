@@ -60,7 +60,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
   tabBarPosition: 'bottom',
   optimizationsEnabled: true,
   animationEnabled: true,
-  swipeEnabled: true,
+  swipeEnabled: false,
   tabBarOptions: {
     showLabel: false,
     showIcon: true,

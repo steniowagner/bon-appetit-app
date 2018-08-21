@@ -12,7 +12,7 @@ import styled from 'styled-components';
 const Container = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('15%')}px;
-  padding-bottom: ${({ theme }) => `${theme.metrics.smallSize}px`}
+  margin-bottom: ${({ theme }) => `${theme.metrics.smallSize}px`}
 `;
 
 const ContentWrapper = styled(View)`

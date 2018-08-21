@@ -10,6 +10,8 @@ import {
 import styled from 'styled-components';
 import appStyles from 'styles';
 
+import Context from 'components/common/restaurant-detail/components/Context';
+
 const Container = styled(View)`
   width: 100%;
   flex-direction: row;
@@ -50,18 +52,14 @@ const test = [
   { id: '2', item: 'Churrascos' },
   { id: '3', item: 'Sobremesas' },
   { id: '4', item: 'Petiscos' },
-  { id: '5', item: 'Frutos do Mar' },
-  { id: '6', item: 'Sanduíches' },
-  { id: '7', item: 'Sopas' },
-  { id: '8', item: 'Saladas' },
 ];
 
 class CustomTab extends Component {
   state = {
     markerMarginLeft: new Animated.Value(0),
     itemSelectedIndex: 0,
-    cellWidth: 0,
     clickTimestamp: 0,
+    cellWidth: 0,
   };
 
   componentDidMount() {
@@ -114,7 +112,14 @@ class CustomTab extends Component {
   }
 
   setMarkerPosition = (newIndexSelected: number): Object => {
-    const { markerMarginLeft, cellWidth } = this.state;
+    const { itemSelectedIndex, markerMarginLeft, cellWidth } = this.state;
+
+    const shouldNotRenderMarker = (itemSelectedIndex > 0 && itemSelectedIndex < test.length - 1)
+      && (newIndexSelected > 0 && newIndexSelected < test.length - 1);
+
+    if (shouldNotRenderMarker) {
+      return;
+    }
 
     let newMarkerMargin = cellWidth;
 
@@ -152,12 +157,42 @@ class CustomTab extends Component {
     const { clickTimestamp } = this.state;
     const now = Date.now();
 
-    const passedTimeEnough = (now - clickTimestamp) >= 500;
+    const passedTimeEnough = (now - clickTimestamp) >= 750;
 
     return passedTimeEnough;
   }
 
-  render() {
+  renderList = (onSelectMenu: Function): Object => {
+    const { itemSelectedIndex, cellWidth } = this.state;
+
+    return (
+      <FlatList
+        showsHorizontalScrollIndicator={false}
+        ref={(ref) => { this.flatListRef = ref; }}
+        horizontal
+        data={test}
+        keyExtractor={item => item.id}
+        extraData={this.state}
+        renderItem={({ item, index }) => (
+          <Cell
+            width={cellWidth}
+            onPress={() => {
+              this.onCellPress(index);
+              onSelectMenu(index);
+            }}
+          >
+            <OptionText
+              color={this.getCellTextColor(itemSelectedIndex, index)}
+            >
+              {item.item}
+            </OptionText>
+          </Cell>
+        )}
+      />
+    );
+  }
+
+  renderMarker = () => {
     const {
       itemSelectedIndex,
       markerMarginLeft,
@@ -165,34 +200,25 @@ class CustomTab extends Component {
     } = this.state;
 
     return (
-      <Container>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          ref={(ref) => { this.flatListRef = ref; }}
-          horizontal
-          data={test}
-          keyExtractor={item => item.id}
-          extraData={this.state}
-          renderItem={({ item, index }) => (
-            <Cell
-              width={cellWidth}
-              onPress={() => this.onCellPress(index)}
-            >
-              <OptionText
-                color={this.getCellTextColor(itemSelectedIndex, index)}
-              >
-                {item.item}
-              </OptionText>
-            </Cell>
-          )}
+      <MarkerWrapper style={{ marginLeft: markerMarginLeft }}>
+        <Marker
+          width={cellWidth}
+          currentIndex={itemSelectedIndex}
         />
-        <MarkerWrapper style={{ marginLeft: markerMarginLeft }}>
-          <Marker
-            width={cellWidth}
-            currentIndex={itemSelectedIndex}
-          />
-        </MarkerWrapper>
-      </Container>
+      </MarkerWrapper>
+    );
+  }
+
+  render() {
+    return (
+      <Context.Consumer>
+        {context => (
+          <Container>
+            {this.renderList(context.onSelectMenu)}
+            {this.renderMarker()}
+          </Container>
+        )}
+      </Context.Consumer>
     );
   }
 }
