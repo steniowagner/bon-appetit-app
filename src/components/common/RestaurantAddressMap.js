@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_DIRECTIONS_API_KEY } from 'react-native-dotenv';
@@ -19,21 +19,22 @@ const Container = styled(View)`
 
 const MapContainer = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('75%')};
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('74%')};
 `;
 
 const FloatingActionButtonWrapper = styled(View)`
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('75%') - 28}px;
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('74%') - 28}px;
   padding-right: ${({ theme }) => theme.metrics.largeSize}px;
+
   align-self: flex-end;
   position: absolute;
 `;
 
 const FooterContainer = styled(View)`
   width: 100%;
+  height: 100%;
   padding-left: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-top: ${({ theme }) => theme.metrics.mediumSize}px;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('18%')};
+  padding-top: ${({ theme }) => (Platform.OS === 'ios' ? theme.metrics.largeSize : theme.metrics.mediumSize)}px;
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -80,8 +81,8 @@ const INITIAL_REGION = {
 };
 
 class RestaurantAddressMap extends Component<Props, State> {
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.payload.restaurantName || '',
+  static navigationOptions = ({ navigation: { state: { params } } }) => ({
+    title: params.payload.restaurantName || '',
     headerStyle: {
       backgroundColor: appStyle.colors.primaryColor,
     },
@@ -114,10 +115,10 @@ class RestaurantAddressMap extends Component<Props, State> {
 
   fitMarkersOnScreen = () => {
     const edgePadding = {
-      top: 40,
-      right: 40,
-      bottom: 40,
-      left: 40,
+      top: 80,
+      right: 80,
+      bottom: 80,
+      left: 80,
     };
 
     const { markers } = this.state;
