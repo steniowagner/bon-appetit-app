@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { View, StatusBar, Platform } from 'react-native';
 

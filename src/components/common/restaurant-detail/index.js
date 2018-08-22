@@ -1,13 +1,17 @@
+// @flow
+
 import React, { Component } from 'react';
 import { View } from 'react-native';
 
 import styled from 'styled-components';
 import appStyle from 'styles';
 
+import { ROUTE_NAMES } from 'components/screens/home/routes';
+
 import CustomTab from 'components/screens/home/components/common/CustomTab';
+import FloatinActionButton from 'components/common/FloatingActionButton';
 import HeaderSection from './components/HeaderSection';
 import AboutRestaurantSection from './components/AboutRestaurantSection';
-import AddressFloatingActionButton from './components/AddressFloatingActionButton';
 import MenuList from './components/menu-list';
 
 import Context from './components/Context';
@@ -72,11 +76,33 @@ class RestaurantDetail extends Component {
     </AboutRestaurantWrapper>
   );
 
-  renderFloatingActionButton = () => (
-    <FloatingActionButtonWrapper>
-      <AddressFloatingActionButton />
-    </FloatingActionButtonWrapper>
-  );
+  renderFloatingActionButton = () => {
+    const { navigation } = this.props;
+
+    return (
+      <FloatingActionButtonWrapper>
+        <FloatinActionButton
+          name="map-marker-multiple"
+          color="yellow"
+          action={() => navigation.navigate(ROUTE_NAMES.RESTAURANT_ADDRESS_MAP, {
+            payload: {
+              restaurantName: 'Cabãna del Primo',
+              userLocation: {
+                latitude: -3.7195263,
+                longitude: -38.589332,
+              },
+              restaurantLocation: {
+                latitude: -3.7191621,
+                longitude: -38.5935437,
+              },
+              distance: 4,
+              status: 'open',
+            },
+          })}
+        />
+      </FloatingActionButtonWrapper>
+    );
+  }
 
   render() {
     return (

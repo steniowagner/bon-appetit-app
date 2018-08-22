@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { View, FlatList } from 'react-native';
 import styled from 'styled-components';

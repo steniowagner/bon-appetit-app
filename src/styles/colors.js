@@ -3,6 +3,7 @@ export default {
   darkText: 'rgba(0, 0, 0, 0.8)',
   darkLayer: 'rgba(0, 0, 0, 0.5)',
   red: '#FD5C63',
+  blue: '#4688F1',
   white: '#FDFDFD',
   defaultWhite: '#FFFFFF',
   green: '#1DB954',

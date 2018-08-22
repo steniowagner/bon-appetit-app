@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import { Image, Platform } from 'react-native';
 import styled from 'styled-components';
