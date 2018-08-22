@@ -3,7 +3,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
+import { GOOGLE_DIRECTIONS_API_KEY } from 'react-native-dotenv';
 
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
 import appStyle from 'styles';
 
@@ -16,11 +19,11 @@ const Container = styled(View)`
 
 const MapContainer = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('76.5%')};
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('75%')};
 `;
 
 const FloatingActionButtonWrapper = styled(View)`
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('76.5%') - 28}px;
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('75%') - 28}px;
   padding-right: ${({ theme }) => theme.metrics.largeSize}px;
   align-self: flex-end;
   position: absolute;
@@ -28,8 +31,9 @@ const FloatingActionButtonWrapper = styled(View)`
 
 const FooterContainer = styled(View)`
   width: 100%;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('15%')};
+  padding-left: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-top: ${({ theme }) => theme.metrics.mediumSize}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('18%')};
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -50,13 +54,34 @@ const EstablishmentStatus = styled(Text)`
   fontFamily: CircularStd-Medium;
 `;
 
+const MarkerIcon = styled(Icon).attrs({
+  color: ({ theme }) => theme.colors.darkText,
+  name: ({ name }) => name,
+  size: 25,
+})`
+  width: 25px;
+  height: 25px;
+`;
+
 type Props = {
   navigation: Function,
-}
+};
 
-class RestaurantAddressMap extends Component<Props, {}> {
+type State = {
+  markers: Array<Object>,
+};
+
+const ASPECT_RATIO = appStyle.metrics.width / appStyle.metrics.height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const INITIAL_REGION = {
+  latitude: -3.7900894,
+  longitude: -38.6590335,
+};
+
+class RestaurantAddressMap extends Component<Props, State> {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.restaurantName,
+    title: navigation.state.params.payload.restaurantName || '',
     headerStyle: {
       backgroundColor: appStyle.colors.primaryColor,
     },
@@ -67,11 +92,6 @@ class RestaurantAddressMap extends Component<Props, {}> {
       fontSize: appStyle.metrics.navigationHeaderFontSize,
     },
   });
-
-  constructor() {
-    super();
-    this.mapRef = null;
-  }
 
   state = {
     markers: [],
@@ -108,56 +128,86 @@ class RestaurantAddressMap extends Component<Props, {}> {
     });
   }
 
-  render() {
+  renderMap = () => {
     const { navigation } = this.props;
-
-    const { restaurantName, distance, status } = navigation.getParam('payload', '');
+    const { restaurantName } = navigation.getParam('payload', '');
 
     const { markers } = this.state;
 
     return (
-      <Container>
-        <MapContainer>
-          <MapView
-            style={{ width: '100%', height: '100%' }}
-            ref={(ref) => { this.mapRef = ref; }}
-            onLayout={() => this.fitMarkersOnScreen()}
-            initialRegion={{
-              latitude: -3.7195263,
-              longitude: -38.589332,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            {markers.map((marker, index) => (
-              <Marker
-                key={index}
-                coordinate={marker}
+      <MapContainer>
+        <MapView
+          style={{ width: '100%', height: '100%' }}
+          ref={(ref) => { this.mapRef = ref; }}
+          onLayout={() => this.fitMarkersOnScreen()}
+          initialRegion={{
+            latitude: INITIAL_REGION.latitude,
+            longitude: INITIAL_REGION.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+        >
+          {markers.map(marker => (
+            <Marker
+              title={marker.id === 'user_location' ? 'You\'re here' : restaurantName}
+              key={marker.id}
+              coordinate={marker}
+            >
+              <MarkerIcon
+                name={marker.id === 'user_location' ? 'emoticon' : 'food-fork-drink'}
               />
-            ))}
-          </MapView>
-        </MapContainer>
-        <FooterContainer>
-          <ResturantName>
-            {restaurantName}
-          </ResturantName>
-          <ReviewStars
-            shouldShowReviewsText
-            reviews={18}
-            stars={4.5}
-            textColor="darkText"
+            </Marker>
+          ))}
+          <MapViewDirections
+            origin={markers[0]}
+            destination={markers[1]}
+            apikey={GOOGLE_DIRECTIONS_API_KEY}
+            strokeWidth={3}
+            strokeColor={appStyle.colors.red}
           />
-          <EstablishmentStatus status={status}>
-            {this.getStatusText(distance, status)}
-          </EstablishmentStatus>
-        </FooterContainer>
-        <FloatingActionButtonWrapper>
-          <FloatinActionButton
-            name="directions"
-            color="blue"
-            action={() => this.fitMarkersOnScreen()}
-          />
-        </FloatingActionButtonWrapper>
+        </MapView>
+      </MapContainer>
+    );
+  }
+
+  renderFooter = () => {
+    const { navigation } = this.props;
+    const { restaurantName, distance, status } = navigation.getParam('payload', '');
+
+    return (
+      <FooterContainer>
+        <ResturantName>
+          {restaurantName}
+        </ResturantName>
+        <ReviewStars
+          shouldShowReviewsText
+          reviews={18}
+          stars={4.5}
+          textColor="darkText"
+        />
+        <EstablishmentStatus status={status}>
+          {this.getStatusText(distance, status)}
+        </EstablishmentStatus>
+      </FooterContainer>
+    );
+  }
+
+  renderFloatingActionButton = () => (
+    <FloatingActionButtonWrapper>
+      <FloatinActionButton
+        name="directions"
+        color="blue"
+        action={() => this.fitMarkersOnScreen()}
+      />
+    </FloatingActionButtonWrapper>
+  )
+
+  render() {
+    return (
+      <Container>
+        {this.renderMap()}
+        {this.renderFooter()}
+        {this.renderFloatingActionButton()}
       </Container>
     );
   }

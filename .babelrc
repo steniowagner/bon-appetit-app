@@ -1,6 +1,6 @@
 {
   "presets": [
-    "react-native"
+    "react-native", "module:react-native-dotenv"
   ],
   "plugins": [
     [

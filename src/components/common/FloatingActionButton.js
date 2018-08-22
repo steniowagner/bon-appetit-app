@@ -35,15 +35,17 @@ const FloatingActionButton = ({
   color,
   action,
 }: Props) => (
-  <ButtonShape color={color}>
-    <TouchableWithoutFeedback
-      onPress={() => action()}
+  <TouchableWithoutFeedback
+    onPress={() => action()}
+  >
+    <ButtonShape
+      color={color}
     >
       <ButtonIcon
         name={name}
       />
-    </TouchableWithoutFeedback>
-  </ButtonShape>
+    </ButtonShape>
+  </TouchableWithoutFeedback>
 );
 
 export default FloatingActionButton;

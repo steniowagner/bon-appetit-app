@@ -30,7 +30,8 @@ const RestaurantImage = styled(Image).attrs({
 const ContentWrapper = styled(View)`
   width: 100%;
   height: 100%;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-left: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
   justify-content: flex-end;
 `;
 

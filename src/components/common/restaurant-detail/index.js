@@ -42,7 +42,15 @@ const FloatingActionButtonWrapper = styled(View)`
   position: absolute;
 `;
 
-class RestaurantDetail extends Component {
+type Props = {
+  navigation: Function,
+};
+
+type State = {
+  indexMenuSelected: number,
+};
+
+class RestaurantDetail extends Component<Props, State> {
   static navigationOptions = {
     headerTintColor: appStyle.colors.defaultWhite,
     headerTransparent: true,
@@ -88,12 +96,14 @@ class RestaurantDetail extends Component {
             payload: {
               restaurantName: 'Cabãna del Primo',
               userLocation: {
+                id: 'user_location',
                 latitude: -3.7195263,
                 longitude: -38.589332,
               },
               restaurantLocation: {
-                latitude: -3.7191621,
-                longitude: -38.5935437,
+                id: 'restaurant_location',
+                latitude: -3.7138213,
+                longitude: -38.5886952,
               },
               distance: 4,
               status: 'open',
