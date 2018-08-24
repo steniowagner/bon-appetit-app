@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 
 import RestaurantAddressMap from 'components/common/RestaurantAddressMap';
 import RestaurantDetail from 'components/common/restaurant-detail';
+import FoodDetail from 'components/common/food-detail';
 
 import EventDetails from './components/in-your-city/components/EventDetails';
 import AllEvents from './components/in-your-city/components/all-events-list';
@@ -15,6 +16,7 @@ export const ROUTE_NAMES = {
   ALL_EVENTS: 'ALL_EVENTS',
   RESTAURANT_DETAIL: 'RESTAURANT_DETAIL',
   RESTAURANT_ADDRESS_MAP: 'RESTAURANT_ADDRESS_MAP',
+  FOOD_DETAIL: 'FOOD_DETAIL',
 };
 
 const ROUTES = createStackNavigator({
@@ -50,6 +52,13 @@ const ROUTES = createStackNavigator({
 
   [ROUTE_NAMES.RESTAURANT_ADDRESS_MAP]: {
     screen: RestaurantAddressMap,
+    navigationOptions: () => ({
+      headerBackTitle: null,
+    }),
+  },
+
+  [ROUTE_NAMES.FOOD_DETAIL]: {
+    screen: FoodDetail,
     navigationOptions: () => ({
       headerBackTitle: null,
     }),

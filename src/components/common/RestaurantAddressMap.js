@@ -3,8 +3,6 @@
 import React, { Component } from 'react';
 import { View, Text, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-import { GOOGLE_DIRECTIONS_API_KEY } from 'react-native-dotenv';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
@@ -159,13 +157,6 @@ class RestaurantAddressMap extends Component<Props, State> {
               />
             </Marker>
           ))}
-          <MapViewDirections
-            origin={markers[0]}
-            destination={markers[1]}
-            apikey={GOOGLE_DIRECTIONS_API_KEY}
-            strokeWidth={3}
-            strokeColor={appStyle.colors.red}
-          />
         </MapView>
       </MapContainer>
     );

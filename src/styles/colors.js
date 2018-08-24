@@ -2,7 +2,8 @@ export default {
   primaryColor: '#1F1F21',
   darkText: 'rgba(0, 0, 0, 0.8)',
   darkLayer: 'rgba(0, 0, 0, 0.5)',
-  red: '#FD5C63',
+  lightDarkLayer: 'rgba(0, 0, 0, 0.3)',
+  red: '#DE3C4B',
   blue: '#4688F1',
   white: '#FDFDFD',
   defaultWhite: '#FFFFFF',
@@ -11,5 +12,5 @@ export default {
   lightGray: '#D3D3D3',
   linkedin: '#0077B5',
   github: '#333333',
-  subText: '#ADADAD',
+  subText: 'rgba(0, 0, 0, 0.6)',
 };

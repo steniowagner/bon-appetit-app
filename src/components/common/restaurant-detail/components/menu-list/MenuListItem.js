@@ -8,8 +8,13 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import { withNavigation } from 'react-navigation';
+import { ROUTE_NAMES } from 'components/screens/home/routes';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
+
+import FlagPrice from 'components/common/FlagPrice';
 
 const Container = styled(View)`
   width: 100%;
@@ -45,8 +50,8 @@ const FoodTitle = styled(Text).attrs({
   numberOfLines: 1,
   ellipsizeMode: 'tail',
 })`
-width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')}px;
-color: ${({ theme }) => theme.colors.darkText};
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')}px;
+  color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
   fontFamily: CircularStd-Black;
 `;
@@ -57,7 +62,7 @@ const FoodDescription = styled(Text).attrs({
 })`
   color: ${({ theme }) => theme.colors.subText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
-  fontFamily: CircularStd-Medium;
+  fontFamily: CircularStd-Book;
 `;
 
 const FlagsContent = styled(View)`
@@ -96,27 +101,43 @@ const FlagStarsContent = styled(View)`
   padding: 4px 8px;
 `;
 
-const FlagPrice = styled(View)`
-  background-color: ${({ theme }) => theme.colors.red};
-  border-radius: 50px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Price = styled(Text)`
-  color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.2%')}px;
-  fontFamily: CircularStd-Bold;
-  padding: 4px 8px;
-`;
-
 type Props = {
   foodTitle: string,
   foodDescription: string,
   foodImage: string,
   price: number,
   stars: number,
+  navigation: Function,
 }
+
+const onPressItem = (payload: Object, navigation: Function): void => {
+  navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, { payload });
+};
+
+const renderTextContent = (foodTitle: string, foodDescription: string): Object => (
+  <TextContent>
+    <FoodTitle>
+      {foodTitle}
+    </FoodTitle>
+    <FoodDescription>
+      {foodDescription}
+    </FoodDescription>
+  </TextContent>
+);
+
+const renderFlagContent = (stars: number, price: number): Object => (
+  <FlagsContent>
+    <FlagStars>
+      <FlagStarsContent>
+        <IconStar />
+        <Stars>
+          {stars}
+        </Stars>
+      </FlagStarsContent>
+    </FlagStars>
+    <FlagPrice price={price} />
+  </FlagsContent>
+);
 
 const MenuListItem = ({
   foodTitle,
@@ -124,37 +145,30 @@ const MenuListItem = ({
   foodImage,
   price,
   stars,
-}: Props) => (
-  <Container>
-    <TouchableWithoutFeedback>
-      <ContentWrapper>
-        <FoodImage foodImage={foodImage} />
-        <TextContent>
-          <FoodTitle>
-            {foodTitle}
-          </FoodTitle>
-          <FoodDescription>
-            {foodDescription}
-          </FoodDescription>
-        </TextContent>
-        <FlagsContent>
-          <FlagStars>
-            <FlagStarsContent>
-              <IconStar />
-              <Stars>
-                {stars}
-              </Stars>
-            </FlagStarsContent>
-          </FlagStars>
-          <FlagPrice>
-            <Price>
-              {`$ ${price}`}
-            </Price>
-          </FlagPrice>
-        </FlagsContent>
-      </ContentWrapper>
-    </TouchableWithoutFeedback>
-  </Container>
-);
+  navigation,
+}: Props) => {
+  const navigationParams = {
+    mode: 'review',
+    foodTitle,
+    foodDescription,
+    foodImage,
+    price,
+    stars,
+  };
 
-export default MenuListItem;
+  return (
+    <Container>
+      <TouchableWithoutFeedback
+        onPress={() => onPressItem(navigationParams, navigation)}
+      >
+        <ContentWrapper>
+          <FoodImage foodImage={foodImage} />
+          {renderTextContent(foodTitle, foodDescription)}
+          {renderFlagContent(stars, price)}
+        </ContentWrapper>
+      </TouchableWithoutFeedback>
+    </Container>
+  );
+};
+
+export default withNavigation(MenuListItem);

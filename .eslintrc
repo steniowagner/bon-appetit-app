@@ -8,6 +8,7 @@
   "extends": ["airbnb", "plugin:react-native/all"],
   "rules": {
     "no-plusplus": 0,
+    "max-len": 0,
     "no-underscore-dangle": 0,
     "import/no-cycle": 0,
     "react-native/no-inline-styles": 0,

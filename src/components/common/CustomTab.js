@@ -12,8 +12,6 @@ import {
 import styled from 'styled-components';
 import appStyles from 'styles';
 
-import Context from 'components/common/restaurant-detail/components/Context';
-
 const Container = styled(View)`
   width: 100%;
   flex-direction: row;
@@ -31,12 +29,11 @@ const Cell = styled(TouchableOpacity)`
 
 const MarkerWrapper = styled(Animated.View)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('0.5%')};
-  width: 100%;
-  background-color: ${({ theme }) => theme.colors.defaultWhite};
+  width: ${({ width }) => width}px;
+  background-color: transparent;
   align-self: flex-end;
   position: absolute;
 `;
-
 
 const Marker = styled(View)`
   height: 100%;
@@ -50,16 +47,21 @@ const OptionText = styled(Text)`
   fontFamily: CircularStd-Medium;
 `;
 
-const test = [
-  { id: '1', item: 'Pizzas' },
-  { id: '2', item: 'Churrascos' },
-  { id: '3', item: 'Sobremesas' },
-  { id: '4', item: 'Petiscos' },
-];
+type Props = {
+  data: Array<Object>,
+  contentWidth: number,
+};
 
-class CustomTab extends Component {
+type State = {
+  markerPaddingLeft: Object,
+  itemSelectedIndex: number,
+  clickTimestamp: number,
+  cellWidth: number,
+};
+
+class CustomTab extends Component<Props, State> {
   state = {
-    markerMarginLeft: new Animated.Value(0),
+    markerPaddingLeft: new Animated.Value(0),
     itemSelectedIndex: 0,
     clickTimestamp: 0,
     cellWidth: 0,
@@ -96,8 +98,10 @@ class CustomTab extends Component {
   }
 
   onMoveList = (indexSelected: number): void => {
+    const { data } = this.props;
+
     const isFirstCell = indexSelected === 0;
-    const isLastCell = indexSelected === test.length - 1;
+    const isLastCell = indexSelected === data.length - 1;
 
     if (isFirstCell || isLastCell) {
       return;
@@ -107,18 +111,19 @@ class CustomTab extends Component {
   }
 
   getCellWidth = (): number => {
-    const screenWidth = appStyles.metrics.width;
-    const datasetLength = test.length;
-    const cellWidth = (datasetLength >= 3) ? (screenWidth / 3) : (screenWidth / datasetLength);
+    const { data, contentWidth } = this.props;
+    const datasetLength = data.length;
+    const cellWidth = (datasetLength >= 3) ? (contentWidth / 3) : (contentWidth / datasetLength);
 
     return cellWidth;
   }
 
   setMarkerPosition = (newIndexSelected: number): Object => {
-    const { itemSelectedIndex, markerMarginLeft, cellWidth } = this.state;
+    const { itemSelectedIndex, markerPaddingLeft, cellWidth } = this.state;
+    const { data } = this.props;
 
-    const shouldNotRenderMarker = (itemSelectedIndex > 0 && itemSelectedIndex < test.length - 1)
-      && (newIndexSelected > 0 && newIndexSelected < test.length - 1);
+    const shouldNotRenderMarker = (itemSelectedIndex > 0 && itemSelectedIndex < data.length - 1)
+      && (newIndexSelected > 0 && newIndexSelected < data.length - 1);
 
     if (shouldNotRenderMarker) {
       return;
@@ -136,13 +141,13 @@ class CustomTab extends Component {
       newMarkerMargin = cellWidth;
     }
 
-    const isLastCellSelected = (newIndexSelected === (test.length - 1));
+    const isLastCellSelected = (newIndexSelected === (data.length - 1));
     if (isLastCellSelected) {
-      const marginFactor = (test.length < 3) ? 1 : 2;
+      const marginFactor = (data.length < 3) ? 1 : 2;
       newMarkerMargin = cellWidth * marginFactor;
     }
 
-    Animated.timing(markerMarginLeft, {
+    Animated.timing(markerPaddingLeft, {
       toValue: newMarkerMargin,
       duration: 350,
     }).start();
@@ -165,15 +170,16 @@ class CustomTab extends Component {
     return passedTimeEnough;
   }
 
-  renderList = (onSelectMenu: Function): Object => {
+  renderList = (): Object => {
     const { itemSelectedIndex, cellWidth } = this.state;
+    const { data } = this.props;
 
     return (
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
         ref={(ref) => { this.flatListRef = ref; }}
-        data={test}
+        data={data}
         keyExtractor={item => item.id}
         extraData={this.state}
         renderItem={({ item, index }) => (
@@ -181,7 +187,6 @@ class CustomTab extends Component {
             width={cellWidth}
             onPress={() => {
               this.onCellPress(index);
-              onSelectMenu(index);
             }}
           >
             <OptionText
@@ -198,12 +203,17 @@ class CustomTab extends Component {
   renderMarker = () => {
     const {
       itemSelectedIndex,
-      markerMarginLeft,
+      markerPaddingLeft,
       cellWidth,
     } = this.state;
 
+    const { contentWidth } = this.props;
+
     return (
-      <MarkerWrapper style={{ marginLeft: markerMarginLeft }}>
+      <MarkerWrapper
+        width={contentWidth}
+        style={{ paddingLeft: markerPaddingLeft }}
+      >
         <Marker
           width={cellWidth}
           currentIndex={itemSelectedIndex}
@@ -214,14 +224,10 @@ class CustomTab extends Component {
 
   render() {
     return (
-      <Context.Consumer>
-        {context => (
-          <Container>
-            {this.renderList(context.onSelectMenu)}
-            {this.renderMarker()}
-          </Container>
-        )}
-      </Context.Consumer>
+      <Container>
+        {this.renderList()}
+        {this.renderMarker()}
+      </Container>
     );
   }
 }
