@@ -50,18 +50,19 @@ const OptionText = styled(Text)`
 type Props = {
   data: Array<Object>,
   contentWidth: number,
+  onChangeListIndex: Function,
 };
 
 type State = {
-  markerPaddingLeft: Object,
   itemSelectedIndex: number,
   clickTimestamp: number,
   cellWidth: number,
 };
 
 class CustomTab extends Component<Props, State> {
+  _markerPaddingLeft = new Animated.Value(0);
+
   state = {
-    markerPaddingLeft: new Animated.Value(0),
     itemSelectedIndex: 0,
     clickTimestamp: 0,
     cellWidth: 0,
@@ -81,11 +82,14 @@ class CustomTab extends Component<Props, State> {
       return;
     }
 
+    const { onChangeListIndex } = this.props;
     const { itemSelectedIndex } = this.state;
 
     if (newIndexSelected === itemSelectedIndex) {
       return;
     }
+
+    onChangeListIndex(newIndexSelected);
 
     this.onMoveList(newIndexSelected);
 
@@ -119,7 +123,7 @@ class CustomTab extends Component<Props, State> {
   }
 
   setMarkerPosition = (newIndexSelected: number): Object => {
-    const { itemSelectedIndex, markerPaddingLeft, cellWidth } = this.state;
+    const { itemSelectedIndex, cellWidth } = this.state;
     const { data } = this.props;
 
     const shouldNotRenderMarker = (itemSelectedIndex > 0 && itemSelectedIndex < data.length - 1)
@@ -147,9 +151,10 @@ class CustomTab extends Component<Props, State> {
       newMarkerMargin = cellWidth * marginFactor;
     }
 
-    Animated.timing(markerPaddingLeft, {
+    Animated.timing(this._markerPaddingLeft, {
       toValue: newMarkerMargin,
       duration: 350,
+      useNativeDriver: true,
     }).start();
   }
 
@@ -201,18 +206,24 @@ class CustomTab extends Component<Props, State> {
   }
 
   renderMarker = () => {
-    const {
-      itemSelectedIndex,
-      markerPaddingLeft,
-      cellWidth,
-    } = this.state;
+    const { itemSelectedIndex, cellWidth } = this.state;
 
     const { contentWidth } = this.props;
 
     return (
       <MarkerWrapper
         width={contentWidth}
-        style={{ paddingLeft: markerPaddingLeft }}
+        style={{
+          paddingLeft: this._markerPaddingLeft._value,
+          transform: [
+            {
+              translateX: this._markerPaddingLeft.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+            },
+          ],
+        }}
       >
         <Marker
           width={cellWidth}

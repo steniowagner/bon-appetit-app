@@ -1,10 +1,11 @@
 // @flow
 
-import React from 'react';
+import React, { Component } from 'react';
 import { Text, View, Image } from 'react-native';
 import styled from 'styled-components';
 
 import ReviewStars from 'components/common/ReviewStars';
+import Shimmer from 'components/common/shimmer';
 
 const Container = styled(View)`
   width: 100%;
@@ -32,12 +33,18 @@ const ProfileAvatarWrapper = styled(View)`
   width: 20%;
   height: 100%;
   justify-content: center;
-  align-items: center;
 `;
 
 const ProfileAvatar = styled(Image).attrs({
-  source: { uri: 'https://images.unsplash.com/photo-1528046929921-e2ef46232d30?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=2cfd7b8b1957f160a979ffd2e95779de&auto=format&fit=crop&w=1350&q=80' },
+  source: ({ uri }) => ({ uri }),
 })`
+  margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+`;
+
+const ProfileAvatarShimmer = styled(Shimmer)`
   margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
   width: 48px;
   height: 48px;
@@ -60,39 +67,82 @@ const TopContetWrapper = styled(View)`
 `;
 
 type Props = {
-  isFirst: boolean,
-  reviwerName: string,
+  reviewerImage: string,
   review: string,
+  reviewer: string,
+  isFirst: boolean,
   stars: number,
 };
 
-const ReviewItemList = ({
-  isFirst,
-  reviwerName,
-  review,
-  stars,
-}: Props) => (
-  <Container isFirst={isFirst}>
-    <ProfileAvatarWrapper>
-      <ProfileAvatar />
-    </ProfileAvatarWrapper>
-    <MainContent>
-      <TopContetWrapper>
-        <ReviewerName>
-          {reviwerName}
-        </ReviewerName>
-        <View>
-          <ReviewStars
-            shouldShowReviewsText={false}
-            stars={stars}
-          />
-        </View>
-      </TopContetWrapper>
-      <ReviewText>
-        {review}
-      </ReviewText>
-    </MainContent>
-  </Container>
-);
+type State = {
+  isLoaded: boolean,
+};
+
+class ReviewItemList extends Component<Props, State> {
+  state = {
+    isImageLoaded: false,
+  }
+
+  onImageLoaded = () => {
+    this.setState({
+      isImageLoaded: true,
+    });
+  }
+
+  renderProfileAvatar = () => {
+    const { reviewerImage } = this.props;
+    const { isImageLoaded } = this.state;
+
+    return (
+      <ProfileAvatarWrapper>
+        <ProfileAvatar
+          onLoad={() => this.onImageLoaded()}
+          uri={reviewerImage}
+        />
+        {!isImageLoaded && <ProfileAvatarShimmer />}
+      </ProfileAvatarWrapper>
+    );
+  }
+
+  renderMainContent = () => {
+    const {
+      reviewer,
+      review,
+      stars,
+    } = this.props;
+
+    return (
+      <MainContent>
+        <TopContetWrapper>
+          <ReviewerName>
+            {reviewer}
+          </ReviewerName>
+          <View>
+            <ReviewStars
+              shouldShowReviewsText={false}
+              stars={stars}
+            />
+          </View>
+        </TopContetWrapper>
+        <ReviewText>
+          {review}
+        </ReviewText>
+      </MainContent>
+    );
+  }
+
+  render() {
+    const { isFirst } = this.props;
+
+    return (
+      <Container
+        isFirst={isFirst}
+      >
+        {this.renderProfileAvatar()}
+        {this.renderMainContent()}
+      </Container>
+    );
+  }
+}
 
 export default ReviewItemList;

@@ -1,11 +1,12 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   View,
   Text,
   FlatList,
   Image,
+  Animated,
 } from 'react-native';
 
 import styled from 'styled-components';
@@ -15,6 +16,7 @@ import FlagPrice from 'components/common/FlagPrice';
 import ReviewStars from 'components/common/ReviewStars';
 import CustomTab from 'components/common/CustomTab';
 import FloatingActionButton from 'components/common/FloatingActionButton';
+import Shimmer from 'components/common/shimmer';
 
 import RestaurantInfo from './components/RestaurantInfo';
 import IngredientsItemList from './components/IngredientsItemList';
@@ -24,7 +26,7 @@ const Container = styled(View)`
   flex: 1;
 `;
 
-const DarkLayer = styled(View)`
+const Header = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
   background-color: ${({ theme }) => theme.colors.darkLayer};
@@ -32,10 +34,15 @@ const DarkLayer = styled(View)`
   justify-content: flex-end;
   position: absolute;
 `;
-
-const FoodImageContainer = styled(Image).attrs({
+/* .attrs({
   source: ({ foodImage }) => ({ uri: foodImage }),
-})`
+}) */
+const FoodImageContainer = styled(Image)`
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
+`;
+
+const FoodImageContainerShimmer = styled(Shimmer)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
 `;
@@ -47,7 +54,7 @@ const ContentContainer = styled(View)`
 
 const ContentCard = styled(View)`
   height: 100%;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
+  padding: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px`};
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -107,19 +114,49 @@ const FloatingActionButtonWrapper = styled(View)`
 `;
 
 const ingredients = [
-  { name: 'Ingrediente 1' },
-  { name: 'Ingrediente 2' },
-  { name: 'Ingrediente 3' },
-  { name: 'Ingrediente 4' },
-  { name: 'Ingrediente 5' },
-  { name: 'Ingrediente 6' },
-  { name: 'Ingrediente 7' },
-  { name: 'Ingrediente 8' },
+  { id: '1', name: 'Ingrediente 1' },
+  { id: '2', name: 'Ingrediente 2' },
+  { id: '3', name: 'Ingrediente 3' },
+  { id: '4', name: 'Ingrediente 4' },
+  { id: '5', name: 'Ingrediente 5' },
+  { id: '6', name: 'Ingrediente 6' },
+  { id: '7', name: 'Ingrediente 7' },
+  { id: '8', name: 'Ingrediente 8' },
+];
+
+const reviews = [
+  {
+    id: '1',
+    reviewer: 'Stenio Wagner',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 3.5,
+  }, {
+    id: '2',
+    reviewer: 'Ana Eridan',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 3.5,
+  }, {
+    id: '3',
+    reviewer: 'Manoel Elisval',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 4.5,
+  }, {
+    id: '4',
+    reviewer: 'Beatriz Eliana',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 6,
+  },
 ];
 
 type Props = {
   navigation: Function,
 };
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FoodDetail extends Component<Props, {}> {
   static navigationOptions = {
@@ -127,6 +164,38 @@ class FoodDetail extends Component<Props, {}> {
     headerTransparent: true,
     headerBackTitle: null,
   };
+
+  _animatedFlatlistPosition = new Animated.Value(0);
+  _flatListHeight = 0;
+
+  state = {
+    tabItemSelected: 0,
+  }
+
+  onChangeListIndex = (index: number): void => {
+    const onAniamateListAppear = () => {
+      Animated.spring(this._animatedFlatlistPosition, {
+        toValue: 0,
+        bounciness: 8,
+        useNativeDriver: true,
+      }).start();
+    };
+
+    Animated.timing(this._animatedFlatlistPosition, {
+      toValue: this._flatListHeight,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      this.setState({
+        tabItemSelected: index,
+      }, () => onAniamateListAppear());
+    });
+  }
+
+  onFlatlistLayout = (event: Object): void => {
+    const { height } = event.nativeEvent.layout;
+    this._flatListHeight = height;
+  }
 
   renderTopContentWrapper = (): Object => {
     const { navigation } = this.props;
@@ -164,28 +233,61 @@ class FoodDetail extends Component<Props, {}> {
     );
   }
 
+  renderListItem = (item, index) => {
+    const { tabItemSelected } = this.state;
+
+    const IngredientComponent = (
+      <IngredientsItemList
+        ingredient={item.name}
+        index={index}
+      />
+    );
+
+    const ReviewComponent = (
+      <ReviewItemList
+        isFirst={index === 0}
+        reviewer={item.reviewer}
+        reviewerImage={item.reviewerImage}
+        review={item.review}
+        stars={item.stars}
+      />
+    );
+
+    const ProperComponent = (tabItemSelected === 0 ? IngredientComponent : ReviewComponent);
+
+    return ProperComponent;
+  }
+
   renderListSection = () => {
     const tabContentWidth = appStyles.metrics.getWidthFromDP('100%') - (appStyles.metrics.largeSize * 2);
+    const { tabItemSelected } = this.state;
+    const dataset = (tabItemSelected === 0) ? ingredients : reviews;
 
     return (
       <CustomTabWrapper>
         <CustomTab
           contentWidth={tabContentWidth}
           data={[{ id: '1', item: 'Ingredients' }, { id: '2', item: 'Reviews' }]}
+          onChangeListIndex={this.onChangeListIndex}
         />
-        <FlatList
+        <AnimatedFlatList
+          style={[{
+            marginTop: this._animatedFlatlistPosition._value,
+            transform: [
+              {
+                translateY: this._animatedFlatlistPosition.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
+                }),
+              },
+            ],
+          }]}
+          scrollEventThrottle={16}
+          onLayout={this.onFlatlistLayout}
           showsVerticalScrollIndicator={false}
-          data={ingredients}
-          keyExtractor={item => item.name}
-          onScroll={this.onScrollFoodInfoList}
-          renderItem={({ item, index }) => (
-            <ReviewItemList
-              isFirst={index === 0}
-              reviwerName="Stenio Wagner"
-              review="Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI"
-              stars={4.5}
-            />
-          )}
+          data={dataset}
+          keyExtractor={item => item.id}
+          renderItem={({ item, index }) => this.renderListItem(item, index)}
         />
       </CustomTabWrapper>
     );
@@ -236,10 +338,12 @@ class FoodDetail extends Component<Props, {}> {
 
     return (
       <Container>
-        <FoodImageContainer foodImage={foodImage} />
-        <DarkLayer>
+        <FoodImageContainer
+          foodImage={foodImage}
+        />
+        <Header>
           {this.renderTopContentWrapper()}
-        </DarkLayer>
+        </Header>
         <ContentContainer>
           <ContentCard>
             {this.renderTextContent()}

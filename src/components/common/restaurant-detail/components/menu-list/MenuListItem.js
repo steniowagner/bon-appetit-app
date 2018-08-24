@@ -148,7 +148,7 @@ const MenuListItem = ({
   navigation,
 }: Props) => {
   const navigationParams = {
-    mode: 'review',
+    mode: 'detail',
     foodTitle,
     foodDescription,
     foodImage,

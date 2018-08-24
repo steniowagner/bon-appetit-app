@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { StatusBar } from 'react-native';
 
@@ -12,12 +12,12 @@ import './config/ReactotronConfig';
 const ApplicationNavigator = CreateNavigation();
 
 const App = () => (
-  <React.Fragment>
+  <Fragment>
     <StatusBar barStyle="light-content" />
     <ThemeProvider theme={AppTheme}>
       <ApplicationNavigator />
     </ThemeProvider>
-  </React.Fragment>
+  </Fragment>
 );
 
 export default App;

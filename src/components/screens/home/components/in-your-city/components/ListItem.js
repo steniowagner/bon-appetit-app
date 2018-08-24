@@ -1,15 +1,16 @@
 // @flow
 
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   Text,
   View,
   TouchableOpacity,
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import styled from 'styled-components';
 
+import { withNavigation } from 'react-navigation';
+import Shimmer from 'components/common/shimmer';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 
 const Container = styled(TouchableOpacity)`
@@ -18,6 +19,14 @@ const Container = styled(TouchableOpacity)`
   margin-left: ${({ theme, index }) => (index === 0 ? theme.metrics.largeSize : 0)}px;
   margin-right: ${({ theme }) => theme.metrics.smallSize}
   border-radius: ${({ theme }) => theme.metrics.borderRadius};
+`;
+
+const ItemShimmer = styled(Shimmer)`
+height: ${({ theme }) => (theme.metrics.getHeightFromDP('20%'))}px;
+width: ${({ theme }) => (theme.metrics.getWidthFromDP('70%'))}px;
+margin-left: ${({ theme, index }) => (index === 0 ? theme.metrics.largeSize : 0)}px;
+margin-right: ${({ theme }) => theme.metrics.smallSize}
+border-radius: ${({ theme }) => theme.metrics.borderRadius};
 `;
 
 const DarkLayer = styled(View)`
@@ -67,32 +76,55 @@ type Props = {
   navigation: Function,
 };
 
-const InYourCityListItem = ({
-  eventTitle,
-  eventDescription,
-  eventImage,
-  index,
-  navigation,
-}: Props) => (
-  <Container
-    onPress={() => navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
+class InYourCityListItem extends Component<Props, {}> {
+  state = {
+    isImageLoaded: false,
+  };
+
+  onLoadImage = () => {
+    this.setState({
+      isImageLoaded: true,
+    });
+  }
+
+  render() {
+    const {
+      navigation,
       eventTitle,
       eventDescription,
       eventImage,
-    })}
-    index={index}
-  >
-    <EventImage imageURL={eventImage} />
-    <DarkLayer />
-    <AboutEventWrapper>
-      <EventTitle>
-        {eventTitle}
-      </EventTitle>
-      <EventDescription>
-        {eventDescription}
-      </EventDescription>
-    </AboutEventWrapper>
-  </Container>
-);
+      index,
+    } = this.props;
+
+    const { isImageLoaded } = this.state;
+
+    return (
+      <Container
+        onPress={() => navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
+          eventTitle,
+          eventDescription,
+          eventImage,
+        })}
+        index={index}
+      >
+        <EventImage
+          imageURL={eventImage}
+          onLoad={() => this.onLoadImage()}
+        />
+        <DarkLayer />
+        <AboutEventWrapper>
+          <EventTitle>
+            {eventTitle}
+          </EventTitle>
+          <EventDescription>
+            {eventDescription}
+          </EventDescription>
+        </AboutEventWrapper>
+        {!isImageLoaded && <ItemShimmer />}
+      </Container>
+    );
+  }
+}
+
 
 export default withNavigation(InYourCityListItem);

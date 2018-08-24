@@ -38,7 +38,11 @@ const getStars = (stars) => {
   let currentStars = stars;
 
   if (currentStars >= MAX_GRADE) {
-    return Array(MAX_GRADE).fill().map(_empty => <FullStar key={Math.random()} />);
+    for (let i = 0; i < MAX_GRADE; i++) {
+      starsFromGrade.push(FullStar);
+    }
+
+    return starsFromGrade;
   }
 
   while (currentStars >= 1) {
@@ -57,7 +61,7 @@ const getStars = (stars) => {
   return starsFromGrade;
 };
 
-const renderStars = (grade: number): any => {
+const renderStars = (grade: number): Object => {
   const starsFromGrade = getStars(grade);
 
   return (
