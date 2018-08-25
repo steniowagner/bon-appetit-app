@@ -22,7 +22,7 @@ const Container = styled(View)`
 const SectionTitleText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-family: CircularStd-Bold;
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
 `;
 
 const ItemWrapper = styled(View)`
@@ -43,14 +43,14 @@ const LanguageSectionWrapper = styled(View)`
 const SelectedLanguageText = styled(Text)`
   color: ${({ theme }) => theme.colors.red};
   font-family: CircularStd-Medium;
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
 `;
 
 const SmallText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
   margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px 0`}
   font-family: CircularStd-Medium;
-  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
+  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('3.2%')}px;
 `;
 
 const OptionWrapper = styled(View)`
@@ -67,7 +67,7 @@ const MediumText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
   margin-top: ${({ theme }) => theme.metrics.extraSmallSize}
   font-family: CircularStd-Bold;
-  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
+  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
 `;
 
 const OptionWithouDescriptionWrapper = styled(View)`

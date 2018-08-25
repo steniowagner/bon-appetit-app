@@ -10,7 +10,7 @@ import styled from 'styled-components';
 const Wrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
-  padding: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.smallSize}px ${theme.metrics.smallSize}px  ${theme.metrics.largeSize}px`}
+  padding: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.smallSize}px ${theme.metrics.extraSmallSize}px  ${theme.metrics.largeSize}px`}
 `;
 
 const ButtonWrapper = styled(TouchableOpacity)`
@@ -27,7 +27,7 @@ const ButtonTitle = styled(Text)`
 
 const SectionTitle = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.5%')};
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3%')};
   font-family: CircularStd-Black;
 `;
 

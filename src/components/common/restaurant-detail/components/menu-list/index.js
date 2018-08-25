@@ -12,7 +12,12 @@ const MenuListContainer = styled(FlatList)`
   margin: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
-const MenuList = ({ data }) => (
+type Props = {
+  isDataFetched: boolean,
+  data: Array<Object>,
+}
+
+const MenuList = ({ data, isDataFetched }: Props) => (
   <MenuListContainer
     showsVerticalScrollIndicator={false}
     scrollEventThrottle={16}
@@ -20,6 +25,7 @@ const MenuList = ({ data }) => (
     keyExtractor={item => item.id}
     renderItem={({ item }) => (
       <MenuListItem
+        isDataFetched={isDataFetched}
         foodImage={item.foodImage}
         foodTitle={item.foodTitle}
         foodDescription={item.foodDescription}

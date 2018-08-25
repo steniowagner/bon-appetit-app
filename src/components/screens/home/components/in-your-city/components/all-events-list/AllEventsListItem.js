@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   Text,
@@ -8,11 +8,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { withNavigation } from 'react-navigation';
-import { ROUTE_NAMES } from 'components/screens/home/routes';
-
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+import { withNavigation } from 'react-navigation';
+
+import { ROUTE_NAMES } from 'components/screens/home/routes';
 
 const Wrapper = styled(View)`
   flex-direction: row;
@@ -27,13 +29,18 @@ const EventImage = styled(Image).attrs({
   padding: ${({ theme }) => `${theme.metrics.smallSize}px ${theme.metrics.largeSize}px`};
   width: ${({ theme }) => theme.metrics.getWidthFromDP('40%')}px;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('22%')}px;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   resizeMode: cover;
+`;
+
+const EventImageShimmer = styled(ShimmerPlaceHolder)`
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('40%')}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('22%')}px;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   position: absolute;
 `;
 
 const TextContentWrapper = styled(View)`
-  margin-left: ${({ theme }) => theme.metrics.getWidthFromDP('40%')}px;
   padding-horizontal: ${({ theme }) => theme.metrics.smallSize}px;
   justify-content: center;
   width: ${({ theme }) => theme.metrics.getWidthFromDP('60%')}px;
@@ -99,72 +106,124 @@ const RestaurantIcon = styled(Icon).attrs({
   height: 18px;
 `;
 
-const renderRestaurantParticipating = (restaurantsParticipating: number): Object => (
-  <RestaurantsParticipatingWrapper>
-    <RestaurantIcon />
-    <RestaurantParticipatingText>
-      {`${restaurantsParticipating} Restaurants participating`}
-    </RestaurantParticipatingText>
-  </RestaurantsParticipatingWrapper>
-);
-
-const onPressSeeAllRestaurants = (
-  eventTitle: string,
-  eventDescription: string,
-  eventImage: string,
-  navigation: Function,
-): Object => {
-  navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
-    eventTitle,
-    eventDescription,
-    eventImage,
-  });
-};
-
-const renderSeeAllRestaurantsButton = (
-  eventTitle: string,
-  eventDescription: string,
-  eventImage: string,
-  navigation: Function,
-): Object => (
-  <ButtonWrapper
-    onPress={() => onPressSeeAllRestaurants(eventTitle, eventDescription, eventImage, navigation)}
-  >
-    <ButtonTitle>
-      See Restaurants
-    </ButtonTitle>
-    <ArrowIcon />
-  </ButtonWrapper>
-);
-
 type Props = {
   eventTitle: string,
   eventDescription: string,
   eventImage: string,
   restaurantsParticipating: number,
   navigation: Function,
+  isDataFetched: boolean,
 };
 
-const AllEventsListItem = ({
-  eventTitle,
-  eventDescription,
-  restaurantsParticipating,
-  eventImage,
-  navigation,
-}: Props) => (
-  <Wrapper>
-    <EventImage eventImage={eventImage} />
-    <TextContentWrapper>
-      <EventTitle>
-        {eventTitle}
-      </EventTitle>
-      <EventDescription>
-        {eventDescription}
-      </EventDescription>
-      {renderRestaurantParticipating(restaurantsParticipating)}
-      {renderSeeAllRestaurantsButton(eventTitle, eventDescription, eventImage, navigation)}
-    </TextContentWrapper>
-  </Wrapper>
-);
+type State = {
+  isEventImageLoaded: boolean,
+};
+
+class AllEventsListItem extends Component<Props, State> {
+  state = {
+    isEventImageLoaded: false,
+  };
+
+  onLoadEventImage = () => {
+    this.setState({
+      isEventImageLoaded: true,
+    });
+  }
+
+  renderRestaurantParticipating = (): Object => {
+    const { isDataFetched, restaurantsParticipating } = this.props;
+
+    return (
+      <ShimmerPlaceHolder
+        visible={isDataFetched}
+        autoRun
+      >
+        <RestaurantsParticipatingWrapper>
+          <RestaurantIcon />
+          <RestaurantParticipatingText>
+            {`${restaurantsParticipating} Restaurants participating`}
+          </RestaurantParticipatingText>
+        </RestaurantsParticipatingWrapper>
+      </ShimmerPlaceHolder>
+    );
+  }
+
+  renderSeeAllRestaurantsButton = (): Object => {
+    const {
+      eventTitle,
+      eventDescription,
+      eventImage,
+      navigation,
+      isDataFetched,
+    } = this.props;
+
+    const { isEventImageLoaded } = this.state;
+    const enableButton = isEventImageLoaded && isDataFetched;
+
+    const onSeeRestaurantButtonPress = () => {
+      navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
+        eventTitle,
+        eventDescription,
+        eventImage,
+      });
+    };
+
+    return enableButton
+      && (
+        <ButtonWrapper
+          onPress={() => onSeeRestaurantButtonPress()}
+        >
+          <ButtonTitle>
+            See Restaurants
+          </ButtonTitle>
+          <ArrowIcon />
+        </ButtonWrapper>
+      );
+  }
+
+  render() {
+    const {
+      eventTitle,
+      eventDescription,
+      eventImage,
+      isDataFetched,
+    } = this.props;
+
+    const { isEventImageLoaded } = this.state;
+
+    return (
+      <Wrapper>
+        <EventImage
+          eventImage={eventImage}
+          onLoad={() => this.onLoadEventImage()}
+        />
+        <EventImageShimmer
+          autoRun
+          visible={isEventImageLoaded}
+        />
+        <TextContentWrapper>
+          <ShimmerPlaceHolder
+            visible={isDataFetched}
+            autoRun
+          >
+            <EventTitle>
+              {eventTitle}
+            </EventTitle>
+          </ShimmerPlaceHolder>
+          <ShimmerPlaceHolder
+            visible={isDataFetched}
+            autoRun
+          >
+            <EventDescription>
+              {eventDescription}
+            </EventDescription>
+          </ShimmerPlaceHolder>
+          {this.renderRestaurantParticipating()}
+          {this.renderSeeAllRestaurantsButton()}
+        </TextContentWrapper>
+      </Wrapper>
+    );
+  }
+}
 
 export default withNavigation(AllEventsListItem);

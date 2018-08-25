@@ -5,7 +5,8 @@ import { Text, View, Image } from 'react-native';
 import styled from 'styled-components';
 
 import ReviewStars from 'components/common/ReviewStars';
-import Shimmer from 'components/common/shimmer';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+
 
 const Container = styled(View)`
   width: 100%;
@@ -44,7 +45,7 @@ const ProfileAvatar = styled(Image).attrs({
   border-radius: 24px;
 `;
 
-const ProfileAvatarShimmer = styled(Shimmer)`
+const ProfileAvatarShimmer = styled(ShimmerPlaceHolder)`
   margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
   width: 48px;
   height: 48px;
@@ -95,11 +96,15 @@ class ReviewItemList extends Component<Props, State> {
 
     return (
       <ProfileAvatarWrapper>
-        <ProfileAvatar
-          onLoad={() => this.onImageLoaded()}
-          uri={reviewerImage}
-        />
-        {!isImageLoaded && <ProfileAvatarShimmer />}
+        <ProfileAvatarShimmer
+          visible={isImageLoaded}
+          autoRun
+        >
+          <ProfileAvatar
+            onLoad={() => this.onImageLoaded()}
+            uri={reviewerImage}
+          />
+        </ProfileAvatarShimmer>
       </ProfileAvatarWrapper>
     );
   }
@@ -111,22 +116,30 @@ class ReviewItemList extends Component<Props, State> {
       stars,
     } = this.props;
 
+    const { isImageLoaded } = this.state;
+
     return (
       <MainContent>
-        <TopContetWrapper>
-          <ReviewerName>
-            {reviewer}
-          </ReviewerName>
-          <View>
-            <ReviewStars
-              shouldShowReviewsText={false}
-              stars={stars}
-            />
-          </View>
-        </TopContetWrapper>
-        <ReviewText>
-          {review}
-        </ReviewText>
+        <ShimmerPlaceHolder
+          style={{ width: '100%', height: '100%'}}
+          visible={isImageLoaded}
+          autoRun
+        >
+          <TopContetWrapper>
+            <ReviewerName>
+              {reviewer}
+            </ReviewerName>
+            <View>
+              <ReviewStars
+                shouldShowReviewsText={false}
+                stars={stars}
+              />
+            </View>
+          </TopContetWrapper>
+          <ReviewText>
+            {review}
+          </ReviewText>
+        </ShimmerPlaceHolder>
       </MainContent>
     );
   }

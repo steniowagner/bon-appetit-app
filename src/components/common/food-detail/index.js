@@ -12,11 +12,12 @@ import {
 import styled from 'styled-components';
 import appStyles from 'styles';
 
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+
 import FlagPrice from 'components/common/FlagPrice';
 import ReviewStars from 'components/common/ReviewStars';
 import CustomTab from 'components/common/CustomTab';
 import FloatingActionButton from 'components/common/FloatingActionButton';
-import Shimmer from 'components/common/shimmer';
 
 import RestaurantInfo from './components/RestaurantInfo';
 import IngredientsItemList from './components/IngredientsItemList';
@@ -30,19 +31,18 @@ const Header = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
   background-color: ${({ theme }) => theme.colors.darkLayer};
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
   justify-content: flex-end;
   position: absolute;
 `;
-/* .attrs({
-  source: ({ foodImage }) => ({ uri: foodImage }),
-}) */
-const FoodImageContainer = styled(Image)`
+
+const HeaderShimmer = styled(ShimmerPlaceHolder)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
+  height: 100%;
 `;
 
-const FoodImageContainerShimmer = styled(Shimmer)`
+const FoodImage = styled(Image).attrs({
+  source: ({ foodImage }) => ({ uri: foodImage }),
+})`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
 `;
@@ -94,10 +94,14 @@ const CustomTabWrapper = styled(View)`
   flex: 1;
 `;
 
-const TopContentWrapper = styled(View)`
+const TopContent = styled(View)`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
+`;
+
+const TopContentWrapper = styled(View)`
+  padding: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const FlagPriceWrapper = styled(View)`
@@ -170,6 +174,13 @@ class FoodDetail extends Component<Props, {}> {
 
   state = {
     tabItemSelected: 0,
+    isFoodImageLoaded: false,
+  }
+
+  onLoadFoodImage = () => {
+    this.setState({
+      isFoodImageLoaded: true,
+    });
   }
 
   onChangeListIndex = (index: number): void => {
@@ -216,20 +227,20 @@ class FoodDetail extends Component<Props, {}> {
     );
 
     return (
-      <React.Fragment>
-        <TopContentWrapper>
+      <TopContentWrapper>
+        <TopContent>
           <FoodName>
             {foodTitle}
           </FoodName>
           {renderFlagPrice()}
-        </TopContentWrapper>
+        </TopContent>
         <ReviewStars
           shouldShowReviewsText
           reviews={16}
           textColor="defaultWhite"
           stars={stars}
         />
-      </React.Fragment>
+      </TopContentWrapper>
     );
   }
 
@@ -296,6 +307,7 @@ class FoodDetail extends Component<Props, {}> {
   renderTextContent = (): Object => {
     const { navigation } = this.props;
     const { foodDescription, mode } = navigation.getParam('payload', {});
+    const { isFoodImageLoaded } = this.state;
 
     const shouldRenderRestaurantInfo = mode === 'detail';
 
@@ -307,16 +319,22 @@ class FoodDetail extends Component<Props, {}> {
             restaurantName="Cabaña del Primo"
             status="open"
             distance={3}
+            isVisible={isFoodImageLoaded}
           />)
         }
-        <FoodDescriptionWrapper>
-          <FoodDescriptionText>
-            Description
-          </FoodDescriptionText>
-          <FoodDescription>
-            {foodDescription}
-          </FoodDescription>
-        </FoodDescriptionWrapper>
+        <ShimmerPlaceHolder
+          visible={isFoodImageLoaded}
+          autoRun
+        >
+          <FoodDescriptionWrapper>
+            <FoodDescriptionText>
+              Description
+            </FoodDescriptionText>
+            <FoodDescription>
+              {foodDescription}
+            </FoodDescription>
+          </FoodDescriptionWrapper>
+        </ShimmerPlaceHolder>
       </TextContentContainer>
     );
   }
@@ -333,21 +351,28 @@ class FoodDetail extends Component<Props, {}> {
 
   render() {
     const { navigation } = this.props;
-
     const { mode, foodImage } = navigation.getParam('payload', {});
+
+    const { isFoodImageLoaded } = this.state;
 
     return (
       <Container>
-        <FoodImageContainer
+        <FoodImage
+          onLoad={() => this.onLoadFoodImage()}
           foodImage={foodImage}
         />
         <Header>
-          {this.renderTopContentWrapper()}
+          <HeaderShimmer
+            autoRun
+            visible={isFoodImageLoaded}
+          >
+            {this.renderTopContentWrapper()}
+          </HeaderShimmer>
         </Header>
         <ContentContainer>
           <ContentCard>
             {this.renderTextContent()}
-            {this.renderListSection()}
+            {isFoodImageLoaded && this.renderListSection()}
           </ContentCard>
         </ContentContainer>
         {mode === 'review' && this.renderFloatingActionButton()}

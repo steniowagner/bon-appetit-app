@@ -19,6 +19,7 @@ class AllEvents extends Component {
     title: navigation.state.params.title || '',
     headerStyle: {
       backgroundColor: appStyle.colors.primaryColor,
+      borderBottomWidth: 0,
     },
     headerTintColor: appStyle.colors.defaultWhite,
     headerTitleStyle: {
@@ -27,6 +28,10 @@ class AllEvents extends Component {
       fontSize: appStyle.metrics.navigationHeaderFontSize,
     },
   });
+
+  state = {
+    isDataFetched: true,
+  };
 
   getTestData = () => {
     const data = [];
@@ -45,13 +50,17 @@ class AllEvents extends Component {
   };
 
   render() {
+    const { isDataFetched } = this.state;
+
     return (
       <Container>
         <FlatList
           data={this.getTestData()}
           keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <AllEventsListItem
+              isDataFetched={isDataFetched}
               eventImage={item.eventImage}
               restaurantsParticipating={item.restaurantsParticipating}
               eventTitle={item.eventTitle}

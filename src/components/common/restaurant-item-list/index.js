@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { ROUTE_NAMES } from 'components/screens/home/routes';
 
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 
 import ReviewStars from 'components/common/ReviewStars';
 import ImageCached from './components/ImageCached';
@@ -19,6 +20,13 @@ import ImageCached from './components/ImageCached';
 const CardContainer = styled(View)`
   margin-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+`;
+
+const ContainerShimmer = styled(ShimmerPlaceholder)`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
 const DarkLayer = styled(View)`
@@ -56,28 +64,6 @@ const Address = styled(Text)`
   fontFamily: CircularStd-Medium;
 `;
 
-const BottomRowWrapper = styled(View)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
-
-const LearnMoreButtonWrapper = styled(TouchableOpacity)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('12%')}px;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('8%')}px;
-  align-self: flex-end;
-  align-items: flex-end;
-  justify-content: flex-end;
-`;
-
-const LearnMoreIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.defaultWhite,
-  name: 'arrow-right',
-  size: 28,
-})`
-  width: 28px;
-  height: 28px;
-`;
-
 const AddressIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.defaultWhite,
   name: 'map-marker',
@@ -111,30 +97,41 @@ const RestaurantItemList = ({
   stars,
   picURL,
   navigation,
-}: Props) => (
-  <CardContainer>
-    <ImageCached uri={picURL} />
-    <DarkLayer />
-    <Content>
-      <Name>
-        {name}
-      </Name>
-      <ReviewStars
-        stars={stars}
-        shouldShowReviewsText
-        reviews={1}
-        textColor="white"
-      />
-      <BottomRowWrapper>
-        {renderBottomRow(address)}
-        <LearnMoreButtonWrapper
-          onPress={() => navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL)}
-        >
-          <LearnMoreIcon />
-        </LearnMoreButtonWrapper>
-      </BottomRowWrapper>
-    </Content>
-  </CardContainer>
-);
+}: Props) => {
+  const onItemPress = () => {
+    navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, {
+      payload: {
+        name,
+        address,
+        stars,
+        picURL,
+      },
+    });
+  };
+
+  return (
+    <CardContainer>
+      <TouchableOpacity onPress={() => onItemPress()}>
+        <Fragment>
+          <ImageCached uri={picURL} />
+          <DarkLayer />
+          <Content>
+            <Name>
+              {name}
+            </Name>
+            <ReviewStars
+              stars={stars}
+              shouldShowReviewsText
+              reviews={1}
+              textColor="white"
+            />
+            {renderBottomRow(address)}
+          </Content>
+        </Fragment>
+      </TouchableOpacity>
+      {false && <ContainerShimmer autoRun visible={false}/>}
+    </CardContainer>
+  );
+}
 
 export default withNavigation(RestaurantItemList);

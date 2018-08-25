@@ -1,19 +1,20 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   Image,
   Text,
   View,
   TouchableOpacity,
 } from 'react-native';
+
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import styled from 'styled-components';
 
 import { withNavigation } from 'react-navigation';
-import Shimmer from 'components/common/shimmer';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 
-const Container = styled(TouchableOpacity)`
+const Container = styled(View)`
   height: ${({ theme }) => (theme.metrics.getHeightFromDP('20%'))}px;
   width: ${({ theme }) => (theme.metrics.getWidthFromDP('70%'))}px;
   margin-left: ${({ theme, index }) => (index === 0 ? theme.metrics.largeSize : 0)}px;
@@ -21,12 +22,13 @@ const Container = styled(TouchableOpacity)`
   border-radius: ${({ theme }) => theme.metrics.borderRadius};
 `;
 
-const ItemShimmer = styled(Shimmer)`
-height: ${({ theme }) => (theme.metrics.getHeightFromDP('20%'))}px;
-width: ${({ theme }) => (theme.metrics.getWidthFromDP('70%'))}px;
-margin-left: ${({ theme, index }) => (index === 0 ? theme.metrics.largeSize : 0)}px;
-margin-right: ${({ theme }) => theme.metrics.smallSize}
-border-radius: ${({ theme }) => theme.metrics.borderRadius};
+const ContainerShimmer = styled(ShimmerPlaceHolder)`
+  height: ${({ theme }) => (theme.metrics.getHeightFromDP('20%'))}px;
+  width: ${({ theme }) => (theme.metrics.getWidthFromDP('70%'))}px;
+  margin-left: ${({ theme, index }) => (index === 0 ? theme.metrics.largeSize : 0)}px;
+  margin-right: ${({ theme }) => theme.metrics.smallSize}
+  border-radius: ${({ theme }) => theme.metrics.borderRadius};
+  position: absolute;
 `;
 
 const DarkLayer = styled(View)`
@@ -98,30 +100,41 @@ class InYourCityListItem extends Component<Props, {}> {
 
     const { isImageLoaded } = this.state;
 
+    const onPressItem = () => {
+      navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
+        eventTitle,
+        eventDescription,
+        eventImage,
+      });
+    };
+
     return (
-      <Container
-        onPress={() => navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
-          eventTitle,
-          eventDescription,
-          eventImage,
-        })}
-        index={index}
-      >
-        <EventImage
-          imageURL={eventImage}
-          onLoad={() => this.onLoadImage()}
+      <Fragment>
+        <Container index={index}>
+          <TouchableOpacity
+            onPress={() => onPressItem()}
+          >
+            <EventImage
+              imageURL={eventImage}
+              onLoad={() => this.onLoadImage()}
+            />
+            <DarkLayer />
+            <AboutEventWrapper>
+              <EventTitle>
+                {eventTitle}
+              </EventTitle>
+              <EventDescription>
+                {eventDescription}
+              </EventDescription>
+            </AboutEventWrapper>
+          </TouchableOpacity>
+        </Container>
+        <ContainerShimmer
+          autoRun
+          index={index}
+          visible={isImageLoaded}
         />
-        <DarkLayer />
-        <AboutEventWrapper>
-          <EventTitle>
-            {eventTitle}
-          </EventTitle>
-          <EventDescription>
-            {eventDescription}
-          </EventDescription>
-        </AboutEventWrapper>
-        {!isImageLoaded && <ItemShimmer />}
-      </Container>
+      </Fragment>
     );
   }
 }

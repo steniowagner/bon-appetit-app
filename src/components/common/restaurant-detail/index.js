@@ -48,6 +48,7 @@ type Props = {
 
 type State = {
   indexMenuSelected: number,
+  isDataFetched: boolean,
 };
 
 class RestaurantDetail extends Component<Props, State> {
@@ -59,6 +60,7 @@ class RestaurantDetail extends Component<Props, State> {
 
   state = {
     indexMenuSelected: 0,
+    isDataFetched: true,
   };
 
   onSelectMenu = (indexMenuSelected: number): void => {
@@ -68,26 +70,42 @@ class RestaurantDetail extends Component<Props, State> {
   }
 
   renderMenuSection = () => {
-    const { indexMenuSelected } = this.state;
+    const { indexMenuSelected, isDataFetched } = this.state;
 
     return (
       <Menu>
-        <CustomTab />
-        <MenuList data={data[indexMenuSelected]} />
+        {isDataFetched && <CustomTab />}
+        <MenuList
+          data={data[indexMenuSelected]}
+          isDataFetched={isDataFetched}
+        />
       </Menu>
     );
   }
 
-  renderAboutRestaurantSection = () => (
-    <AboutRestaurantWrapper>
-      <AboutRestaurantSection />
-    </AboutRestaurantWrapper>
-  );
+  renderAboutRestaurantSection = () => {
+    const { isDataFetched } = this.state;
+    const { navigation } = this.props;
+    const { address } = navigation.getParam('payload', {});
+
+    return (
+      <AboutRestaurantWrapper>
+        <AboutRestaurantSection
+          address={address}
+          status="Aberto agora (até às 23:30)"
+          about="Gastronomia requintada de carnes nobres argentinas, ambiente chique e intimista convidativo a longas estadias."
+          isDataFetched={isDataFetched}
+        />
+      </AboutRestaurantWrapper>
+    );
+  }
 
   renderFloatingActionButton = () => {
     const { navigation } = this.props;
+    const { isDataFetched } = this.state;
 
-    return (
+    return isDataFetched
+    && (
       <FloatingActionButtonWrapper>
         <FloatinActionButton
           name="map-marker-multiple"
@@ -115,6 +133,13 @@ class RestaurantDetail extends Component<Props, State> {
   }
 
   render() {
+    const { navigation } = this.props;
+    const {
+      name,
+      stars,
+      picURL,
+    } = navigation.getParam('payload', {});
+
     return (
       <Context.Provider
         value={{
@@ -123,10 +148,10 @@ class RestaurantDetail extends Component<Props, State> {
       >
         <Container>
           <HeaderSection
-            restaurantImage="https://images.unsplash.com/photo-1534531173927-aeb928d54385?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=7579a77bc83515a0b75cf26c479e019f&auto=format&fit=crop&w=1950&q=80"
-            restaurantName="Cabãna del Primo"
+            restaurantImage={picURL}
+            restaurantName={name}
             reviews={18}
-            stars={4.5}
+            stars={stars}
           />
           {this.renderAboutRestaurantSection()}
           {this.renderFloatingActionButton()}

@@ -2,10 +2,13 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const EstablishmentInfoContainer = styled(View)`
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+
+const EstablishmentInfoContainer = styled(ShimmerPlaceholder)`
   width: 80%;
 `;
 
@@ -39,25 +42,46 @@ const InfoIcon = styled(Icon).attrs({
   height: 16px;
 `;
 
-const AboutRestaurantSection = () => (
+type Props = {
+  address: string,
+  status: string,
+  about: string,
+  isDataFetched: boolean,
+};
+
+const AboutRestaurantSection = ({
+  address,
+  status,
+  about,
+  isDataFetched,
+}: Props) => (
   <React.Fragment>
-    <EstablishmentInfoContainer>
+    <EstablishmentInfoContainer
+      autoRun
+      visible={isDataFetched}
+    >
       <EstablishmentInfoWrapper>
         <InfoIcon iconTitle="map-marker-outline" />
         <EstablishmentInfoText>
-          R. Maria Tomásia, 503 - Aldeota, Fortaleza
+          {address}
         </EstablishmentInfoText>
       </EstablishmentInfoWrapper>
       <EstablishmentInfoWrapper>
         <InfoIcon iconTitle="clock-outline" />
         <EstablishmentInfoText>
-          Aberto agora (até às 23:30)
+          {status}
         </EstablishmentInfoText>
       </EstablishmentInfoWrapper>
     </EstablishmentInfoContainer>
-    <RestaurantAboutText>
-      Gastronomia requintada de carnes nobres argentinas, ambiente chique e intimista convidativo a longas estadias.
-    </RestaurantAboutText>
+    <ShimmerPlaceholder
+      autoRun
+      visible={isDataFetched}
+      style={{ marginTop: 20 }}
+    >
+      <RestaurantAboutText>
+        {about}
+      </RestaurantAboutText>
+    </ShimmerPlaceholder>
   </React.Fragment>
 );
 

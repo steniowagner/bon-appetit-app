@@ -11,11 +11,18 @@ import {
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+
 const Wrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding-bottom: ${({ theme }) => theme.metrics.largeSize}px;
+`;
+
+const WrapperShimmer = styled(ShimmerPlaceholder)`
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('8%')}px;
 `;
 
 const MainContent = styled(View)`
@@ -90,7 +97,7 @@ const getStatusText = (distance: string, status: string): string => {
   return `${statusText} now. ${distance}km from you`;
 };
 
-const renderMainContet = (restaurantName: string, status: string, distance: number): Object => (
+const renderMainContent = (restaurantName: string, status: string, distance: number): Object => (
   <MainContent>
     <RestaurantIcon />
     <MainContentWrapper>
@@ -119,17 +126,29 @@ type Props = {
   restaurantName: string,
   status: ?string,
   distance: ?number,
+  isVisible: boolean,
 };
 
 const RestaurantInfo = ({
   restaurantName,
   status,
   distance,
+  isVisible,
 }: Props) => (
-  <Wrapper>
-    {renderMainContet(restaurantName, status, distance)}
-    {renderSeeRestaurantButton()}
-  </Wrapper>
+  <WrapperShimmer
+    autoRun
+    visible={isVisible}
+  >
+    <Wrapper>
+      <ShimmerPlaceholder
+        autoRun
+        visible={isVisible}
+      >
+        {renderMainContent(restaurantName, status, distance)}
+      </ShimmerPlaceholder>
+      {isVisible && renderSeeRestaurantButton()}
+    </Wrapper>
+  </WrapperShimmer>
 );
 
 export default RestaurantInfo;
