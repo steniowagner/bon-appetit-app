@@ -11,6 +11,7 @@ const Wrapper = styled(View)`
   flex-direction: row;
   align-items: center;
   width: 100%;
+  flex-wrap: wrap;
 `;
 
 const Reviews = styled(Text)`

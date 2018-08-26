@@ -4,12 +4,9 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 import styled from 'styled-components';
 
-import { ROUTE_NAMES } from 'components/screens/home/routes';
 import ListItem from './ListItem';
-import SectionHeader from '../../common/SectionHeader';
 
 const Container = styled(View)`
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('33%')};
   justify-content: space-between;
   width: 100%;
 `;
@@ -34,33 +31,23 @@ const getTestData = () => {
   return data;
 };
 
-const renderList = () => (
-  <ListWrapper>
-    <FlatList
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      data={getTestData()}
-      keyExtractor={item => item.id}
-      renderItem={({ item, index }) => (
-        <ListItem
-          index={index}
-          eventTitle={item.eventTitle}
-          eventDescription={item.eventDescription}
-          eventImage={item.eventImage}
-        />
-      )}
-    />
-  </ListWrapper>
-);
-
 const InYourCitySection = () => (
   <Container>
-    <SectionHeader
-      title="In Your City"
-      nextRoute={ROUTE_NAMES.ALL_EVENTS}
-    />
     <ListWrapper>
-      {renderList()}
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={getTestData()}
+        keyExtractor={item => item.id}
+        renderItem={({ item, index }) => (
+          <ListItem
+            index={index}
+            eventTitle={item.eventTitle}
+            eventDescription={item.eventDescription}
+            eventImage={item.eventImage}
+          />
+        )}
+      />
     </ListWrapper>
   </Container>
 );

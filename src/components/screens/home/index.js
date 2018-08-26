@@ -1,12 +1,21 @@
 // @flow
 
-import React from 'react';
-import { View, StatusBar, Platform } from 'react-native';
+import React, { Fragment } from 'react';
+import {
+  View,
+  StatusBar,
+  Platform,
+  ScrollView,
+} from 'react-native';
 
 import styled from 'styled-components';
 import appStyle from 'styles';
 
-import InYourCitySection from './components/in-your-city/components/Section';
+import { ROUTE_NAMES } from 'components/screens/home/routes';
+
+import Section from './components/Section';
+import InYourCitySection from './components/in-your-city/components/home-list';
+import Popular from './components/popular/popular-home-section';
 
 const Container = styled(View)`
   flex: 1;
@@ -14,12 +23,25 @@ const Container = styled(View)`
 `;
 
 const HomeMainContent = () => (
-  <React.Fragment>
+  <Fragment>
     <StatusBar barStyle="light-content" />
     <Container>
-      <InYourCitySection />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+      >
+        <Section
+          title="In Your City"
+          nextRoute={ROUTE_NAMES.ALL_EVENTS}
+          render={() => <InYourCitySection />}
+        />
+        <Section
+          title="Popular"
+          nextRoute={ROUTE_NAMES.ALL_POPULAR}
+          render={() => <Popular />}
+        />
+      </ScrollView>
     </Container>
-  </React.Fragment>
+  </Fragment>
 );
 
 HomeMainContent.navigationOptions = {
