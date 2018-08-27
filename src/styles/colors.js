@@ -9,7 +9,7 @@ export default {
   defaultWhite: '#FFFFFF',
   green: '#1DB954',
   yellow: '#F8C330',
-  lightGray: '#D3D3D3',
+  lightGray: '#adadad',
   linkedin: '#0077B5',
   github: '#333333',
   subText: 'rgba(0, 0, 0, 0.6)',

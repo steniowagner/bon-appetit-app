@@ -11,30 +11,29 @@ const Wrapper = styled(View)`
   flex-direction: row;
   align-items: center;
   width: 100%;
-  flex-wrap: wrap;
 `;
 
 const Reviews = styled(Text)`
   color: ${({ theme, textColor }) => theme.colors[textColor]};
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')};
-  fontFamily: CircularStd-Medium;
+  fontFamily: CircularStd-Book;
 `;
 
 const WrapperStars = styled(View)`
   flex-direction: row;
 `;
 
-const FullStar = <Icon name="star" size={16} color={appStyle.colors.yellow} />;
-
-const HalfStar = <Icon name="star-half" size={16} color={appStyle.colors.yellow} />;
-
-const EmptyStar = <Icon name="star-outline" size={16} color={appStyle.colors.yellow} />;
-
-const getStars = (stars) => {
+const getStars = (stars: number, small: ?boolean): Array<Object> => {
   const MAX_GRADE = 5;
   const quantityEmptyStars = MAX_GRADE - Math.ceil(stars);
   const starsFromGrade = [];
+
+  const iconSize = small ? 12 : 16;
+
+  const FullStar = <Icon name="star" size={iconSize} color={appStyle.colors.yellow} />;
+  const HalfStar = <Icon name="star-half" size={iconSize} color={appStyle.colors.yellow} />;
+  const EmptyStar = <Icon name="star-outline" size={iconSize} color={appStyle.colors.yellow} />;
 
   let currentStars = stars;
 
@@ -62,8 +61,8 @@ const getStars = (stars) => {
   return starsFromGrade;
 };
 
-const renderStars = (grade: number): Object => {
-  const starsFromGrade = getStars(grade);
+const renderStars = (grade: number, theme: ?boolean): Object => {
+  const starsFromGrade = getStars(grade, theme);
 
   return (
     <WrapperStars>
@@ -80,6 +79,7 @@ type Props = {
   shouldShowReviewsText: ?boolean,
   reviews: ?number,
   textColor: ?string,
+  small: ?boolean,
   stars: number,
 };
 
@@ -88,13 +88,14 @@ const ReviewStars = ({
   shouldShowReviewsText,
   reviews,
   textColor,
+  small,
 } : Props) => (
   <Wrapper>
-    {renderStars(stars)}
+    {renderStars(stars, small)}
     {shouldShowReviewsText
       && (
       <Reviews textColor={textColor}>
-        {`${reviews}  ${reviews > 1 ? 'Reviews' : 'Review'}`}
+        {`${reviews} ${reviews > 1 ? 'Reviews' : 'Review'}`}
       </Reviews>)}
   </Wrapper>
 );
