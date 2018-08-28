@@ -19,20 +19,31 @@ import FlagPrice from 'components/common/FlagPrice';
 import ReviewStars from 'components/common/ReviewStars';
 
 const Container = styled(View)`
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('40%')};
-  margin-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('30%')};
   margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
+  padding: ${({ theme }) => theme.metrics.mediumSize}px;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  background-color: ${({ theme }) => theme.colors.white};
-  shadowColor: ${({ theme }) => theme.colors.darkLayer},
+  background-color: ${({ theme }) => theme.colors.defaultWhite};
+`;
+
+const ContentWrapper = styled(View)``;
+
+const FoodImageShimmer = styled(ShimmerPlaceholder).attrs({
+  autoRun: true,
+  visible: false,
+})`
+  width: 100%;
+  height: 100%;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
 const FoodImageWrapper = styled(View)`
-  width: 100%;
-  height: 40%;
-  border-top-right-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  border-top-left-radius: ${({ theme }) => theme.metrics.borderRadius}px;
+  width: 30%;
+  height: 100%;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   overflow: hidden;
+  position: absolute;
 `;
 
 const FoodImage = styled(Image).attrs({
@@ -41,48 +52,46 @@ const FoodImage = styled(Image).attrs({
 })`
   width: 100%;
   height: 100%;
-
   padding: ${({ theme }) => theme.metrics.largeSize}px;
   position: absolute;
 `;
 
-const DarkLayer = styled(View)`
-  width: 100%;
+const TextContentContainer = styled(View)`
+  margin-left: ${({ theme }) => theme.metrics.getWidthFromDP('28%')}px;
+  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  justify-content: space-between;
   height: 100%;
-  align-items: flex-end;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
-  background-color: ${({ theme }) => theme.colors.lightDarkLayer};
-  border-top-right-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  border-top-left-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
-const MainContentWrapper = styled(View)`
-  height: 60%;
+const TopRowContent = styled(View)`
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
-const StarsWrapper = styled(View)`
-  align-items: center;
-  width: 100%;
-`;
-
-const TextContentWrapper = styled(View)`
-  align-items: center;
-  padding-top: ${({ theme }) => theme.metrics.smallSize}px;
-`;
-
-const FoodTitle = styled(Text)`
+const FoodTitle = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})`
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
   fontFamily: CircularStd-Black;
-  text-align: center;
+  width: 75%;
 `;
 
-const FoodDescription = styled(Text)`
+const FoodDescription = styled(Text).attrs({
+  numberOfLines: 4,
+  ellipsizeMode: 'tail',
+})`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   fontFamily: CircularStd-Book;
-  margin: ${({ theme }) => `${theme.metrics.mediumSize}px ${theme.metrics.getWidthFromDP('10%')}px`};
-  text-align: center;
+  margin-vertical: ${({ theme }) => theme.metrics.mediumSize}px;
+`;
+
+const BottomRowContent = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const RestaurantStatus = styled(Text)`
@@ -99,16 +108,10 @@ const ArrowIconWrapper = styled(View)`
 `;
 
 const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.red,
+  color: ({ theme }) => theme.colors.darkText,
   name: 'arrow-right',
   size: 25,
 })`
-  margin-right: 12px;
-  width: 25px;
-  height: 25px;
-`;
-
-const GapComponent = styled(View)`
   width: 25px;
   height: 25px;
 `;
@@ -131,6 +134,7 @@ type Props = {
   distance: number,
   price: number,
   stars: number,
+  reviews: number,
   isDataFetched: boolean,
   isOpen: boolean,
   navigation: Function,
@@ -140,7 +144,7 @@ type State = {
   isFoodImageLoaded: boolean,
 };
 
-class YMLSectionList extends Component<Props, State> {
+class YMLSeeAllItemList extends Component<Props, State> {
   state = {
     isFoodImageLoaded: false,
   };
@@ -164,81 +168,64 @@ class YMLSectionList extends Component<Props, State> {
 
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
       payload: {
+        mode: 'detail',
         foodDescription,
         foodImage,
         foodTitle,
         distance,
         price,
         stars,
-        mode: 'detail',
       },
     });
   }
 
-  renderTopContent = () => {
+  renderFoodImage = () => {
     const { isFoodImageLoaded } = this.state;
-    const { price, foodImage } = this.props;
+    const { foodImage } = this.props;
 
-    const ContentComponents = (
-      <DarkLayer>
-        <FlagPrice price={price} />
-      </DarkLayer>
-    );
-
-    const Shimmer = (
-      <ShimmerPlaceholder
-        style={{
-          width: '100%',
-          height: '100%',
-          borderTopRightRadius: appStyle.metrics.borderRadius,
-          borderTopLeftRadius: appStyle.metrics.borderRadius,
-        }}
-        visible={false}
-        autoRun
-      />
-    );
-
-    const ProperComponent = (isFoodImageLoaded ? ContentComponents : Shimmer);
-
-    return (
+    const FoodImageComponents = (
       <Fragment>
         <FoodImageWrapper>
           <FoodImage
-            onLoad={() => this.onFoodImageLoaded()}
             foodImage={foodImage}
+            onLoad={() => this.onFoodImageLoaded()}
           />
-          {ProperComponent}
+          {!isFoodImageLoaded && <FoodImageShimmer />}
         </FoodImageWrapper>
       </Fragment>
     );
+
+    return FoodImageComponents;
   }
 
-  renderFoodInfo = () => {
+  renderTopRowContent = () => {
     const {
       foodTitle,
-      stars,
-      foodDescription,
-    } = this.props;
+      price,
+    stars,
+  reviews} = this.props;
 
     return (
-      <TextContentWrapper>
-        <FoodTitle>
-          {foodTitle}
-        </FoodTitle>
-        <StarsWrapper>
-          <ReviewStars
-            stars={stars}
-            shouldShowReviewsText={false}
+      <View>
+        <TopRowContent>
+          <FoodTitle>
+            {foodTitle}
+          </FoodTitle>
+          <FlagPrice
+            price={price}
           />
-        </StarsWrapper>
-        <FoodDescription>
-          {foodDescription}
-        </FoodDescription>
-      </TextContentWrapper>
+        </TopRowContent>
+        <ReviewStars
+          shouldShowReviewsText
+          stars={stars}
+          reviews={reviews}
+          textColor="darkText"
+        />
+      </View>
     );
   }
 
-  renderBottomRowComponents = () => {
+  renderBottomRowContent = () => {
     const { isOpen, distance } = this.props;
 
     const restaurantStatus = {
@@ -255,41 +242,67 @@ class YMLSectionList extends Component<Props, State> {
     const status = (isOpen ? 'open' : 'closed');
 
     return (
-      <ArrowIconWrapper>
-        <GapComponent />
+      <BottomRowContent>
         <RestaurantStatus
           color={restaurantStatus[status].color}
         >
           {restaurantStatus[status].text}
         </RestaurantStatus>
-        <TouchableOpacity
-          onPress={() => this.onPressItem()}
-        >
-          <ArrowIcon />
-        </TouchableOpacity>
-      </ArrowIconWrapper>
+        <ArrowIconWrapper>
+          <TouchableOpacity
+            onPress={() => this.onPressItem()}
+          >
+            <ArrowIcon />
+          </TouchableOpacity>
+        </ArrowIconWrapper>
+      </BottomRowContent>
     );
   }
+
+  renderTextContent = () => {
+    const {
+      stars,
+      reviews,
+      foodDescription,
+    } = this.props;
+
+    return (
+      <Fragment>
+        {this.renderTopRowContent()}
+        <FoodDescription>
+          {foodDescription}
+        </FoodDescription>
+        {this.renderBottomRowContent()}
+      </Fragment>
+    );
+  }
+
+  renderTextContentShimmer = () => (
+    <ShimmerContainer>
+      <ShimmerPlaceholder
+        visible={false}
+        autoRun
+      />
+      <ShimmerPlaceholder
+        style={{
+          height: 50,
+          marginVertical: 15,
+        }}
+        visible={false}
+        autoRun
+      />
+      <ShimmerPlaceholder
+        visible={false}
+        autoRun
+      />
+    </ShimmerContainer>
+  );
 
   render() {
     const { isDataFetched } = this.props;
 
-    const Shimmer = (
-      <ShimmerContainer>
-        <ShimmerPlaceholder
-          visible={false}
-          autoRun
-        />
-        <ShimmerPlaceholder
-          visible={false}
-          autoRun
-        />
-        <ShimmerPlaceholder
-          visible={false}
-          autoRun
-        />
-      </ShimmerContainer>
-    );
+    const TextContentShimmer = this.renderTextContentShimmer();
+    const TextContentComponent = this.renderTextContent();
 
     return (
       <Container
@@ -299,10 +312,10 @@ class YMLSectionList extends Component<Props, State> {
               elevation: 1,
               shadowOffset: {
                 width: 0,
-                height: 1,
+                height: 0,
               },
-              shadowRadius: 2,
-              shadowOpacity: 5.0,
+              shadowRadius: 3,
+              shadowOpacity: 0.35,
             },
             android: {
               elevation: 4,
@@ -316,16 +329,15 @@ class YMLSectionList extends Component<Props, State> {
           }),
         }}
       >
-        {this.renderTopContent()}
-        <MainContentWrapper>
-          {isDataFetched && this.renderFoodInfo()}
-          {isDataFetched && this.renderBottomRowComponents()}
-          {!isDataFetched && Shimmer}
-
-        </MainContentWrapper>
+        <ContentWrapper>
+          {this.renderFoodImage()}
+          <TextContentContainer>
+            {isDataFetched ? TextContentComponent : TextContentShimmer}
+          </TextContentContainer>
+        </ContentWrapper>
       </Container>
     );
   }
 }
 
-export default withNavigation(YMLSectionList);
+export default withNavigation(YMLSeeAllItemList);

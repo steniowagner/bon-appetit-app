@@ -4,7 +4,7 @@ import { FlatList } from 'react-native';
 import styled from 'styled-components';
 import appStyle from 'styles';
 
-import YMLItemList from './YMLItemList';
+import YMLSeeAllItemList from './YMLSeeAllItemList';
 
 const List = styled(FlatList)`
   flex: 1;
@@ -18,9 +18,10 @@ const data = [{
   foodTitle: 'Bife del Primo',
   stars: 3.5,
   foodDescription: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos,',
-  isOpen: true,
+  isOpen: false,
   distance: 3.5,
-  isDataFetched: true,
+  isDataFetched: false,
+  reviews: 7,
 },{
   id: '2',
   foodImage: 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9647d95a500b5e222258fb03ed086ed1&auto=format&fit=crop&w=400&q=80',
@@ -31,6 +32,7 @@ const data = [{
   isOpen: true,
   distance: 3.5,
   isDataFetched: true,
+  reviews: 7,
 }, {
   id: '3',
   foodImage: 'https://images.unsplash.com/photo-1505253468034-514d2507d914?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=140e2054487a8f6f092fd6cda183cfac&auto=format&fit=crop&w=334&q=80',
@@ -41,6 +43,7 @@ const data = [{
   isOpen: true,
   distance: 3.5,
   isDataFetched: true,
+  reviews: 7,
 }];
 
 const PopularSeeAll = () => (
@@ -49,7 +52,7 @@ const PopularSeeAll = () => (
     data={data}
     keyExtractor={item => item.id}
     renderItem={({ item }) => (
-      <YMLItemList
+      <YMLSeeAllItemList
         foodImage={item.foodImage}
         price={item.price}
         foodTitle={item.foodTitle}
@@ -58,6 +61,7 @@ const PopularSeeAll = () => (
         isOpen={item.isOpen}
         distance={item.distance}
         isDataFetched={item.isDataFetched}
+        reviews={item.reviews}
       />
     )}
   />
