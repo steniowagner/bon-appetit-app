@@ -24,7 +24,7 @@ type Props = {
 const PriceFlag = ({ price }: Props) => (
   <Wrapper>
     <Price>
-      {`$ ${parseFloat(price).toFixed(2)}`}
+      {`$ ${price}`}
     </Price>
   </Wrapper>
 );

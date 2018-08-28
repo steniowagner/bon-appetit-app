@@ -23,7 +23,6 @@ const getTestData = () => {
 };
 
 const Container = styled(View)`
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('40%')};
   justify-content: space-between;
   width: 100%;
 `;
@@ -41,8 +40,9 @@ const YouMightLikeSection = () => (
         showsHorizontalScrollIndicator={false}
         data={getTestData()}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <PopularSectionListItem
+            isFirst={index === 0}
             foodTitle={item.foodTitle}
             foodImage={item.foodImage}
             stars={item.stars}

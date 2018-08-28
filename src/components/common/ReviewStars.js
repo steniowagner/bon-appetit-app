@@ -10,7 +10,6 @@ import appStyle from 'styles';
 const Wrapper = styled(View)`
   flex-direction: row;
   align-items: center;
-  width: 100%;
 `;
 
 const Reviews = styled(Text)`

@@ -19,7 +19,8 @@ import FlagPrice from 'components/common/FlagPrice';
 const Container = styled(View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('28%')};
   height: ${({ theme }) => theme.metrics.getHeightFromDP('30%')};
-  margin-left: ${({ theme }) => theme.metrics.largeSize}px;
+  margin-left: ${({ theme, isFirst }) => (isFirst ? theme.metrics.largeSize : 0)}px;
+  margin-right: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const ContainerShimmer = styled(ShimmerPlaceholder)`
@@ -75,6 +76,7 @@ type Props = {
   stars: number,
   price: number,
   navigation: Function,
+  isFirst: boolean,
 };
 
 type State = {
@@ -141,11 +143,11 @@ class PopularSectionListItem extends Component<Props, State> {
 
   render() {
     const { isFoodImageLoaded } = this.state;
-    const { foodImage } = this.props;
+    const { foodImage, isFirst } = this.props;
 
     return (
       <Fragment>
-        <Container>
+        <Container isFirst={isFirst}>
           <TouchableWithoutFeedback
             onPress={() => this.onPressItem()}
           >

@@ -5,6 +5,7 @@ import RestaurantAddressMap from 'components/common/RestaurantAddressMap';
 import RestaurantDetail from 'components/common/restaurant-detail';
 import FoodDetail from 'components/common/food-detail';
 import PopularSeeAll from 'components/screens/home/components/popular/popular-see-all';
+import YMLSeeAll from 'components/screens/home/components/you-might-like/yml-see-all';
 
 import EventDetails from './components/in-your-city/components/EventDetails';
 import AllEvents from './components/in-your-city/components/all-events-list';
@@ -19,6 +20,7 @@ export const ROUTE_NAMES = {
   RESTAURANT_ADDRESS_MAP: 'RESTAURANT_ADDRESS_MAP',
   FOOD_DETAIL: 'FOOD_DETAIL',
   ALL_POPULAR: 'ALL_POPULAR',
+  ALL_YOU_MIGHT_LIKE: 'ALL_YOU_MIGHT_LIKE',
 };
 
 const ROUTES = createStackNavigator({
@@ -68,6 +70,13 @@ const ROUTES = createStackNavigator({
 
   [ROUTE_NAMES.ALL_POPULAR]: {
     screen: PopularSeeAll,
+    navigationOptions: () => ({
+      headerBackTitle: null,
+    }),
+  },
+
+  [ROUTE_NAMES.ALL_YOU_MIGHT_LIKE]: {
+    screen: YMLSeeAll,
     navigationOptions: () => ({
       headerBackTitle: null,
     }),
