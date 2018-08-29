@@ -40,7 +40,7 @@ const DarkLayer = styled(View)`
 `;
 
 const FoodImage = styled(Image).attrs({
-  source: ({ foodImage }) => ({ uri: foodImage }),
+  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
 })`
   width: 100%;
   height: 70%;
@@ -72,7 +72,7 @@ const FlagPriceWrapper = styled(View)`
 
 type Props = {
   foodTitle: string,
-  foodImage: string,
+  foodImageURL: string,
   stars: number,
   price: number,
   navigation: Function,
@@ -92,7 +92,7 @@ class PopularSectionListItem extends Component<Props, State> {
     const {
       navigation,
       foodTitle,
-      foodImage,
+      foodImageURL,
       price,
       stars,
     } = this.props;
@@ -101,7 +101,7 @@ class PopularSectionListItem extends Component<Props, State> {
       payload: {
         mode: 'detail',
         foodTitle,
-        foodImage,
+        foodImageURL,
         price,
         stars,
       },
@@ -143,7 +143,7 @@ class PopularSectionListItem extends Component<Props, State> {
 
   render() {
     const { isFoodImageLoaded } = this.state;
-    const { foodImage, isFirst } = this.props;
+    const { foodImageURL, isFirst } = this.props;
 
     return (
       <Fragment>
@@ -153,7 +153,7 @@ class PopularSectionListItem extends Component<Props, State> {
           >
             <View>
               <FoodImage
-                foodImage={foodImage}
+                foodImageURL={foodImageURL}
               />
               {this.renderBottomContent()}
             </View>

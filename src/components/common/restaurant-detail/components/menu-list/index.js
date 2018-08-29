@@ -26,11 +26,12 @@ const MenuList = ({ data, isDataFetched }: Props) => (
     renderItem={({ item }) => (
       <MenuListItem
         isDataFetched={isDataFetched}
-        foodImage={item.foodImage}
+        foodImageURL={item.foodImageURL}
         foodTitle={item.foodTitle}
         foodDescription={item.foodDescription}
         price={item.price}
         stars={item.stars}
+        mode="review"
       />)
     }
   />

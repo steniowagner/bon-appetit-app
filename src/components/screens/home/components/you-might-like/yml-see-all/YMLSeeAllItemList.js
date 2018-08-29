@@ -47,7 +47,7 @@ const FoodImageWrapper = styled(View)`
 `;
 
 const FoodImage = styled(Image).attrs({
-  source: ({ foodImage }) => ({ uri: foodImage }),
+  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
   resizeMode: 'cover',
 })`
   width: 100%;
@@ -108,7 +108,7 @@ const ArrowIconWrapper = styled(View)`
 `;
 
 const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.darkText,
+  color: ({ theme }) => theme.colors.red,
   name: 'arrow-right',
   size: 25,
 })`
@@ -129,7 +129,7 @@ const ShimmerContainer = styled(View).attrs({
 
 type Props = {
   foodDescription: string,
-  foodImage: string,
+  foodImageURL: string,
   foodTitle: string,
   distance: number,
   price: number,
@@ -158,19 +158,21 @@ class YMLSeeAllItemList extends Component<Props, State> {
   onPressItem = () => {
     const {
       foodDescription,
-      foodImage,
+      foodImageURL,
       foodTitle,
       distance,
       price,
       stars,
       navigation,
+      isOpen,
     } = this.props;
 
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
       payload: {
+        isOpen,
         mode: 'detail',
         foodDescription,
-        foodImage,
+        foodImageURL,
         foodTitle,
         distance,
         price,
@@ -181,13 +183,13 @@ class YMLSeeAllItemList extends Component<Props, State> {
 
   renderFoodImage = () => {
     const { isFoodImageLoaded } = this.state;
-    const { foodImage } = this.props;
+    const { foodImageURL } = this.props;
 
     const FoodImageComponents = (
       <Fragment>
         <FoodImageWrapper>
           <FoodImage
-            foodImage={foodImage}
+            foodImageURL={foodImageURL}
             onLoad={() => this.onFoodImageLoaded()}
           />
           {!isFoodImageLoaded && <FoodImageShimmer />}
@@ -202,8 +204,9 @@ class YMLSeeAllItemList extends Component<Props, State> {
     const {
       foodTitle,
       price,
-    stars,
-  reviews} = this.props;
+      stars,
+      reviews,
+    } = this.props;
 
     return (
       <View>
@@ -231,11 +234,11 @@ class YMLSeeAllItemList extends Component<Props, State> {
     const restaurantStatus = {
       open: {
         color: appStyle.colors.green,
-        text: `Open now. ${distance}km from you`,
+        text: `${distance}km from you`,
       },
       closed: {
         color: appStyle.colors.red,
-        text: 'Closed now',
+        text: 'Restaurant closed now',
       },
     };
 
@@ -260,11 +263,7 @@ class YMLSeeAllItemList extends Component<Props, State> {
   }
 
   renderTextContent = () => {
-    const {
-      stars,
-      reviews,
-      foodDescription,
-    } = this.props;
+    const { foodDescription } = this.props;
 
     return (
       <Fragment>

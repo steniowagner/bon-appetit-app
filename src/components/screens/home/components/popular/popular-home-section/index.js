@@ -13,7 +13,7 @@ const getTestData = () => {
     data.push({
       id: `${i}`,
       foodTitle: 'Nissim Miojo',
-      foodImage: 'https://images.unsplash.com/photo-1533854964478-588049c5084e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9a3f43bf5f66dc44d7780904913a7fb3&auto=format&fit=crop&w=967&q=80',
+      foodImageURL: 'https://images.unsplash.com/photo-1533854964478-588049c5084e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9a3f43bf5f66dc44d7780904913a7fb3&auto=format&fit=crop&w=967&q=80',
       stars: 4.5,
       price: 29.90,
     });
@@ -44,7 +44,7 @@ const YouMightLikeSection = () => (
           <PopularSectionListItem
             isFirst={index === 0}
             foodTitle={item.foodTitle}
-            foodImage={item.foodImage}
+            foodImageURL={item.foodImageURL}
             stars={item.stars}
             price={item.price}
           />

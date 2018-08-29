@@ -50,7 +50,7 @@ const ImageContentContainer = styled(View)`
 `;
 
 const FoodImage = styled(Image).attrs({
-  source: ({ foodImage }) => ({ uri: foodImage }),
+  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
 })`
   width: 100%;
   height: 100%;
@@ -147,7 +147,7 @@ type Props = {
   distance: number,
   foodTitle: string,
   description: string,
-  foodImage: string,
+  foodImageURL: string,
   isDataFetched: boolean
 };
 
@@ -198,7 +198,7 @@ class PopularSeeAllItemList extends Component<Props, State> {
       foodTitle,
       distance,
       description,
-      foodImage,
+      foodImageURL,
       price,
     } = this.props;
 
@@ -210,7 +210,7 @@ class PopularSeeAllItemList extends Component<Props, State> {
         foodTitle,
         distance,
         description,
-        foodImage,
+        foodImageURL,
         price,
       },
     });
@@ -323,7 +323,7 @@ class PopularSeeAllItemList extends Component<Props, State> {
 
   renderFoodImage = () => {
     const { isFoodImageLoaded } = this.state;
-    const { foodImage } = this.props;
+    const { foodImageURL } = this.props;
 
     return (
       <ImageContentContainer
@@ -331,7 +331,7 @@ class PopularSeeAllItemList extends Component<Props, State> {
       >
         <FoodImage
           onLoad={() => this.onFoodImageLoaded()}
-          foodImage={foodImage}
+          foodImageURL={foodImageURL}
         />
         {!isFoodImageLoaded
           && (

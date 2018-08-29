@@ -128,6 +128,7 @@ class YMLSectionList extends Component<Props, State> {
       stars,
       foodTitle,
       navigation,
+      foodImageURL,
     } = this.props;
 
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
@@ -137,6 +138,7 @@ class YMLSectionList extends Component<Props, State> {
         reviews,
         stars,
         foodTitle,
+        foodImageURL,
         mode: 'detail',
       },
     });

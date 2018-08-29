@@ -1,154 +1,174 @@
 // @flow
 
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
-
-import styled from 'styled-components';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Wrapper = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: ${({ theme }) => theme.metrics.largeSize}px;
-`;
+import styled from 'styled-components';
+import appStyles from 'styles';
 
-const WrapperShimmer = styled(ShimmerPlaceholder)`
+import { ROUTE_NAMES } from 'components/screens/home/routes';
+import { withNavigation } from 'react-navigation';
+
+const RestaurantInfoWrapper = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('8%')}px;
-`;
-
-const MainContent = styled(View)`
   flex-direction: row;
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')};
+  margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
+  justify-content: space-between;
 `;
 
-const RestauranName = styled(Text).attrs({
-  numberOfLines: 2,
+const RestaurantTextInfoWrapper = styled(View)`
+  width: 80%;
+  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  flex-direction: row;
+`;
+
+const RestaurantName = styled(Text).attrs({
+  numberOfLines: 1,
   ellipsizeMode: 'tail',
 })`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')};
-  font-family: CircularStd-Bold;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.4%')};
+  padding-bottom: ${({ theme }) => theme.metrics.getHeightFromDP('0.5%')}px;
+  font-family: CircularStd-Medium;
 `;
 
-const MainContentWrapper = styled(View)``;
+const RestaurantStatus = styled(Text)`
+  width: 100%;
+  color: ${({ color }) => color};
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2%')};
+  font-family: CircularStd-Medium;
+`;
 
 const RestaurantIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.darkText,
-  name: 'silverware-variant',
-  size: 16,
+  name: 'silverware',
+  size: 18,
 })`
-  margin-right: ${({ theme }) => theme.metrics.extraSmallSize}
-  width: 16px;
-  height: 16px;
+  margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  width: 18px;
+  height: 18px;
+`;
+
+const VisitRestaurantWrapper = styled(View)`
+  width: 20%;
+  align-items: flex-end;
+  justify-content: center;
+`;
+
+const VisitRestaurantShape = styled(TouchableOpacity)`
+  background-color: ${({ theme }) => theme.colors.yellow};
+  border-radius: 50px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-vertical: ${({ theme }) => theme.metrics.getHeightFromDP('0.8%')}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
+`;
+
+const VisitText = styled(Text)`
+  color: ${({ theme }) => theme.colors.defaultWhite};
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2%')};
+  font-family: CircularStd-Black;
+  margin-right: -${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const ArrowIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.defaultWhite,
-  name: 'arrow-right',
+  name: 'chevron-right',
   size: 18,
 })`
+  margin-right: -8px;
   width: 18px;
   height: 18px;
-  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
-const EstablishmentStatus = styled(Text)`
-  color: ${({ theme, status }) => (status === 'open' ? theme.colors.green : theme.colors.red)};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
-  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  fontFamily: CircularStd-Medium;
+const RestaurantInfoShimmer = styled(ShimmerPlaceholder).attrs({
+  visible: false,
+  autoRun: true,
+})`
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('10%')}px;
+  padding-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
 `;
 
-const SeeRestaurantButtonShape = styled(TouchableOpacity)`
-  flex-direction: row;
-  background-color: ${({ theme }) => theme.colors.yellow};
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('5%')}px;
-  border-radius: ${({ theme }) => theme.metrics.getHeightFromDP('5%') / 2}px;
-`;
-
-const SeeRestaurantButtonText = styled(Text)`
-  color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'ios' ? '2%' : '2.5%';
-    return theme.metrics.getHeightFromDP(percentage);
-  }}px;
-  fontFamily: CircularStd-Black;
-`;
-
-const ContentWrapper = styled(View)`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
-`;
-
-const getStatusText = (distance: string, status: string): string => {
-  const statusText = (status === 'open' ? 'Open' : 'Closed');
-
-  return `${statusText} now. ${distance}km from you`;
+const onPressVisitRestaurantButton = (navigation: Function): void => {
+  navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, {});
 };
 
-const renderMainContent = (restaurantName: string, status: string, distance: number): Object => (
-  <MainContent>
-    <RestaurantIcon />
-    <MainContentWrapper>
-      <RestauranName>
-        {restaurantName}
-      </RestauranName>
-      <EstablishmentStatus status={status}>
-        {getStatusText(distance, status)}
-      </EstablishmentStatus>
-    </MainContentWrapper>
-  </MainContent>
-);
+const renderTextContent = (distance: number, isOpen: boolean, restaurantName: string): Object => {
+  const restaurantStatus = {
+    open: {
+      color: appStyles.colors.green,
+      text: `Open now, ${distance}km from you`,
+    },
+    closed: {
+      color: appStyles.colors.red,
+      text: 'Closed now',
+    },
+  };
 
-const renderSeeRestaurantButton = () => (
-  <SeeRestaurantButtonShape>
-    <ContentWrapper>
-      <SeeRestaurantButtonText>
-        See Restaurant
-      </SeeRestaurantButtonText>
+  const status = (isOpen ? 'open' : 'closed');
+
+  return (
+    <View style={{ paddingLeft: 4 }}>
+      <RestaurantName>
+        {restaurantName}
+      </RestaurantName>
+      <RestaurantStatus
+        color={restaurantStatus[status].color}
+      >
+        {restaurantStatus[status].text}
+      </RestaurantStatus>
+    </View>
+  );
+};
+
+const renderRestaurantVisitButton = (navigation: Function): void => (
+  <VisitRestaurantWrapper>
+    <VisitRestaurantShape
+      onPress={() => onPressVisitRestaurantButton(navigation)}
+    >
+      <VisitText>
+        Visit
+      </VisitText>
       <ArrowIcon />
-    </ContentWrapper>
-  </SeeRestaurantButtonShape>
+    </VisitRestaurantShape>
+  </VisitRestaurantWrapper>
 );
 
 type Props = {
+  isDataFetched: boolean,
+  isOpen: boolean,
   restaurantName: string,
-  status: ?string,
-  distance: ?number,
-  isVisible: boolean,
+  distance: number,
+  navigation: Function,
 };
 
 const RestaurantInfo = ({
+  isOpen,
   restaurantName,
-  status,
   distance,
-  isVisible,
-}: Props) => (
-  <WrapperShimmer
-    autoRun
-    visible={isVisible}
-  >
-    <Wrapper>
-      <ShimmerPlaceholder
-        autoRun
-        visible={isVisible}
-      >
-        {renderMainContent(restaurantName, status, distance)}
-      </ShimmerPlaceholder>
-      {isVisible && renderSeeRestaurantButton()}
-    </Wrapper>
-  </WrapperShimmer>
-);
+  isDataFetched,
+  navigation,
+}: Props) => {
+  const RestaurantInfoComponents = (
+    <RestaurantInfoWrapper>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <RestaurantTextInfoWrapper>
+          <RestaurantIcon />
+          {renderTextContent(distance, isOpen, restaurantName)}
+        </RestaurantTextInfoWrapper>
+        {renderRestaurantVisitButton(navigation)}
+      </View>
+    </RestaurantInfoWrapper>
+  );
 
-export default RestaurantInfo;
+  const ProperComponent = (isDataFetched ? RestaurantInfoComponents : <RestaurantInfoShimmer />);
+
+  return ProperComponent;
+};
+
+export default withNavigation(RestaurantInfo);

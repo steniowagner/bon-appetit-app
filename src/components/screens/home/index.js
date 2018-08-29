@@ -55,6 +55,7 @@ HomeMainContent.navigationOptions = {
   title: 'Bon Appetit',
   headerStyle: {
     backgroundColor: appStyle.colors.primaryColor,
+    borderBottomWidth: 0,
   },
   headerTintColor: appStyle.colors.defaultWhite,
   headerTitleStyle: {

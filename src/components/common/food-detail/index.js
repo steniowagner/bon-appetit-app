@@ -9,112 +9,84 @@ import {
   Animated,
 } from 'react-native';
 
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-
-import FlagPrice from 'components/common/FlagPrice';
-import ReviewStars from 'components/common/ReviewStars';
 import CustomTab from 'components/common/CustomTab';
-import FloatingActionButton from 'components/common/FloatingActionButton';
 
-import RestaurantInfo from './components/RestaurantInfo';
+import FloatingActionButton from 'components/common/FloatingActionButton';
 import IngredientsItemList from './components/IngredientsItemList';
 import ReviewItemList from './components/ReviewItemList';
+import FoodStatus from './components/FoodStatus';
+import RestaurantInfo from './components/RestaurantInfo';
 
-const Container = styled(View)`
-  flex: 1;
+const ImageWrapper = styled(View)`
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('27%')};
 `;
 
-const Header = styled(View)`
+const FloatingActionButtonWrapper = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
-  background-color: ${({ theme }) => theme.colors.darkLayer};
-  justify-content: flex-end;
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('27%') - 28}px;
+  align-items: flex-end;
+  padding-right: ${({ theme }) => theme.metrics.extraLargeSize * 2}px;
   position: absolute;
 `;
 
-const HeaderShimmer = styled(ShimmerPlaceHolder)`
+const SmokeShadowImage = styled(Image).attrs({
+  source: require('../../../styles/img/shadow-smoke.png'),
+})`
   width: 100%;
-  height: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('28%')};
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('15%')};
 `;
 
 const FoodImage = styled(Image).attrs({
-  source: ({ foodImage }) => ({ uri: foodImage }),
+  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
 })`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
+  height: 100%;
+  position: absolute;
 `;
 
 const ContentContainer = styled(View)`
+  flex: 1;
+  background-color: ${({ theme }) => theme.colors.primaryColor};
+  padding-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
+`;
+
+const CardContainer = styled(View)`
+  background-color: ${({ theme }) => theme.colors.defaultWhite};
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('75%')}px;
-`;
-
-const ContentCard = styled(View)`
   height: 100%;
-  padding: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px`};
-  background-color: ${({ theme }) => theme.colors.white};
+  padding: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-bottom: 0px;
+  border-top-left-radius: ${({ theme }) => theme.metrics.borderRadius}px;
+  border-top-right-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
-
-const FoodName = styled(Text).attrs({
-  numberOfLines: 2,
-  ellipsizeMode: 'tail',
-})`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('65%')}px;
-  color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5.5%')};
-  padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  font-family: CircularStd-Black;
-`;
-
-const FoodDescriptionWrapper = styled(View)``;
 
 const FoodDescription = styled(Text).attrs({
   numberOfLines: 3,
   ellipsizeMode: 'tail',
 })`
+  margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
   color: ${({ theme }) => theme.colors.subText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')};
   font-family: CircularStd-Book;
-`;
-
-const FoodDescriptionText = styled(Text)`
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')};
-  font-family: CircularStd-Bold;
-`;
-
-const TextContentContainer = styled(View)`
-  width: 100%;
 `;
 
 const CustomTabWrapper = styled(View)`
   flex: 1;
 `;
 
-const TopContent = styled(View)`
+const FoodDescriptionShimmer = styled(ShimmerPlaceholder).attrs({
+  visible: false,
+  autoRun: true,
+})`
   width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const TopContentWrapper = styled(View)`
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
-`;
-
-const FlagPriceWrapper = styled(View)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('16.5%')}px;
-  justify-content: center;
-`;
-
-const FloatingActionButtonWrapper = styled(View)`
-  width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('25%') - 28}px;
-  align-items: flex-end;
-  padding-right: ${({ theme }) => theme.metrics.extraLargeSize}px;
-  position: absolute;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('15%')}px;
+  padding-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
 `;
 
 const ingredients = [
@@ -128,7 +100,7 @@ const ingredients = [
   { id: '8', name: 'Ingrediente 8' },
 ];
 
-const reviews = [
+const revs = [
   {
     id: '1',
     reviewer: 'Stenio Wagner',
@@ -148,7 +120,32 @@ const reviews = [
     review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
     stars: 4.5,
   }, {
-    id: '4',
+    id: '421',
+    reviewer: 'Beatriz Eliana',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 6,
+  },
+  {
+    id: '12',
+    reviewer: 'Stenio Wagner',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 3.5,
+  }, {
+    id: '22',
+    reviewer: 'Ana Eridan',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 3.5,
+  }, {
+    id: '32',
+    reviewer: 'Manoel Elisval',
+    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
+    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
+    stars: 4.5,
+  }, {
+    id: '42',
     reviewer: 'Beatriz Eliana',
     reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
     review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
@@ -156,13 +153,9 @@ const reviews = [
   },
 ];
 
-type Props = {
-  navigation: Function,
-};
-
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-class FoodDetail extends Component<Props, {}> {
+class FoodDetail extends Component {
   static navigationOptions = {
     headerTintColor: appStyles.colors.defaultWhite,
     headerTransparent: true,
@@ -174,7 +167,7 @@ class FoodDetail extends Component<Props, {}> {
 
   state = {
     tabItemSelected: 0,
-    isFoodImageLoaded: false,
+    isDataFetched: true,
   }
 
   onLoadFoodImage = () => {
@@ -208,42 +201,6 @@ class FoodDetail extends Component<Props, {}> {
     this._flatListHeight = height;
   }
 
-  renderTopContentWrapper = (): Object => {
-    const { navigation } = this.props;
-
-    const {
-      foodTitle,
-      price,
-      stars,
-      mode,
-    } = navigation.getParam('payload', {});
-
-    const shouldRenderFlagPrice = mode === 'detail';
-    const renderFlagPrice = () => (
-      shouldRenderFlagPrice && (
-      <FlagPriceWrapper>
-        <FlagPrice price={price} />
-      </FlagPriceWrapper>)
-    );
-
-    return (
-      <TopContentWrapper>
-        <TopContent>
-          <FoodName>
-            {foodTitle}
-          </FoodName>
-          {renderFlagPrice()}
-        </TopContent>
-        <ReviewStars
-          shouldShowReviewsText
-          reviews={16}
-          textColor="defaultWhite"
-          stars={stars}
-        />
-      </TopContentWrapper>
-    );
-  }
-
   renderListItem = (item, index) => {
     const { tabItemSelected } = this.state;
 
@@ -269,12 +226,28 @@ class FoodDetail extends Component<Props, {}> {
     return ProperComponent;
   }
 
-  renderListSection = () => {
-    const tabContentWidth = appStyles.metrics.getWidthFromDP('100%') - (appStyles.metrics.largeSize * 2);
-    const { tabItemSelected } = this.state;
-    const dataset = (tabItemSelected === 0) ? ingredients : reviews;
+  renderFoodDescription = () => {
+    const { isDataFetched } = this.state;
+    const { navigation } = this.props;
+    const { foodDescription } = navigation.getParam('payload', {});
 
-    return (
+    const FoodDescriptionComponents = (
+      <FoodDescription>
+        {foodDescription || 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI'}
+      </FoodDescription>
+    );
+
+    const ProperComponent = (isDataFetched ? FoodDescriptionComponents : <FoodDescriptionShimmer />);
+
+    return ProperComponent;
+  }
+
+  renderListSection = () => {
+    const tabContentWidth = appStyles.metrics.getWidthFromDP('100%') - (appStyles.metrics.largeSize * 4);
+    const { tabItemSelected, isDataFetched } = this.state;
+    const dataset = (tabItemSelected === 0) ? ingredients : revs;
+
+    return isDataFetched && (
       <CustomTabWrapper>
         <CustomTab
           contentWidth={tabContentWidth}
@@ -304,41 +277,6 @@ class FoodDetail extends Component<Props, {}> {
     );
   }
 
-  renderTextContent = (): Object => {
-    const { navigation } = this.props;
-    const { foodDescription, mode } = navigation.getParam('payload', {});
-    const { isFoodImageLoaded } = this.state;
-
-    const shouldRenderRestaurantInfo = mode === 'detail';
-
-    return (
-      <TextContentContainer>
-        {shouldRenderRestaurantInfo
-          && (
-          <RestaurantInfo
-            restaurantName="Cabaña del Primo"
-            status="open"
-            distance={3}
-            isVisible={isFoodImageLoaded}
-          />)
-        }
-        <ShimmerPlaceHolder
-          visible={isFoodImageLoaded}
-          autoRun
-        >
-          <FoodDescriptionWrapper>
-            <FoodDescriptionText>
-              Description
-            </FoodDescriptionText>
-            <FoodDescription>
-              {foodDescription}
-            </FoodDescription>
-          </FoodDescriptionWrapper>
-        </ShimmerPlaceHolder>
-      </TextContentContainer>
-    );
-  }
-
   renderFloatingActionButton = () => (
     <FloatingActionButtonWrapper>
       <FloatingActionButton
@@ -349,37 +287,65 @@ class FoodDetail extends Component<Props, {}> {
     </FloatingActionButtonWrapper>
   )
 
-  render() {
+  renderFoodImage = () => {
     const { navigation } = this.props;
-    const { mode, foodImage } = navigation.getParam('payload', {});
-
-    const { isFoodImageLoaded } = this.state;
+    const { foodImageURL } = navigation.getParam('payload', {});
 
     return (
-      <Container>
+      <ImageWrapper>
         <FoodImage
-          onLoad={() => this.onLoadFoodImage()}
-          foodImage={foodImage}
+          foodImageURL={foodImageURL}
         />
-        <Header>
-          <HeaderShimmer
-            autoRun
-            visible={isFoodImageLoaded}
-          >
-            {this.renderTopContentWrapper()}
-          </HeaderShimmer>
-        </Header>
+        <SmokeShadowImage />
+      </ImageWrapper>
+    );
+  }
+
+  render() {
+    const { isDataFetched } = this.state;
+    const { navigation } = this.props;
+
+    const {
+      mode,
+      foodTitle,
+      price,
+      reviews,
+      stars,
+      isOpen,
+      distance,
+    } = navigation.getParam('payload', {});
+
+    const isReviewMode = mode === 'review';
+
+    return (
+      <Fragment>
+        {this.renderFoodImage()}
         <ContentContainer>
-          <ContentCard>
-            {this.renderTextContent()}
-            {isFoodImageLoaded && this.renderListSection()}
-          </ContentCard>
+          <CardContainer>
+            <FoodStatus
+              isReviewMode={isReviewMode}
+              isDataFetched={isDataFetched}
+              foodTitle={foodTitle}
+              price={price}
+              reviews={reviews || 15}
+              stars={stars}
+            />
+            {!isReviewMode && (
+              <RestaurantInfo
+                isOpen={isOpen}
+                restaurantName="Cabaña del Primo"
+                distance={distance || 4}
+                isDataFetched={isDataFetched}
+              />
+            )}
+            {this.renderFoodDescription()}
+            {this.renderListSection()}
+          </CardContainer>
         </ContentContainer>
-        {mode === 'review' && this.renderFloatingActionButton()}
-      </Container>
+        {isReviewMode && this.renderFloatingActionButton()}
+      </Fragment>
     );
   }
 }
-
 
 export default FoodDetail;

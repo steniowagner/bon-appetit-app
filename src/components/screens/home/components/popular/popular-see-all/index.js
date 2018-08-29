@@ -18,7 +18,7 @@ const data = [{
   stars: 5,
   distance: 12,
   description: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos',
-  foodImage: 'https://statics.jennycraig.com/images/products/0405-045_small.jpg',
+  foodImageURL: 'https://statics.jennycraig.com/images/products/0405-045_small.jpg',
   price: parseFloat(22.90).toFixed(2),
   isDataFetched: true,
 },
@@ -29,7 +29,7 @@ const data = [{
   stars: 5,
   distance: 12,
   description: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos',
-  foodImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR5a5_tS0s_SnrdMsLapahfjDhhzGcBqJ1DwLbE7a4YXlDZdN1dA',
+  foodImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR5a5_tS0s_SnrdMsLapahfjDhhzGcBqJ1DwLbE7a4YXlDZdN1dA',
   price: parseFloat(22.90).toFixed(2),
   isDataFetched: true,
 },
@@ -40,7 +40,7 @@ const data = [{
   stars: 5,
   distance: 12,
   description: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos',
-  foodImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnlX0NmVmoHwA0CYh5kRtrCWs1YdmvBrYQDt6DtNVoaR8ZKCs8fQ',
+  foodImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnlX0NmVmoHwA0CYh5kRtrCWs1YdmvBrYQDt6DtNVoaR8ZKCs8fQ',
   price: parseFloat(22.90).toFixed(2),
   isDataFetched: true,
 },
@@ -51,7 +51,7 @@ const data = [{
   stars: 5,
   distance: 12,
   description: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos',
-  foodImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgqGNJevSVzjR-gcy29I9A7Z_oduPRQxvaFePJ5ppNicnSjFgo',
+  foodImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgqGNJevSVzjR-gcy29I9A7Z_oduPRQxvaFePJ5ppNicnSjFgo',
   price: parseFloat(22.90).toFixed(2),
   isDataFetched: true,
 }];
@@ -68,7 +68,7 @@ const PopularSeeAll = () => (
         stars={item.stars}
         distance={item.distance}
         description={item.description}
-        foodImage={item.foodImage}
+        foodImageURL={item.foodImageURL}
         price={item.price}
         isDataFetched={item.isDataFetched}
       />

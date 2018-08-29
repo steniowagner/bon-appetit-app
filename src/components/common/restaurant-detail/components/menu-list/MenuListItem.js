@@ -34,7 +34,7 @@ const ContentWrapper = styled(View)`
 `;
 
 const FoodImage = styled(Image).attrs({
-  source: ({ foodImage }) => ({ uri: foodImage }),
+  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
 })`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('22%')}px;
   height: 100%;
@@ -121,7 +121,7 @@ const FlagStarsContent = styled(View)`
 type Props = {
   foodTitle: string,
   foodDescription: string,
-  foodImage: string,
+  foodImageURL: string,
   price: number,
   stars: number,
   navigation: Function,
@@ -177,7 +177,7 @@ class MenuListItem extends Component<Props, State> {
     const {
       foodTitle,
       foodDescription,
-      foodImage,
+      foodImageURL,
       price,
       stars,
       navigation,
@@ -185,10 +185,10 @@ class MenuListItem extends Component<Props, State> {
     } = this.props;
 
     const navigationParams = {
-      mode: 'detail',
+      mode: 'review',
       foodTitle,
       foodDescription,
-      foodImage,
+      foodImageURL,
       price,
       stars,
     };
@@ -205,7 +205,7 @@ class MenuListItem extends Component<Props, State> {
           <ContentWrapper>
             <FoodImage
               onLoad={() => this.onLoadFoodImage()}
-              foodImage={foodImage}
+              foodImageURL={foodImageURL}
             />
             <FoodImageShimmer
               visible={isFoodImageLoaded}
