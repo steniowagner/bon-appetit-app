@@ -27,7 +27,7 @@ const DarkLayer = styled(View)`
 `;
 
 const RestaurantImage = styled(Image).attrs({
-  source: ({ imageURL }) => ({ uri: imageURL }),
+  source: ({ imageURL }) => ({ uri: (imageURL || 'https://images.unsplash.com/photo-1521917441209-e886f0404a7b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=c9da9e12bc69d92a619d44059a8d335f&auto=format&fit=crop&w=1000&q=80')}),
 })`
   width: 100%;
   height: 100%;
@@ -85,7 +85,7 @@ class HeaderSection extends Component<Props, State> {
       <Container>
         <RestaurantImage
           onLoad={() => this.onLoadHeaderImage()}
-          imageURL={restaurantImage}
+          imageURL={restaurantImage || "Cabña del Primo"}
         />
         <DarkLayer />
         <ContentWrapper>
@@ -96,7 +96,7 @@ class HeaderSection extends Component<Props, State> {
             shouldShowReviewsText
             textColor="defaultWhite"
             reviews={reviews}
-            stars={stars}
+            stars={stars || 3.5}
           />
         </ContentWrapper>
         <ContainerShimmer

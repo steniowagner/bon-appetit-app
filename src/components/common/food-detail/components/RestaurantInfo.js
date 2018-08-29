@@ -95,7 +95,7 @@ const RestaurantInfoShimmer = styled(ShimmerPlaceholder).attrs({
 `;
 
 const onPressVisitRestaurantButton = (navigation: Function): void => {
-  navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, {});
+  navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL);
 };
 
 const renderTextContent = (distance: number, isOpen: boolean, restaurantName: string): Object => {

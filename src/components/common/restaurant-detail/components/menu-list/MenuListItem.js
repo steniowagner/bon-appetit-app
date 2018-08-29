@@ -138,14 +138,13 @@ class MenuListItem extends Component<Props, State> {
   };
 
   onLoadFoodImage = () => {
-    console.log('onLoadFoodImage')
     this.setState({
       isFoodImageLoaded: true,
-    }, () => console.log('loaded'));
+    });
   }
 
   onPressItem = (payload: Object, navigation: Function): void => {
-    navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, { payload });
+    navigation.navigate(ROUTE_NAMES.FOOD_DETAIL_REVIEW, { payload });
   };
 
   renderTextContent = (foodTitle: string, foodDescription: string): Object => (

@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import RestaurantAddressMap from 'components/common/RestaurantAddressMap';
 import RestaurantDetail from 'components/common/restaurant-detail';
 import FoodDetail from 'components/common/food-detail';
+import FoodDetailReview from 'components/common/restaurant-detail/components/food-detail-review';
 import PopularSeeAll from 'components/screens/home/components/popular/popular-see-all';
 import YMLSeeAll from 'components/screens/home/components/you-might-like/yml-see-all';
 
@@ -21,6 +22,7 @@ export const ROUTE_NAMES = {
   FOOD_DETAIL: 'FOOD_DETAIL',
   ALL_POPULAR: 'ALL_POPULAR',
   ALL_YOU_MIGHT_LIKE: 'ALL_YOU_MIGHT_LIKE',
+  FOOD_DETAIL_REVIEW: 'FOOD_DETAIL_REVIEW',
 };
 
 const ROUTES = createStackNavigator({
@@ -63,6 +65,13 @@ const ROUTES = createStackNavigator({
 
   [ROUTE_NAMES.FOOD_DETAIL]: {
     screen: FoodDetail,
+    navigationOptions: () => ({
+      headerBackTitle: null,
+    }),
+  },
+
+  [ROUTE_NAMES.FOOD_DETAIL_REVIEW]: {
+    screen: FoodDetailReview,
     navigationOptions: () => ({
       headerBackTitle: null,
     }),

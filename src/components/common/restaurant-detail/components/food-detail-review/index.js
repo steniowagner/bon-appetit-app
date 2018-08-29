@@ -22,7 +22,6 @@ import FloatingActionButton from 'components/common/FloatingActionButton';
 import IngredientsItemList from './components/IngredientsItemList';
 import ReviewItemList from './components/ReviewItemList';
 import FoodStatus from './components/FoodStatus';
-import RestaurantInfo from './components/RestaurantInfo';
 
 const ImageWrapper = styled(View)`
   width: 100%;
@@ -38,7 +37,7 @@ const FloatingActionButtonWrapper = styled(View)`
 `;
 
 const SmokeShadowImage = styled(Image).attrs({
-  source: require('../../../styles/img/shadow-smoke.png'),
+  source: require('styles/img/shadow-smoke.png'),
 })`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('28%')};
@@ -158,7 +157,7 @@ const revs = [
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-class FoodDetail extends Component {
+class FoodDetailReview extends Component {
   static navigationOptions = ({ navigation }) => {
     const { mode } = navigation.state.params.payload;
 
@@ -326,8 +325,6 @@ class FoodDetail extends Component {
       price,
       reviews,
       stars,
-      isOpen,
-      distance,
     } = navigation.getParam('payload', {});
 
     const isReviewMode = mode === 'review';
@@ -345,22 +342,14 @@ class FoodDetail extends Component {
               reviews={reviews || 15}
               stars={stars}
             />
-            {!isReviewMode && (
-              <RestaurantInfo
-                isOpen={isOpen}
-                restaurantName="Cabaña del Primo"
-                distance={distance || 4}
-                isDataFetched={isDataFetched}
-              />
-            )}
             {this.renderFoodDescription()}
             {this.renderListSection()}
           </CardContainer>
         </ContentContainer>
-        {isReviewMode && this.renderFloatingActionButton()}
+        {this.renderFloatingActionButton()}
       </Fragment>
     );
   }
 }
 
-export default FoodDetail;
+export default FoodDetailReview;
