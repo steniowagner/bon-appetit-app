@@ -18,7 +18,6 @@ import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import FlagPrice from 'components/common/FlagPrice';
 
 const Container = styled(View)`
-  width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('15%')}px;
   margin-bottom: ${({ theme }) => `${theme.metrics.smallSize}px`}
 `;

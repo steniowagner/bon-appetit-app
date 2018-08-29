@@ -9,9 +9,6 @@ import {
   Animated,
 } from 'react-native';
 
-import { HeaderBackButton } from 'react-navigation';
-import { ROUTE_NAMES } from 'components/screens/home/routes';
-
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import styled from 'styled-components';
 import appStyles from 'styles';
@@ -158,22 +155,10 @@ const revs = [
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FoodDetailReview extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const { mode } = navigation.state.params.payload;
-
-    const isReviewMode = mode === 'review';
-    const customGoBack = (isReviewMode ? navigation.navigate : navigation.goBack);
-    const route = (isReviewMode ? ROUTE_NAMES.RESTAURANT_DETAIL : null);
-
-    return {
-      headerLeft: (<HeaderBackButton
-        onPress={() => customGoBack(route)}
-        tintColor={appStyles.colors.defaultWhite}
-      />),
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTransparent: true,
-      headerBackTitle: null,
-    };
+  static navigationOptions = {
+    headerTintColor: appStyles.colors.defaultWhite,
+    headerTransparent: true,
+    headerBackTitle: null,
   };
 
   _animatedFlatlistPosition = new Animated.Value(0);
@@ -320,14 +305,11 @@ class FoodDetailReview extends Component {
     const { navigation } = this.props;
 
     const {
-      mode,
       foodTitle,
       price,
       reviews,
       stars,
     } = navigation.getParam('payload', {});
-
-    const isReviewMode = mode === 'review';
 
     return (
       <Fragment>
@@ -335,7 +317,6 @@ class FoodDetailReview extends Component {
         <ContentContainer>
           <CardContainer>
             <FoodStatus
-              isReviewMode={isReviewMode}
               isDataFetched={isDataFetched}
               foodTitle={foodTitle}
               price={price}

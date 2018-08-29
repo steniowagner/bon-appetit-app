@@ -9,16 +9,12 @@ import {
   Animated,
 } from 'react-native';
 
-import { HeaderBackButton } from 'react-navigation';
-import { ROUTE_NAMES } from 'components/screens/home/routes';
-
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
 import CustomTab from 'components/common/CustomTab';
 
-import FloatingActionButton from 'components/common/FloatingActionButton';
 import IngredientsItemList from './components/IngredientsItemList';
 import ReviewItemList from './components/ReviewItemList';
 import FoodStatus from './components/FoodStatus';
@@ -27,14 +23,6 @@ import RestaurantInfo from './components/RestaurantInfo';
 const ImageWrapper = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('27%')};
-`;
-
-const FloatingActionButtonWrapper = styled(View)`
-  width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('27%') - 28}px;
-  align-items: flex-end;
-  padding-right: ${({ theme }) => theme.metrics.extraLargeSize * 2}px;
-  position: absolute;
 `;
 
 const SmokeShadowImage = styled(Image).attrs({
@@ -159,22 +147,10 @@ const revs = [
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FoodDetail extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const { mode } = navigation.state.params.payload;
-
-    const isReviewMode = mode === 'review';
-    const customGoBack = (isReviewMode ? navigation.navigate : navigation.goBack);
-    const route = (isReviewMode ? ROUTE_NAMES.RESTAURANT_DETAIL : null);
-
-    return {
-      headerLeft: (<HeaderBackButton
-        onPress={() => customGoBack(route)}
-        tintColor={appStyles.colors.defaultWhite}
-      />),
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTransparent: true,
-      headerBackTitle: null,
-    };
+  static navigationOptions = {
+    headerTintColor: appStyles.colors.defaultWhite,
+    headerTransparent: true,
+    headerBackTitle: null,
   };
 
   _animatedFlatlistPosition = new Animated.Value(0);
@@ -292,16 +268,6 @@ class FoodDetail extends Component {
     );
   }
 
-  renderFloatingActionButton = () => (
-    <FloatingActionButtonWrapper>
-      <FloatingActionButton
-        name="star"
-        color="yellow"
-        action={() => {}}
-      />
-    </FloatingActionButtonWrapper>
-  )
-
   renderFoodImage = () => {
     const { navigation } = this.props;
     const { foodImageURL } = navigation.getParam('payload', {});
@@ -321,7 +287,6 @@ class FoodDetail extends Component {
     const { navigation } = this.props;
 
     const {
-      mode,
       foodTitle,
       price,
       reviews,
@@ -330,34 +295,28 @@ class FoodDetail extends Component {
       distance,
     } = navigation.getParam('payload', {});
 
-    const isReviewMode = mode === 'review';
-
     return (
       <Fragment>
         {this.renderFoodImage()}
         <ContentContainer>
           <CardContainer>
             <FoodStatus
-              isReviewMode={isReviewMode}
               isDataFetched={isDataFetched}
               foodTitle={foodTitle}
               price={price}
               reviews={reviews || 15}
               stars={stars}
             />
-            {!isReviewMode && (
-              <RestaurantInfo
-                isOpen={isOpen}
-                restaurantName="Cabaña del Primo"
-                distance={distance || 4}
-                isDataFetched={isDataFetched}
-              />
-            )}
+            <RestaurantInfo
+              isOpen={isOpen}
+              restaurantName="Cabaña del Primo"
+              distance={distance || 4}
+              isDataFetched={isDataFetched}
+            />
             {this.renderFoodDescription()}
             {this.renderListSection()}
           </CardContainer>
         </ContentContainer>
-        {isReviewMode && this.renderFloatingActionButton()}
       </Fragment>
     );
   }

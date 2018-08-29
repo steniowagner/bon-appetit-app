@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { View, Text } from 'react-native';
 import styled from 'styled-components';
@@ -45,7 +47,6 @@ type Props = {
   stars: number,
   foodTitle: string,
   isDataFetched: boolean,
-  isReviewMode: boolean,
 };
 
 const FoodStatus = ({
@@ -54,7 +55,6 @@ const FoodStatus = ({
   stars,
   foodTitle,
   isDataFetched,
-  isReviewMode,
 }: Props) => {
   const FoodStatusComponents = (
     <TopContent>
@@ -62,11 +62,9 @@ const FoodStatus = ({
         <FoodTitle>
           {foodTitle}
         </FoodTitle>
-        {!isReviewMode && (
-          <FlagPrice
-            price={price}
-          />
-        )}
+        <FlagPrice
+          price={price}
+        />
       </FirstRowWrapper>
       <ReviewStars
         shouldShowReviewsText

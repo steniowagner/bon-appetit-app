@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, FlatList, Animated } from 'react-native';
 
 import styled from 'styled-components';
 import appStyle from 'styles';
@@ -12,9 +12,7 @@ import CustomTab from 'components/screens/home/components/common/CustomTab';
 import FloatinActionButton from 'components/common/FloatingActionButton';
 import HeaderSection from './components/HeaderSection';
 import AboutRestaurantSection from './components/AboutRestaurantSection';
-import MenuList from './components/menu-list';
-
-import Context from './components/Context';
+import MenuListItem from './components/MenuListItem';
 
 import data from './test-data';
 
@@ -25,6 +23,7 @@ const Container = styled(View)`
 
 const Menu = styled(View)`
   flex: 1;
+  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
   background-color: ${({ theme }) => theme.colors.primaryColor};
 `;
 
@@ -51,6 +50,8 @@ type State = {
   isDataFetched: boolean,
 };
 
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 class RestaurantDetail extends Component<Props, State> {
   static navigationOptions = {
     headerTintColor: appStyle.colors.defaultWhite,
@@ -58,15 +59,56 @@ class RestaurantDetail extends Component<Props, State> {
     headerBackTitle: null,
   };
 
+  _animatedFlatlistPosition = new Animated.Value(0);
+  _animatedFlatlistOpacity = new Animated.Value(1);
+  _flatListWidth = 0;
+
   state = {
     indexMenuSelected: 0,
     isDataFetched: true,
   };
 
-  onSelectMenu = (indexMenuSelected: number): void => {
-    this.setState({
-      indexMenuSelected,
+  onChangeMenuIndex = (indexSelected: number): void => {
+    const { indexMenuSelected } = this.state;
+
+    if (indexMenuSelected === indexSelected) {
+      return;
+    }
+
+    const animationAppearCombo = Animated.sequence([
+      Animated.timing(this._animatedFlatlistPosition, {
+        toValue: this._flatListWidth,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+
+      Animated.timing(this._animatedFlatlistOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+
+      Animated.spring(this._animatedFlatlistPosition, {
+        toValue: 0,
+        bounciness: 8,
+        useNativeDriver: true,
+      }),
+    ]);
+
+    Animated.timing(this._animatedFlatlistOpacity, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      this.setState({
+        indexMenuSelected: indexSelected,
+      }, () => animationAppearCombo.start());
     });
+  }
+
+  onFlatlistLayout = (event: Object): void => {
+    const { width } = event.nativeEvent.layout;
+    this._flatListWidth = width;
   }
 
   renderMenuSection = () => {
@@ -74,10 +116,40 @@ class RestaurantDetail extends Component<Props, State> {
 
     return (
       <Menu>
-        {isDataFetched && <CustomTab />}
-        <MenuList
+        {isDataFetched && (
+          <CustomTab
+            onChangeMenuIndex={this.onChangeMenuIndex}
+          />
+        )}
+        <AnimatedFlatList
+          style={{
+            padding: appStyle.metrics.smallSize,
+            opacity: this._animatedFlatlistOpacity,
+            marginLeft: this._animatedFlatlistPosition._value,
+            transform: [
+              {
+                translateX: this._animatedFlatlistPosition.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
+                }),
+              },
+            ],
+          }}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onLayout={this.onFlatlistLayout}
           data={data[indexMenuSelected]}
-          isDataFetched={isDataFetched}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <MenuListItem
+              isDataFetched={isDataFetched}
+              foodImageURL={item.foodImageURL}
+              foodTitle={item.foodTitle}
+              foodDescription={item.foodDescription}
+              price={item.price}
+              stars={item.stars}
+            />
+          )}
         />
       </Menu>
     );
@@ -141,23 +213,17 @@ class RestaurantDetail extends Component<Props, State> {
     } = navigation.getParam('payload', {});
 
     return (
-      <Context.Provider
-        value={{
-          onSelectMenu: this.onSelectMenu,
-        }}
-      >
-        <Container>
-          <HeaderSection
-            restaurantImage={picURL}
-            restaurantName={name}
-            reviews={18}
-            stars={stars}
-          />
-          {this.renderAboutRestaurantSection()}
-          {this.renderFloatingActionButton()}
-          {this.renderMenuSection()}
-        </Container>
-      </Context.Provider>
+      <Container>
+        <HeaderSection
+          restaurantImage={picURL}
+          restaurantName={name}
+          reviews={18}
+          stars={stars}
+        />
+        {this.renderAboutRestaurantSection()}
+        {this.renderFloatingActionButton()}
+        {this.renderMenuSection()}
+      </Container>
     );
   }
 }

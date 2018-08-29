@@ -10,8 +10,6 @@ import {
 import styled from 'styled-components';
 import appStyles from 'styles';
 
-import Context from 'components/common/restaurant-detail/components/Context';
-
 const Container = styled(View)`
   width: 100%;
   flex-direction: row;
@@ -162,8 +160,9 @@ class CustomTab extends Component {
     return passedTimeEnough;
   }
 
-  renderList = (onSelectMenu: Function): Object => {
+  renderList = (): Object => {
     const { itemSelectedIndex, cellWidth } = this.state;
+    const { onChangeMenuIndex } = this.props;
 
     return (
       <FlatList
@@ -178,7 +177,7 @@ class CustomTab extends Component {
             width={cellWidth}
             onPress={() => {
               this.onCellPress(index);
-              onSelectMenu(index);
+              onChangeMenuIndex(index);
             }}
           >
             <OptionText
@@ -211,14 +210,10 @@ class CustomTab extends Component {
 
   render() {
     return (
-      <Context.Consumer>
-        {context => (
-          <Container>
-            {this.renderList(context.onSelectMenu)}
-            {this.renderMarker()}
-          </Container>
-        )}
-      </Context.Consumer>
+      <Container>
+        {this.renderList()}
+        {this.renderMarker()}
+      </Container>
     );
   }
 }
