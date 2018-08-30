@@ -4,11 +4,11 @@ import React, { Component } from 'react';
 import { View, FlatList, Animated } from 'react-native';
 
 import styled from 'styled-components';
-import appStyle from 'styles';
+import appStyles from 'styles';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 
-import CustomTab from 'components/screens/home/components/common/CustomTab';
+import CustomTab from 'components/common/CustomTab';
 import FloatinActionButton from 'components/common/FloatingActionButton';
 import HeaderSection from './components/HeaderSection';
 import AboutRestaurantSection from './components/AboutRestaurantSection';
@@ -52,9 +52,23 @@ type State = {
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
+const menu = [{
+  id: '1',
+  title: 'Pizzas',
+}, {
+  id: '2',
+  title: 'Churrascos',
+}, {
+  id: '3',
+  title: 'Saladas',
+}, {
+  id: '4',
+  title: 'Oriental',
+}];
+
 class RestaurantDetail extends Component<Props, State> {
   static navigationOptions = {
-    headerTintColor: appStyle.colors.defaultWhite,
+    headerTintColor: appStyles.colors.defaultWhite,
     headerTransparent: true,
     headerBackTitle: null,
   };
@@ -78,13 +92,13 @@ class RestaurantDetail extends Component<Props, State> {
     const animationAppearCombo = Animated.sequence([
       Animated.timing(this._animatedFlatlistPosition, {
         toValue: this._flatListWidth,
-        duration: 200,
+        duration: 150,
         useNativeDriver: true,
       }),
 
       Animated.timing(this._animatedFlatlistOpacity, {
         toValue: 1,
-        duration: 200,
+        duration: 150,
         useNativeDriver: true,
       }),
 
@@ -97,7 +111,7 @@ class RestaurantDetail extends Component<Props, State> {
 
     Animated.timing(this._animatedFlatlistOpacity, {
       toValue: 0,
-      duration: 200,
+      duration: 150,
       useNativeDriver: true,
     }).start(() => {
       this.setState({
@@ -118,12 +132,15 @@ class RestaurantDetail extends Component<Props, State> {
       <Menu>
         {isDataFetched && (
           <CustomTab
+            data={menu}
+            theme="light"
+            contentWidth={appStyles.metrics.width}
             onChangeMenuIndex={this.onChangeMenuIndex}
           />
         )}
         <AnimatedFlatList
           style={{
-            padding: appStyle.metrics.smallSize,
+            padding: appStyles.metrics.smallSize,
             opacity: this._animatedFlatlistOpacity,
             marginLeft: this._animatedFlatlistPosition._value,
             transform: [

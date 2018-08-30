@@ -167,7 +167,7 @@ class FoodDetail extends Component {
     });
   }
 
-  onChangeListIndex = (index: number): void => {
+  onChangeMenuIndex = (index: number): void => {
     const onAniamateListAppear = () => {
       Animated.spring(this._animatedFlatlistPosition, {
         toValue: 0,
@@ -241,9 +241,10 @@ class FoodDetail extends Component {
     return isDataFetched && (
       <CustomTabWrapper>
         <CustomTab
+          theme="light"
           contentWidth={tabContentWidth}
-          data={[{ id: '1', item: 'Ingredients' }, { id: '2', item: 'Reviews' }]}
-          onChangeListIndex={this.onChangeListIndex}
+          data={[{ id: '1', title: 'Ingredients' }, { id: '2', title: 'Reviews' }]}
+          onChangeMenuIndex={this.onChangeMenuIndex}
         />
         <AnimatedFlatList
           style={[{

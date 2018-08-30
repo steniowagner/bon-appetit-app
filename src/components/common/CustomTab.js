@@ -16,7 +16,7 @@ const Container = styled(View)`
   width: 100%;
   flex-direction: row;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('7%')};
-  background-color: ${({ theme }) => theme.colors.defaultWhite};
+  background-color: ${({ color }) => color};
 `;
 
 const Cell = styled(TouchableOpacity)`
@@ -24,7 +24,7 @@ const Cell = styled(TouchableOpacity)`
   align-items: center;
   width: ${({ width }) => width};
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ color }) => color};
 `;
 
 const MarkerWrapper = styled(Animated.View)`
@@ -42,7 +42,7 @@ const Marker = styled(View)`
 `;
 
 const OptionText = styled(Text)`
-  color: ${({ color }) => color};
+  color: ${({ color }) => color}
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
   fontFamily: CircularStd-Medium;
 `;
@@ -50,7 +50,8 @@ const OptionText = styled(Text)`
 type Props = {
   data: Array<Object>,
   contentWidth: number,
-  onChangeListIndex: Function,
+  onChangeMenuIndex: Function,
+  theme: string,
 };
 
 type State = {
@@ -82,14 +83,14 @@ class CustomTab extends Component<Props, State> {
       return;
     }
 
-    const { onChangeListIndex } = this.props;
+    const { onChangeMenuIndex } = this.props;
     const { itemSelectedIndex } = this.state;
 
     if (newIndexSelected === itemSelectedIndex) {
       return;
     }
 
-    onChangeListIndex(newIndexSelected);
+    onChangeMenuIndex(newIndexSelected);
 
     this.onMoveList(newIndexSelected);
 
@@ -153,15 +154,17 @@ class CustomTab extends Component<Props, State> {
 
     Animated.timing(this._markerPaddingLeft, {
       toValue: newMarkerMargin,
-      duration: 350,
+      duration: 250,
       useNativeDriver: true,
     }).start();
   }
 
   getCellTextColor = (itemSelectedIndex: number, cellIndex: number): string => {
-    const { red, darkText } = appStyles.colors;
+    const { red } = appStyles.colors;
+    const { theme } = this.props;
 
-    const cellTextColor = (itemSelectedIndex === cellIndex) ? red : darkText;
+    const inactiveCellTextColor = (theme === 'light' ? appStyles.colors.primaryColor : appStyles.colors.defaultWhite);
+    const cellTextColor = (itemSelectedIndex === cellIndex ? red : inactiveCellTextColor);
 
     return cellTextColor;
   }
@@ -170,15 +173,15 @@ class CustomTab extends Component<Props, State> {
     const { clickTimestamp } = this.state;
     const now = Date.now();
 
-    const passedTimeEnough = (now - clickTimestamp) >= 500;
+    const passedTimeEnough = (now - clickTimestamp) >= 600;
 
     return passedTimeEnough;
   }
 
-  renderList = (): Object => {
+  renderList = (themeColor: string): Object => {
     const { itemSelectedIndex, cellWidth } = this.state;
     const { data } = this.props;
-
+    console.log(themeColor)
     return (
       <FlatList
         horizontal
@@ -189,6 +192,7 @@ class CustomTab extends Component<Props, State> {
         extraData={this.state}
         renderItem={({ item, index }) => (
           <Cell
+            color={themeColor}
             width={cellWidth}
             onPress={() => {
               this.onCellPress(index);
@@ -197,7 +201,7 @@ class CustomTab extends Component<Props, State> {
             <OptionText
               color={this.getCellTextColor(itemSelectedIndex, index)}
             >
-              {item.item}
+              {item.title}
             </OptionText>
           </Cell>
         )}
@@ -234,9 +238,14 @@ class CustomTab extends Component<Props, State> {
   }
 
   render() {
+    const { theme } = this.props;
+    const themeColor = (theme === 'light' ? appStyles.colors.defaultWhite : appStyles.colors.primaryColor);
+
     return (
-      <Container>
-        {this.renderList()}
+      <Container
+        color={themeColor}
+      >
+        {this.renderList(themeColor)}
         {this.renderMarker()}
       </Container>
     );
