@@ -90,9 +90,9 @@ const ApplyButtonText = styled(Text)`
 const dataset = [{ title: 'Pizza' }, { title: 'Churrasco' }, { title: 'Salads' }, { title: 'Desserts' }, { title: 'Fast Food' }];
 
 type Props = {
+  lastFoodTypesChosen: Array<Object>,
   onApplyFilterParams: Function,
   onToggleModal: Function,
-  lastFoodTypesChosen: Array<Object>,
   lastDistanceChosen: number,
   isModalVisible: boolean,
 };
@@ -117,7 +117,7 @@ class FilterModal extends Component<Props, State> {
     this.setState({
       foodTypes: lastFoodTypesChosen,
       maxDistance: lastDistanceChosen,
-    });
+    }, () => console.log('updated: ', this.state.foodTypes));
   }
 
   onChangeMaxDistance = (maxDistance: number): void => {
@@ -147,7 +147,7 @@ class FilterModal extends Component<Props, State> {
     const { maxDistance, foodTypes } = this.state;
 
     onApplyFilterParams({ maxDistance, foodTypes });
-
+    console.log('onPressApplyFiltersButton', foodTypes)
     onToggleModal();
   }
 

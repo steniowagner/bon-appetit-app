@@ -10,6 +10,8 @@ import RestaurantItemList from 'components/common/restaurant-item-list';
 import FloatingActionButton from 'components/common/FloatingActionButton';
 import FilterModal from './components/FilterModal';
 
+console.disableYellowBox = true;
+
 const restaurants = [{
   id: '1',
   name: 'Jovem Lanches',
@@ -110,7 +112,7 @@ class Search extends Component {
 
   onApplyFilterParams = (filterParams: Object): void => {
     const { maxDistance, foodTypes } = filterParams;
-
+    console.log(filterParams)
     this.setState({
       maxDistance,
       foodTypes,
@@ -149,24 +151,28 @@ class Search extends Component {
     </FloatingActionButtonWrapper>
   );
 
+  renderModal = () => {
+    const { maxDistance, foodTypes } = this.state;
+
+    return (
+      <FilterModal
+        lastFoodTypesChosen={foodTypes}
+        lastDistanceChosen={maxDistance}
+        onToggleModal={() => this.onToggleModal()}
+        isModalVisible
+        onApplyFilterParams={params => this.onApplyFilterParams(params)}
+      />
+    );
+  }
+
   render() {
-    const {
-      isModalVisible,
-      maxDistance,
-      foodTypes,
-    } = this.state;
+    const { isModalVisible } = this.state;
 
     return (
       <Container>
         {this.renderRestaurantList()}
         {this.renderFloatingActionButton()}
-        <FilterModal
-          lastFoodTypesChosen={foodTypes}
-          lastDistanceChosen={maxDistance}
-          onToggleModal={() => this.onToggleModal()}
-          isModalVisible={isModalVisible}
-          onApplyFilterParams={params => this.onApplyFilterParams(params)}
-        />
+        {isModalVisible ? this.renderModal() : null}
       </Container>
     );
   }

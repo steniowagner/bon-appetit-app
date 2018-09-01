@@ -56,7 +56,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
     },
   },
 }, {
-  initialRouteName: 'Search',
+  initialRouteName: 'Home',
   tabBarPosition: 'bottom',
   optimizationsEnabled: true,
   animationEnabled: true,
