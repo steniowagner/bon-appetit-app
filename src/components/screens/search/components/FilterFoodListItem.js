@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import {
   TouchableWithoutFeedback,
@@ -83,16 +85,7 @@ class FilterFoodListItem extends Component<Props, State> {
     const { isItemAlreadySelected } = this.props;
 
     if (isItemAlreadySelected) {
-      const animateItemColor = Animated.timing(this._selectorColor, {
-        toValue: 1,
-        duration: 300,
-      });
-
-      this.setState({
-        isSelected: true,
-      }, () => {
-        animateItemColor.start();
-      });
+      this.handleItemAlreadySelected();
     }
   }
 
@@ -154,6 +147,19 @@ class FilterFoodListItem extends Component<Props, State> {
         duration: 300,
       }),
     ]).start();
+  }
+
+  handleItemAlreadySelected = () => {
+    const animateItemColor = Animated.timing(this._selectorColor, {
+      toValue: 1,
+      duration: 300,
+    });
+
+    this.setState({
+      isSelected: true,
+    }, () => {
+      animateItemColor.start();
+    });
   }
 
   renderCardContent = () => {

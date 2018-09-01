@@ -91,10 +91,9 @@ const dataset = [{ title: 'Pizza' }, { title: 'Churrasco' }, { title: 'Salads' }
 
 type Props = {
   onApplyFilterParams: Function,
-  lastDistanceChoiced: Function,
-  onAddFoodTypeFilter: Function,
-  onRemoverFoodTypeFilter: Function,
   onToggleModal: Function,
+  lastFoodTypesChosen: Array<Object>,
+  lastDistanceChosen: number,
   isModalVisible: boolean,
 };
 
@@ -106,7 +105,20 @@ type State = {
 class FilterModal extends Component<Props, State> {
   state = {
     maxDistance: 1,
+    foodTypes: [],
   };
+
+  componentDidMount() {
+    const {
+      lastFoodTypesChosen,
+      lastDistanceChosen,
+    } = this.props;
+
+    this.setState({
+      foodTypes: lastFoodTypesChosen,
+      maxDistance: lastDistanceChosen,
+    });
+  }
 
   onChangeMaxDistance = (maxDistance: number): void => {
     this.setState({
@@ -114,11 +126,27 @@ class FilterModal extends Component<Props, State> {
     });
   }
 
+  onAddFoodTypeFilter = (foodType: string): void => {
+    const { foodTypes } = this.state;
+
+    this.setState({
+      foodTypes: [...foodTypes, foodType],
+    });
+  }
+
+  onRemoverFoodTypeFilter = (foodType: string): void => {
+    const { foodTypes } = this.state;
+
+    this.setState({
+      foodTypes: foodTypes.filter(filter => filter !== foodType),
+    });
+  }
+
   onPressApplyFiltersButton = () => {
     const { onApplyFilterParams, onToggleModal } = this.props;
-    const { maxDistance } = this.state;
+    const { maxDistance, foodTypes } = this.state;
 
-    onApplyFilterParams({ maxDistance });
+    onApplyFilterParams({ maxDistance, foodTypes });
 
     onToggleModal();
   }
@@ -149,43 +177,41 @@ class FilterModal extends Component<Props, State> {
     );
   }
 
-  renderKindFoodSection = () => {
-    const { onAddFoodTypeFilter, onRemoverFoodTypeFilter } = this.props;
-
-    return (
-      <TypeOfFoodSectionContainer>
-        <QuestionText>
-          {'Which kind of food you\'re looking for?'}
-        </QuestionText>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          data={dataset}
-          keyExtractor={item => item.title}
-          renderItem={({ item, index }) => (
-            <FilterFoodListItem
-              isFirst={index === 0}
-              isItemAlreadySelected={this.checkFoodTypeItemAlreadySelected(item.title)}
-              title={item.title}
-              onAddFoodTypeFilter={onAddFoodTypeFilter}
-              onRemoverFoodTypeFilter={onRemoverFoodTypeFilter}
-            />
-          )}
-        />
-      </TypeOfFoodSectionContainer>
-    );
-  }
+  renderKindFoodSection = () => (
+    <TypeOfFoodSectionContainer>
+      <QuestionText>
+        {'Which kind of food you\'re looking for?'}
+      </QuestionText>
+      <FlatList
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        data={dataset}
+        keyExtractor={item => item.title}
+        renderItem={({ item, index }) => (
+          <FilterFoodListItem
+            isFirst={index === 0}
+            isItemAlreadySelected={this.checkFoodTypeItemAlreadySelected(item.title)}
+            title={item.title}
+            onAddFoodTypeFilter={foodType => this.onAddFoodTypeFilter(foodType)}
+            onRemoverFoodTypeFilter={foodType => this.onRemoverFoodTypeFilter(foodType)}
+          />
+        )}
+      />
+    </TypeOfFoodSectionContainer>
+  );
 
   renderMaxDistanceSection = () => {
-    const { lastDistanceChoiced } = this.props;
+    const { lastDistanceChosen } = this.props;
 
     return (
-      <MaxDistanceSectionContainer>
+      <MaxDistanceSectionContainer
+        lastDistanceChoiced={lastDistanceChosen}
+      >
         <QuestionText>
           {'Maximum distance you can travel?'}
         </QuestionText>
         <MaxDistance
-          lastDistanceChoiced={lastDistanceChoiced}
+          lastDistanceChosen={lastDistanceChosen}
           onChangeMaxDistance={this.onChangeMaxDistance}
         />
       </MaxDistanceSectionContainer>

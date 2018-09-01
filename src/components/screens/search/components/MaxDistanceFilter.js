@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import {
   Text,
@@ -45,7 +47,7 @@ const DistanceBoundsText = styled(Text)`
 
 type Props = {
   onChangeMaxDistance: Function,
-  lastDistanceChoiced: Function,
+  lastDistanceChosen: Function,
 };
 
 type State = {
@@ -58,13 +60,13 @@ class MaxDistanceFilter extends Component<Props, State> {
   };
 
   componentDidMount() {
-    const { lastDistanceChoiced } = this.props;
+    const { lastDistanceChosen } = this.props;
 
     this.setState({
-      currentDistance: lastDistanceChoiced,
+      currentDistance: lastDistanceChosen,
     });
 
-    this.sliderRef.setNativeProps({ value: lastDistanceChoiced });
+    this.sliderRef.setNativeProps({ value: lastDistanceChosen });
   }
 
   onSlideSlider = (value: number): void => {

@@ -10,8 +10,6 @@ import RestaurantItemList from 'components/common/restaurant-item-list';
 import FloatingActionButton from 'components/common/FloatingActionButton';
 import FilterModal from './components/FilterModal';
 
-console.disableYellowBox = true;
-
 const restaurants = [{
   id: '1',
   name: 'Jovem Lanches',
@@ -48,7 +46,7 @@ const restaurants = [{
   id: '123',
   name: 'Jovem Lanches',
   address: 'Rosinha Sampaio st., Quintino Cunha, Fortaleza',
-  picURL: 'https://u.tfstatic.com/restaurant_photos/239/221239/169/612/restaurant-puur-het-restaurant-2ba49.jpg',
+  picURL: '',
   stars: 4.5,
   reviews: 17,
 }];
@@ -111,26 +109,11 @@ class Search extends Component {
   }
 
   onApplyFilterParams = (filterParams: Object): void => {
-    const { maxDistance } = filterParams;
+    const { maxDistance, foodTypes } = filterParams;
 
     this.setState({
       maxDistance,
-    });
-  }
-
-  onAddFoodTypeFilter = (foodType: string): void => {
-    const { foodTypes } = this.state;
-
-    this.setState({
-      foodTypes: [...foodTypes, foodType],
-    });
-  }
-
-  onRemoverFoodTypeFilter = (foodType: string): void => {
-    const { foodTypes } = this.state;
-
-    this.setState({
-      foodTypes: foodTypes.filter(filter => filter !== foodType),
+      foodTypes,
     });
   }
 
@@ -154,20 +137,17 @@ class Search extends Component {
     </ListWrapper>
   );
 
-  renderFloatingActionButton = () => {
-
-    return (
-      <FloatingActionButtonWrapper
-        listHeight={this._restaurantListHeight}
-      >
-        <FloatingActionButton
-          name="filter-variant"
-          color="red"
-          action={this.onToggleModal}
-        />
-      </FloatingActionButtonWrapper>
-    );
-  }
+  renderFloatingActionButton = () => (
+    <FloatingActionButtonWrapper
+      listHeight={this._restaurantListHeight}
+    >
+      <FloatingActionButton
+        name="filter-variant"
+        color="red"
+        action={this.onToggleModal}
+      />
+    </FloatingActionButtonWrapper>
+  );
 
   render() {
     const {
@@ -182,9 +162,7 @@ class Search extends Component {
         {this.renderFloatingActionButton()}
         <FilterModal
           lastFoodTypesChosen={foodTypes}
-          lastDistanceChoiced={maxDistance}
-          onAddFoodTypeFilter={this.onAddFoodTypeFilter}
-          onRemoverFoodTypeFilter={this.onRemoverFoodTypeFilter}
+          lastDistanceChosen={maxDistance}
           onToggleModal={() => this.onToggleModal()}
           isModalVisible={isModalVisible}
           onApplyFilterParams={params => this.onApplyFilterParams(params)}
