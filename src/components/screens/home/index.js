@@ -31,7 +31,7 @@ const HomeMainContent = () => (
       <ScrollView
         showsVerticalScrollIndicator={false}
       >
-        <Section
+        {/* <Section
           title="In Your City"
           nextRoute={ROUTE_NAMES.ALL_EVENTS}
           render={() => <InYourCitySection />}
@@ -45,7 +45,7 @@ const HomeMainContent = () => (
           title="Popular"
           nextRoute={ROUTE_NAMES.ALL_POPULAR}
           render={() => <Popular />}
-        />
+        />*/}
       </ScrollView>
     </Container>
   </Fragment>

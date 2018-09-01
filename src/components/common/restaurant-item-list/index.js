@@ -132,6 +132,6 @@ const RestaurantItemList = ({
       {false && <ContainerShimmer autoRun visible={false}/>}
     </CardContainer>
   );
-}
+};
 
 export default withNavigation(RestaurantItemList);

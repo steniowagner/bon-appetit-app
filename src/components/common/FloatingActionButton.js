@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { View, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
@@ -35,7 +35,7 @@ const FloatingActionButton = ({
   color,
   action,
 }: Props) => (
-  <TouchableWithoutFeedback
+  <TouchableOpacity
     onPress={() => action()}
   >
     <ButtonShape
@@ -45,7 +45,7 @@ const FloatingActionButton = ({
         name={name}
       />
     </ButtonShape>
-  </TouchableWithoutFeedback>
+  </TouchableOpacity>
 );
 
 export default FloatingActionButton;
