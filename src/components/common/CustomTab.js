@@ -181,7 +181,7 @@ class CustomTab extends Component<Props, State> {
   renderList = (themeColor: string): Object => {
     const { itemSelectedIndex, cellWidth } = this.state;
     const { data } = this.props;
-    console.log(themeColor)
+
     return (
       <FlatList
         horizontal

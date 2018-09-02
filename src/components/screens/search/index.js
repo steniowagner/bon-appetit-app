@@ -10,8 +10,6 @@ import RestaurantItemList from 'components/common/restaurant-item-list';
 import FloatingActionButton from 'components/common/FloatingActionButton';
 import FilterModal from './components/FilterModal';
 
-console.disableYellowBox = true;
-
 const restaurants = [{
   id: '1',
   name: 'Jovem Lanches',

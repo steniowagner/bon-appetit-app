@@ -15,7 +15,10 @@ const Wrapper = styled(View)`
 const Reviews = styled(Text)`
   color: ${({ theme, textColor }) => theme.colors[textColor]};
   margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')};
+  font-size: ${({ theme, isSmall }) => {
+    const percentage = (isSmall ? '1.8%' : '2%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
   fontFamily: CircularStd-Book;
 `;
 
@@ -93,7 +96,10 @@ const ReviewStars = ({
     {renderStars(stars, small)}
     {shouldShowReviewsText
       && (
-      <Reviews textColor={textColor}>
+      <Reviews
+        isSmall={small}
+        textColor={textColor}
+      >
         {`${reviews} ${reviews > 1 ? 'Reviews' : 'Review'}`}
       </Reviews>)}
   </Wrapper>

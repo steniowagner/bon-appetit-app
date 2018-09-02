@@ -11,6 +11,8 @@ import './config/ReactotronConfig';
 
 const ApplicationNavigator = CreateNavigation();
 
+console.disableYellowBox = true;
+
 const App = () => (
   <Fragment>
     <StatusBar barStyle="light-content" />
