@@ -64,13 +64,10 @@ const PopularSeeAll = () => (
     renderItem={({ item }) => (
       <PopularSeeAllItemList
         foodTitle={item.foodTitle}
-        reviews={item.reviews}
         stars={item.stars}
-        distance={item.distance}
         description={item.description}
         foodImageURL={item.foodImageURL}
         price={item.price}
-        isDataFetched={item.isDataFetched}
       />
     )}
   />

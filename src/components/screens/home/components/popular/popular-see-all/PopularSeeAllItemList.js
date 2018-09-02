@@ -10,7 +10,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import styled from 'styled-components';
-import appStyle from 'styles';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 import { withNavigation } from 'react-navigation';
@@ -19,57 +18,54 @@ import ReviewStars from 'components/common/ReviewStars';
 import FlagPrice from 'components/common/FlagPrice';
 
 const Container = styled(View)`
+  flex-direction: row;
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('30%')}px;
-  justify-content: flex-end;
-  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
+  align-items: center;
+  justify-content: center;
+  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px
+  padding-horizontal: ${({ theme }) => theme.metrics.extraLargeSize}px
 `;
 
 const CardContainer = styled(View)`
-  height: 80%;
   background-color: ${({ theme }) => theme.colors.white};
-  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
   padding: ${({ theme }) => theme.metrics.mediumSize}px;
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px
-  position: absolute;
-`;
-
-const ContentWrapper = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  background-color: ${({ theme }) => theme.colors.defaultWhite};
+  height: 80%;
+  width: 60%;
 `;
 
 const ImageContentContainer = styled(View)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('28%')}px;
+  width: 30%;
   height: 100%;
-  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
-  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-  margin-left: ${({ theme }) => theme.metrics.largeSize}px
-  z-index: 1;
 `;
 
 const FoodImage = styled(Image).attrs({
   source: ({ foodImageURL }) => ({ uri: foodImageURL }),
+  resizeMode: 'cover',
 })`
   width: 100%;
   height: 100%;
-  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
 const FoodImageShimmer = styled(ShimmerPlaceholder)`
   width: 100%;
   height: 100%;
-  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
   position: absolute;
 `;
 
+const AboutFoodWrapper = styled(View)``;
+
+const TopRowWrapper = styled(View)`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const FoodTitle = styled(Text).attrs({
-  numberOfLines: 1,
+  numberOfLines: 2,
   ellipsizeMode: 'tail',
 })`
-  width: 75%;
-  color: ${({ theme }) => theme.colors.subText};
+  color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => {
     const percentage = Platform.OS === 'android' ? '3%' : '2.6%';
 
@@ -82,90 +78,54 @@ const FoodDescription = styled(Text).attrs({
   numberOfLines: 3,
   ellipsizeMode: 'tail',
 })`
-  color: ${({ theme }) => theme.colors.lightGray};
+  color: ${({ theme }) => theme.colors.subText};
   font-size: ${({ theme }) => {
     const percentage = Platform.OS === 'android' ? '2.5%' : '2%';
     return theme.metrics.getHeightFromDP(percentage);
   }};
-  font-family: CircularStd-Medium;
   width: 85%;
-  height: 100%;
-`;
-
-const MainContent = styled(View)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('60%')}px;
-  height: 100%;
-  margin-left:  ${({ theme }) => theme.metrics.getWidthFromDP('29%')}px;
-`;
-
-const LocationIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.darkText,
-  name: 'map-marker',
-  size: 16,
-})`
-  width: 16px;
-  height: 16px;
-`;
-
-const DistanceWrapper = styled(View)`
-  flex-direction: row;
-  align-items: center;
-  margin-vertical: ${({ theme }) => theme.metrics.extraSmallSize}px;
-`;
-
-const DistanceText = styled(Text)`
-  color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '2.8%' : '2%';
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
-  font-family: CircularStd-Black;
-  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  margin-top: ${({ theme }) => theme.metrics.smallSize}px;
+  font-family: CircularStd-Medium;
 `;
 
 const ArrowButton = styled(TouchableOpacity)`
-  width: 15%;
-  height: 80%;
+  width: 48px;
+  height: 48px;
   justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.red};
+  align-self: flex-end;
+  margin-left: -24px;
 `;
 
 const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.red,
+  color: ({ theme }) => theme.colors.defaultWhite,
   name: 'arrow-right',
   size: 28,
 })`
-  align-self: flex-end;
   width: 28px;
   height: 28px;
 `;
 
-type Props = {
-  navigation: Function,
-  reviews: number,
-  stars: number,
-  price: number,
-  distance: number,
-  foodTitle: string,
-  description: string,
-  foodImageURL: string,
-  isDataFetched: boolean
-};
-
-type State = {
-  isFoodImageLoaded: boolean,
-};
+const TextShimmer = styled(ShimmerPlaceholder).attrs({
+  autoRun: true,
+  visible: false,
+})`
+  width: 120px;
+  height: 50px;
+  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+`;
 
 const shadowStyle = {
-  shadowColor: appStyle.colors.darkLayer,
   ...Platform.select({
     ios: {
       elevation: 1,
       shadowOffset: {
         width: 0,
-        height: 1,
+        height: 0,
       },
-      shadowRadius: 2,
-      shadowOpacity: 5.0,
+      shadowRadius: 3,
+      shadowOpacity: 0.35,
     },
     android: {
       elevation: 4,
@@ -177,6 +137,19 @@ const shadowStyle = {
       shadowOpacity: 5.0,
     },
   }),
+};
+
+type Props = {
+  navigation: Function,
+  foodImageURL: string,
+  description: string,
+  foodTitle: string,
+  stars: number,
+  price: number,
+};
+
+type State = {
+  isFoodImageLoaded: boolean,
 };
 
 class PopularSeeAllItemList extends Component<Props, State> {
@@ -193,10 +166,8 @@ class PopularSeeAllItemList extends Component<Props, State> {
   onPressArrowButton = () => {
     const {
       navigation,
-      reviews,
       stars,
       foodTitle,
-      distance,
       description,
       foodImageURL,
       price,
@@ -205,10 +176,8 @@ class PopularSeeAllItemList extends Component<Props, State> {
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
       payload: {
         mode: 'detail',
-        reviews,
         stars,
         foodTitle,
-        distance,
         description,
         foodImageURL,
         price,
@@ -216,109 +185,11 @@ class PopularSeeAllItemList extends Component<Props, State> {
     });
   }
 
-  renderTopRowComponents = () => {
-    const {
-      foodTitle,
-      price,
-      reviews,
-      stars,
-      isDataFetched,
-    } = this.props;
+  parseFoodTitle = (foodTitle: string): string => {
+    const firstBlankSpaceIndex = foodTitle.indexOf(' ');
+    const title = `${foodTitle.substring(0, firstBlankSpaceIndex)}\n${foodTitle.substring(firstBlankSpaceIndex + 1, foodTitle.length)}`;
 
-    const TopRowShimmer = (
-      <ShimmerPlaceholder
-        visible={false}
-        autoRun
-        style={{
-          height: '20%',
-        }}
-      />
-    );
-
-    const TopRowComponents = (
-      <Fragment>
-        <ContentWrapper>
-          <FoodTitle>
-            {foodTitle}
-          </FoodTitle>
-          <FlagPrice price={price} />
-        </ContentWrapper>
-        <ReviewStars
-          smallSize
-          shouldShowReviewsText
-          reviews={reviews}
-          textColor="lightGray"
-          stars={stars}
-        />
-      </Fragment>
-    );
-
-    const ProperComponent = (isDataFetched ? TopRowComponents : TopRowShimmer);
-
-    return ProperComponent;
-  }
-
-  renderDistance = () => {
-    const { isDataFetched, distance } = this.props;
-
-    const DistanceShimmer = (
-      <ShimmerPlaceholder
-        visible={false}
-        autoRun
-        style={{
-          marginTop: 5,
-        }}
-      />
-    );
-
-    const DistanceComponent = (
-      <Fragment>
-        {isDataFetched && (
-          <DistanceWrapper>
-            <LocationIcon />
-            <DistanceText>
-              {`${distance} km from you`}
-            </DistanceText>
-          </DistanceWrapper>
-        )}
-      </Fragment>
-    );
-
-    const ProperComponent = (isDataFetched ? DistanceComponent : DistanceShimmer);
-
-    return ProperComponent;
-  }
-
-  renderBottomRowComponents = () => {
-    const { isDataFetched, description } = this.props;
-
-    const BottomRowShimmer = (
-      <ShimmerPlaceholder
-        visible={false}
-        autoRun
-        style={{
-          marginTop: 8,
-          height: '30%',
-        }}
-      />
-    );
-
-    const BottomRowComponent = (
-      <ContentWrapper>
-        <FoodDescription>
-          {description}
-        </FoodDescription>
-        <ArrowButton
-          onPress={() => this.onPressArrowButton()}
-        >
-          <ArrowIcon />
-        </ArrowButton>
-      </ContentWrapper>
-    );
-
-    const ProperCompoent = (isDataFetched ? BottomRowComponent : BottomRowShimmer);
-
-    return ProperCompoent;
+    return title;
   }
 
   renderFoodImage = () => {
@@ -330,6 +201,7 @@ class PopularSeeAllItemList extends Component<Props, State> {
         style={{ ...shadowStyle }}
       >
         <FoodImage
+          style={{ ...shadowStyle }}
           onLoad={() => this.onFoodImageLoaded()}
           foodImageURL={foodImageURL}
         />
@@ -344,17 +216,68 @@ class PopularSeeAllItemList extends Component<Props, State> {
     );
   }
 
+  renderAboutFood = () => {
+    const { isFoodImageLoaded } = this.state;
+
+    if (!isFoodImageLoaded) {
+      return (
+        <Fragment>
+          <TextShimmer />
+          <TextShimmer />
+        </Fragment>
+      );
+    }
+
+    const {
+      foodTitle,
+      stars,
+      description,
+      price,
+    } = this.props;
+
+    return (
+      <AboutFoodWrapper>
+        <TopRowWrapper>
+          <FoodTitle>
+            {this.parseFoodTitle(foodTitle)}
+          </FoodTitle>
+          <View>
+            <FlagPrice
+              price={price}
+            />
+          </View>
+        </TopRowWrapper>
+        <ReviewStars
+          stars={stars}
+        />
+        <FoodDescription>
+          {description}
+        </FoodDescription>
+      </AboutFoodWrapper>
+    );
+  }
+
+  renderArrowButton = () => (
+    <ArrowButton
+      onPress={() => this.onPressArrowButton()}
+      style={{ ...shadowStyle }}
+    >
+      <ArrowIcon />
+    </ArrowButton>
+  )
+
   render() {
+    const { isFoodImageLoaded } = this.state;
+
     return (
       <Container>
         {this.renderFoodImage()}
-        <CardContainer style={{ ...shadowStyle }}>
-          <MainContent>
-            {this.renderTopRowComponents()}
-            {this.renderDistance()}
-            {this.renderBottomRowComponents()}
-          </MainContent>
+        <CardContainer
+          style={{ ...shadowStyle }}
+        >
+          {this.renderAboutFood()}
         </CardContainer>
+        {isFoodImageLoaded && this.renderArrowButton()}
       </Container>
     );
   }
