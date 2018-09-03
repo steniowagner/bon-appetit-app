@@ -7,12 +7,13 @@ import {
   Switch,
   TouchableOpacity,
   ScrollView,
-  AsyncStorage,
   Platform,
 } from 'react-native';
 
 import styled from 'styled-components';
 import appStyle from 'styles';
+
+import { getItemFromStorage, persistItemInStorage } from 'components/utils/AsyncStoarageManager';
 
 const Container = styled(View)`
   flex: 1;
@@ -82,7 +83,6 @@ const MultipleOptionsTitleWrapper = styled(View)`
 
 const receivePromotionsOptionDescription = 'By enabling this option, the app will periodically use your current location and will show promotions that are happening near you.';
 const notificationsSoundOptionDescription = 'Enable the sound of the Notifications';
-const APP_STORAGE_KEY = '@BON_APPETIT';
 
 class Settings extends Component {
   static navigationOptions = {
@@ -108,41 +108,33 @@ class Settings extends Component {
   };
 
   async componentDidMount() {
-    const receiveNearMe = await this.getItemFromStorage(`${APP_STORAGE_KEY}:receiveNearMe`);
-    const notificationsSound = await this.getItemFromStorage(`${APP_STORAGE_KEY}:notificationsSound`);
-    const receiveAllNotifications = await this.getItemFromStorage(`${APP_STORAGE_KEY}:receiveAllNotifications`);
-    const whenPastSearch = await this.getItemFromStorage(`${APP_STORAGE_KEY}:whenPastSearch`);
-    const whenAboutPromotions = await this.getItemFromStorage(`${APP_STORAGE_KEY}:whenAboutPromotions`);
+    const receiveNearMeFromStorage = await getItemFromStorage('receiveNearMe', false);
+    const notificationsSoundFromStorage = await getItemFromStorage('notificationsSound', false);
+    const receiveAllNotificationsFromStorage = await getItemFromStorage('receiveAllNotifications', false);
+    const whenPastSearchFromStorage = await getItemFromStorage('whenPastSearch', false);
+    const whenAboutPromotionsFromStorage = await getItemFromStorage('whenAboutPromotions', false);
 
     this.setState({
-      receiveNearMe,
-      notificationsSound,
-      receiveAllNotifications,
-      whenPastSearch,
-      whenAboutPromotions,
+      receiveNearMe: (receiveNearMeFromStorage === 'true'),
+      notificationsSound: (notificationsSoundFromStorage === 'true'),
+      receiveAllNotifications: (receiveAllNotificationsFromStorage === 'true'),
+      whenPastSearch: (whenPastSearchFromStorage === 'true'),
+      whenAboutPromotions: (whenAboutPromotionsFromStorage === 'true'),
     });
   }
 
-  getItemFromStorage = async (key) => {
-    const value = await AsyncStorage.getItem(`${APP_STORAGE_KEY}:${key}`);
-
-    return value === 'true';
-  }
-
-  persistItemInStorage = async (key, value) => AsyncStorage.setItem(`${APP_STORAGE_KEY}:${key}`, value);
-
-
-  handleSwitchToggle = async (option: string) => {
-    const value = !this.state[option];
+  handleSwitchToggle = async (option: string): void => {
+    const { state } = this;
+    const value = !state[option];
 
     this.setState({
       [option]: value,
     });
 
-    await this.persistItemInStorage(option, value.toString());
+    await persistItemInStorage(option, value);
   }
 
-  renderSelectLanguageSection = () => (
+  renderSelectLanguageSection = (): Object => (
     <ItemWrapper>
       <LanguageSectionWrapper>
         <SectionTitleText>
@@ -179,7 +171,8 @@ class Settings extends Component {
 
   renderSwitch = (id: string): Object => {
     const thumbTintColor = (Platform.OS === 'android') ? appStyle.colors.red : '';
-    const value = this.state[id];
+    const { state } = this;
+    const value = state[id];
 
     return (
       <Switch
