@@ -26,7 +26,7 @@ const ImageWrapper = styled(View)`
 `;
 
 const SmokeShadowImage = styled(Image).attrs({
-  source: require('../../../styles/img/shadow-smoke.png'),
+  source: require('styles/img/shadow-smoke.png'),
 })`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('28%')};
@@ -94,53 +94,22 @@ const ingredients = [
 const revs = [
   {
     id: '1',
-    reviewer: 'Stenio Wagner',
-    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
+    reviewer: 'Vivian Souza',
+    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/vini-souza.jpg',
+    review: 'You guys really need to pay a course about How to Cook... Seriouuuslyy...',
+    stars: 3,
   }, {
     id: '2',
-    reviewer: 'Ana Eridan',
-    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
+    reviewer: 'Maria Ferrero',
+    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/matheus-ferrero.jpg',
+    review: 'Are you sure the name of this is food?',
+    stars: 2.5,
   }, {
     id: '3',
     reviewer: 'Manoel Elisval',
     reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
     review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
     stars: 4.5,
-  }, {
-    id: '421',
-    reviewer: 'Beatriz Eliana',
-    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 6,
-  },
-  {
-    id: '12',
-    reviewer: 'Stenio Wagner',
-    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
-  }, {
-    id: '22',
-    reviewer: 'Ana Eridan',
-    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
-  }, {
-    id: '32',
-    reviewer: 'Manoel Elisval',
-    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 4.5,
-  }, {
-    id: '42',
-    reviewer: 'Beatriz Eliana',
-    reviewerImage: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/reviewers/aleni-stoakes.jpg',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 6,
   },
 ];
 
@@ -159,12 +128,6 @@ class FoodDetail extends Component {
   state = {
     tabItemSelected: 0,
     isDataFetched: true,
-  }
-
-  onLoadFoodImage = () => {
-    this.setState({
-      isFoodImageLoaded: true,
-    });
   }
 
   onChangeMenuIndex = (index: number): void => {

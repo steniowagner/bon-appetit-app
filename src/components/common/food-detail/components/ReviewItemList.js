@@ -19,6 +19,8 @@ const Container = styled(View)`
 const MainContent = styled(View)`
   width: 80%;
   height: 100%;
+  padding-left: ${({ theme }) => theme.metrics.smallSize}px;
+  justify-content: center;
 `;
 
 const ReviewerName = styled(Text).attrs({
@@ -65,6 +67,7 @@ const TopContetWrapper = styled(View)`
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
+  align-items: center;
 `;
 
 type Props = {
@@ -121,7 +124,7 @@ class ReviewItemList extends Component<Props, State> {
     return (
       <MainContent>
         <ShimmerPlaceHolder
-          style={{ width: '100%', height: '100%'}}
+          style={{ width: '100%', height: '100%' }}
           visible={isImageLoaded}
           autoRun
         >
