@@ -9,6 +9,7 @@ import {
   Animated,
 } from 'react-native';
 
+import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import styled from 'styled-components';
 import appStyles from 'styles';
@@ -25,12 +26,12 @@ const ImageWrapper = styled(View)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('27%')};
 `;
 
-const SmokeShadowImage = styled(Image).attrs({
-  source: require('styles/img/shadow-smoke.png'),
+const SmokeShadow = styled(LinearGradient).attrs({
+  colors: ['transparent', appStyles.colors.primaryColor, appStyles.colors.primaryColor],
 })`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('28%')};
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('15%')};
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('12%')};
 `;
 
 const FoodImage = styled(Image).attrs({
@@ -241,7 +242,7 @@ class FoodDetail extends Component {
         <FoodImage
           foodImageURL={foodImageURL}
         />
-        <SmokeShadowImage />
+        <SmokeShadow />
       </ImageWrapper>
     );
   }
