@@ -5,16 +5,19 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   ScrollView,
   Linking,
+  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styled from 'styled-components';
 import appStyle from 'styles';
 
+import ImageCached from 'components/common/ImageCached';
 import HeartBeating from './components/HeartBeating';
+
+const PROFILE_IMAGE_URL = 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/user-profile/user-profile.jpg';
 
 const Container = styled(View)`
   flex: 1;
@@ -25,9 +28,7 @@ const Content = styled(View)`
   align-items: center;
 `;
 
-const ProfileAvatarWrapper = styled(Image).attrs({
-  source: require('../../../styles/img/steniowagner.png'),
-})`
+const ProfileAvatarWrapper = styled(View)`
   margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
   width: 80px;
   height: 80px;
@@ -50,9 +51,12 @@ const BigText = styled(Text)`
 const SmallText = styled(Text)`
   margin: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px`};
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')};
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '2.5%' : '2.2%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }}px;
   text-align: center;
-  font-family: CircularStd-Bold;
+  font-family: CircularStd-Medium;
 `;
 
 const TextWrapper = styled(View)`
@@ -89,6 +93,14 @@ const SocialButton = styled(TouchableOpacity)`
   height: 50px;
   border-radius: 25px;
 `;
+
+const SocialIcon = styled(Icon).attrs({
+  color: ({ theme }) => theme.colors.defaultWhite,
+  name: ({ name }) => name,
+  size: ({ size }) => size,
+  width: ({ width }) => width,
+  height: ({ height }) => height,
+})``;
 
 const getSmallText = () => 'I’m Stenio, and I’m a Full Stack Engineer with interests in Javascript world, including. NodeJS and, obviously, the React Ecossystem (ReactJS, React-Native and GraphQL).\n\nI also have a good eye for design, and that’s why I’m passionate about building amazing, beautiful and problem-solver things to make the other people\'s lives even better!';
 
@@ -136,12 +148,11 @@ const renderSocialButton = (type: string, iconName: string, size: number): Objec
       onPress={() => handleSocialButtonClick(type)}
       type={type}
     >
-      <Icon
+      <SocialIcon
         name={iconName}
         width={size}
         height={size}
         size={size}
-        color={appStyle.colors.defaultWhite}
       />
     </SocialButton>
   </ButtonWrapper>
@@ -161,9 +172,16 @@ const renderSocialContactsSection = () => (
 
 const Profile = () => (
   <Container>
-    <ScrollView>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+    >
       <Content>
-        <ProfileAvatarWrapper />
+        <ProfileAvatarWrapper>
+          <ImageCached
+            border={40}
+            uri={PROFILE_IMAGE_URL}
+          />
+        </ProfileAvatarWrapper>
         {renderMainTitleContent()}
         {renderMainTextSection()}
         {renderSocialContactsSection()}
@@ -181,8 +199,6 @@ Profile.navigationOptions = {
   headerTitleStyle: {
     color: appStyle.colors.defaultWhite,
     fontFamily: 'CircularStd-Bold',
-    fontWeight: '900',
-    fontSize: appStyle.metrics.navigationHeaderFontSize,
   },
 };
 

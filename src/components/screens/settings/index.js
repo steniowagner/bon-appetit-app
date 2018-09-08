@@ -23,7 +23,10 @@ const Container = styled(View)`
 const SectionTitleText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-family: CircularStd-Bold;
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
+  font-size:  ${({ theme }) => {
+    const percentage = (Platform.OS === 'ios' ? '2.6%' : '3%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }}px;
 `;
 
 const ItemWrapper = styled(View)`
@@ -44,14 +47,20 @@ const LanguageSectionWrapper = styled(View)`
 const SelectedLanguageText = styled(Text)`
   color: ${({ theme }) => theme.colors.red};
   font-family: CircularStd-Medium;
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
+  font-size:  ${({ theme }) => {
+    const percentage = (Platform.OS === 'ios' ? '2.6%' : '3%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }}px;
 `;
 
 const SmallText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
   margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px 0`}
-  font-family: CircularStd-Medium;
-  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('3.2%')}px;
+  font-family: CircularStd-Book;
+  font-size:  ${({ theme }) => {
+    const percentage = (Platform.OS === 'ios' ? '2%' : '2.4%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }}px;
 `;
 
 const OptionWrapper = styled(View)`
@@ -68,7 +77,10 @@ const MediumText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
   margin-top: ${({ theme }) => theme.metrics.extraSmallSize}
   font-family: CircularStd-Bold;
-  font-size:  ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
+  font-size:  ${({ theme }) => {
+    const percentage = (Platform.OS === 'ios' ? '2.4%' : '2.8%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }}px;
 `;
 
 const OptionWithouDescriptionWrapper = styled(View)`
@@ -94,8 +106,6 @@ class Settings extends Component {
     headerTitleStyle: {
       color: appStyle.colors.defaultWhite,
       fontFamily: 'CircularStd-Bold',
-      fontWeight: '900',
-      fontSize: appStyle.metrics.navigationHeaderFontSize,
     },
   };
 

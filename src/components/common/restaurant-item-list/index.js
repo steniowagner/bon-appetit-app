@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 
 import ReviewStars from 'components/common/ReviewStars';
-import ImageCached from './components/ImageCached';
+import ImageCached from 'components/common/ImageCached';
 
 const CardContainer = styled(View)`
   margin-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;

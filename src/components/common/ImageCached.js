@@ -2,7 +2,9 @@
 
 import React, { Component } from 'react';
 import { Image, Platform } from 'react-native';
+
 import styled from 'styled-components';
+import appStyles from 'styles';
 
 import CacheManager from 'components/utils/CacheManager';
 
@@ -11,14 +13,23 @@ const FILE_PREFIX = Platform.OS === 'ios' ? '' : 'file://';
 const Pic = styled(Image).attrs({
   source: ({ uri }) => ({ uri: FILE_PREFIX + uri }),
 })`
-  resizeMode: cover;
-  position: absolute;
-  border-radius: 6px;
   height: 100%;
   width: 100%;
+  resizeMode: cover;
+  position: absolute;
+  border-radius: ${({ border }) => border}px;
 `;
 
-class ImageCached extends Component {
+type Props = {
+  uri: string,
+  border?: string,
+};
+
+type State = {
+  imageURI: string,
+};
+
+class ImageCached extends Component<Props, State> {
   state = {
     imageURI: '',
   };
@@ -35,11 +46,21 @@ class ImageCached extends Component {
 
   render() {
     const { imageURI } = this.state;
+    const { border } = this.props;
 
     return (
-      !!imageURI && <Pic uri={imageURI} />
+      !!imageURI && (
+        <Pic
+          uri={imageURI}
+          border={border}
+        />
+      )
     );
   }
 }
+
+ImageCached.defaultProps = {
+  border: appStyles.metrics.borderRadius,
+};
 
 export default ImageCached;
