@@ -43,7 +43,7 @@ const Marker = styled(View)`
 
 const OptionText = styled(Text)`
   color: ${({ color }) => color}
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.4%')}px;
   fontFamily: CircularStd-Medium;
 `;
 
@@ -154,7 +154,7 @@ class CustomTab extends Component<Props, State> {
 
     Animated.timing(this._markerPaddingLeft, {
       toValue: newMarkerMargin,
-      duration: 250,
+      duration: 200,
       useNativeDriver: true,
     }).start();
   }

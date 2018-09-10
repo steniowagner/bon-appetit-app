@@ -28,7 +28,7 @@ const HomeMainContent = () => (
   <Fragment>
     <StatusBar barStyle="light-content" />
     <Container>
-      <ScrollView
+      {/*<ScrollView
         showsVerticalScrollIndicator={false}
       >
         <Section
@@ -46,7 +46,7 @@ const HomeMainContent = () => (
           nextRoute={ROUTE_NAMES.ALL_POPULAR}
           render={() => <Popular />}
         />
-      </ScrollView>
+      </ScrollView>*/}
     </Container>
   </Fragment>
 );

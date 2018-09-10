@@ -4,6 +4,9 @@ import React, { Fragment } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { StatusBar } from 'react-native';
 
+import { Provider } from 'react-redux';
+import store from 'store';
+
 import CreateNavigation from 'routes';
 import AppTheme from 'styles';
 
@@ -17,7 +20,9 @@ const App = () => (
   <Fragment>
     <StatusBar barStyle="light-content" />
     <ThemeProvider theme={AppTheme}>
-      <ApplicationNavigator />
+      <Provider store={store}>
+        <ApplicationNavigator />
+      </Provider>
     </ThemeProvider>
   </Fragment>
 );
