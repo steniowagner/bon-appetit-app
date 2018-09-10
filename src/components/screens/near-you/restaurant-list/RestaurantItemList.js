@@ -12,11 +12,12 @@ import {
 import styled from 'styled-components';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+
 import ReviewStars from 'components/common/ReviewStars';
 import appStyles from 'styles';
 
 import { withNavigation } from 'react-navigation';
-import { ROUTE_NAMES } from './routes';
+import { ROUTE_NAMES } from '../routes';
 
 const Container = styled(View)`
   width: ${({ theme }) => theme.metrics.width - theme.metrics.getWidthFromDP('24%')}px;
@@ -40,6 +41,7 @@ const RestaurantImageShimmer = styled(ShimmerPlaceholder).attrs({
   visible: false,
   autoRun: true,
 })`
+  width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('12.5%')}px;
   border-radius: 4px;
 `;
@@ -126,14 +128,12 @@ const Icon = styled(Icons).attrs({
 
 type Props = {
   navigation: Function,
-  id: string,
-  name: string,
+  isOpen: boolean,
   imageURL: string,
+  name: string,
+  id: string,
   distance: number,
   stars: number,
-  isOpen: boolean,
-  isFirst: boolean,
-  isLast: boolean,
 };
 
 type State = {
@@ -163,11 +163,11 @@ class RestaurantItemList extends Component<Props, State> {
 
     return (
       <RestaurantImageWrapper>
-        <RestaurantImage
-          imageURL={imageURL}
-          onLoad={() => this.onImageLoaded()}
-        />
         {!isImageLoaded && <RestaurantImageShimmer />}
+        <RestaurantImage
+          onLoad={() => this.onImageLoaded()}
+          imageURL={imageURL}
+        />
       </RestaurantImageWrapper>
     );
   }
@@ -215,14 +215,6 @@ class RestaurantItemList extends Component<Props, State> {
   }
 
   renderTopRowContent = (): Object => {
-    const { isImageLoaded } = this.state;
-
-    if (!isImageLoaded) {
-      return (
-        <TextShimmer />
-      );
-    }
-
     const { name, stars } = this.props;
 
     return (
@@ -241,39 +233,26 @@ class RestaurantItemList extends Component<Props, State> {
     );
   }
 
-  renderBottomRowContent = (): Object => {
-    const { isImageLoaded } = this.state;
-
-    if (!isImageLoaded) {
-      return (
-        <TextShimmer />
-      );
-    }
-
-    return (
-      <BottomRowContentWrapper>
-        {this.renderRestaurantStatus()}
-        <TouchableOpacity
-          onPress={() => this.onPressArrowButton()}
-        >
-          <Icon
-            color="darkText"
-            name="arrow-right"
-            size={28}
-          />
-        </TouchableOpacity>
-      </BottomRowContentWrapper>
-    );
-  }
+  renderBottomRowContent = (): Object => (
+    <BottomRowContentWrapper>
+      {this.renderRestaurantStatus()}
+      <TouchableOpacity
+        onPress={() => this.onPressArrowButton()}
+      >
+        <Icon
+          color="darkText"
+          name="arrow-right"
+          size={28}
+        />
+      </TouchableOpacity>
+    </BottomRowContentWrapper>
+  );
 
   render() {
-    const { isFirst, isLast } = this.props;
+    const { isImageLoaded } = this.state;
 
     return (
-      <Container
-        isFirst={isFirst}
-        isLast={isLast}
-      >
+      <Container>
         <Card
           style={{
             ...Platform.select({
@@ -300,8 +279,8 @@ class RestaurantItemList extends Component<Props, State> {
         >
           <Fragment>
             {this.renderRestaurantImage()}
-            {this.renderTopRowContent()}
-            {this.renderBottomRowContent()}
+            {isImageLoaded ? this.renderTopRowContent() : <TextShimmer />}
+            {isImageLoaded ? this.renderBottomRowContent() : <TextShimmer />}
           </Fragment>
         </Card>
       </Container>

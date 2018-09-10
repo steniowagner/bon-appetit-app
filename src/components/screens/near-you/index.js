@@ -1,19 +1,18 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import { View, FlatList } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { View } from 'react-native';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as NearbyRestaurantsActions } from 'store/ducks/nearby-restaurants';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
 import appStyle from 'styles';
 
 import CustomTab from 'components/common/CustomTab';
-import RestaurantItemList from './RestaurantItemList';
+import Map from './Map';
+import RestaurantList from './restaurant-list';
 
 const ERROR_MESSAGE = 'Something gets wrong. Please, check your connection with the server.';
 
@@ -22,21 +21,10 @@ const Container = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const RestaurantsListWrapper = styled(View)`
-  width: 100%;
-  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-  position: absolute;
-`;
-
 const ContentContainer = styled(View)`
   flex: 1;
   justify-content: flex-end;
   align-items: flex-end;
-`;
-
-const MapContainer = styled(MapView)`
-  width: 100%;
-  height: 100%;
 `;
 
 const CustomTabWrapper = styled(View)`
@@ -56,13 +44,6 @@ const customTabData = [{
 const USER_LOCATION = {
   latitude: -3.7193101,
   longitude: -38.5892672,
-};
-
-const INITIAL_REGION = {
-  latitude: -3.7166596,
-  longitude: -38.5914,
-  latitudeDelta: 0.03152,
-  longitudeDelta: 0.0100,
 };
 
 type Props = {
@@ -87,40 +68,34 @@ class NearYou extends Component<Props, {}> {
   };
 
   state = {
-    dishesTypeSelectedIndex: 0,
+    indexDishesTypeSelected: 0,
+    indexRestaurantSelected: 0,
   };
 
   componentDidMount() {
-    this.requestNearbyRestaurants();
+    this.onRequestNearbyRestaurants();
   }
 
-  componentDidUpdate() {
-    this.focusOnFirstRestaurant();
+  onRequestNearbyRestaurants = (): void => {
+    const { getNearbyRestaurantsRequest } = this.props;
+
+    const { indexDishesTypeSelected } = this.state;
+    const dishesSelected = customTabData[indexDishesTypeSelected].title;
+
+    getNearbyRestaurantsRequest(dishesSelected, USER_LOCATION);
   }
 
-  onDishesTypeChange = (dishesTypeSelectedIndex: number): void => {
+  onDishesTypeChange = (indexDishesTypeSelected: number): void => {
     this.setState({
-      dishesTypeSelectedIndex,
-    }, () => this.requestNearbyRestaurants());
+      indexDishesTypeSelected,
+      indexRestaurantSelected: 0,
+    }, () => this.onRequestNearbyRestaurants());
   }
 
-  onSelectMarker = (markerIndex: number): void => {
-    this._flatListRef.scrollToIndex({ animated: true, index: markerIndex });
-  }
-
-  onMomentumScrollEnd = (event: Object): void => {
-    const { contentOffset } = event.nativeEvent;
-
-    const { restaurantsFromRequest } = this.props;
-    const { data } = restaurantsFromRequest;
-
-    const isHorizontalSwipeMovement = contentOffset.x > 0;
-    const indexItemSelected = (isHorizontalSwipeMovement ? (Math.ceil(contentOffset.x / appStyle.metrics.width)) : 0);
-
-    const { location } = data.restaurants[indexItemSelected];
-    const marker = this._markersRefs[indexItemSelected];
-
-    this.animateMapToCoordinates(location.latitude, location.longitude, marker);
+  onSelectMarker = (indexRestaurantSelected: number): void => {
+    this.setState({
+      indexRestaurantSelected,
+    });
   }
 
   getRestaurantList = (): Array<any> => {
@@ -134,123 +109,33 @@ class NearYou extends Component<Props, {}> {
     return restaurants;
   }
 
-  requestNearbyRestaurants = (): void => {
-    const { getNearbyRestaurantsRequest } = this.props;
-
-    const { dishesTypeSelectedIndex } = this.state;
-    const dishesSelected = customTabData[dishesTypeSelectedIndex].title;
-
-    getNearbyRestaurantsRequest(dishesSelected, USER_LOCATION);
-  }
-
-  focusOnFirstRestaurant = (): void => {
-    const restaurants = this.getRestaurantList();
-    const hasRetaurants = restaurants.length > 0;
-
-    if (hasRetaurants) {
-      const { latitude, longitude } = restaurants[0].location;
-
-      this._mapRef.animateToCoordinate({
-        latitude,
-        longitude,
-      }, 500);
-
-      this._markersRefs[0].showCallout();
-    }
-  }
-
-  animateMapToCoordinates = (latitude: number, longitude: number, marker: Object): void => {
-    this._mapRef.animateToCoordinate({
-      latitude,
-      longitude,
-    }, 500);
-
-    setTimeout(() => {
-      marker.showCallout();
-    }, 500);
-  }
-
   renderMap = (): Object => {
+    const { indexRestaurantSelected } = this.state;
     const restaurants = this.getRestaurantList();
     const hasRetaurants = restaurants.length > 0;
-
-    if (hasRetaurants) {
-      this._markersRefs = [restaurants.length];
-    }
 
     return (
-      <MapContainer
-        innerRef={(ref) => { this._mapRef = ref; }}
-        initialRegion={{ ...INITIAL_REGION }}
-        rotateEnabled={false}
-        scrollEnabled={false}
-        zoomEnabled={false}
-      >
-        {
-          hasRetaurants && restaurants.map((restaurant, index) => {
-            const {
-              name,
-              description,
-              location,
-              id,
-            } = restaurant;
-
-            return (
-              <Marker
-                ref={(marker) => { this._markersRefs[index] = marker; }}
-                onPress={() => this.onSelectMarker(index)}
-                title={name}
-                description={description}
-                key={id}
-                coordinate={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                }}
-              >
-                <Icon
-                  name="map-marker-radius"
-                  size={30}
-                  width={30}
-                  height={30}
-                  color={appStyle.colors.green}
-                />
-              </Marker>
-            );
-          })
-         }
-      </MapContainer>
+      <Map
+        userLocation={USER_LOCATION}
+        onSelectMarker={index => this.onSelectMarker(index)}
+        indexLocationSelected={indexRestaurantSelected}
+        restaurants={restaurants}
+        hasRetaurants={hasRetaurants}
+      />
     );
   }
 
-  renderRestaurantsList = (): void => {
+  renderRestaurantsList = (): any => {
+    const { indexRestaurantSelected } = this.state;
     const restaurants = this.getRestaurantList();
     const hasRetaurants = restaurants.length > 0;
 
     return hasRetaurants && (
-      <RestaurantsListWrapper>
-        <FlatList
-          ref={(ref) => { this._flatListRef = ref; }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={event => this.onMomentumScrollEnd(event)}
-          data={restaurants}
-          keyExtractor={item => item.id}
-          extraData={this.state}
-          pagingEnabled
-          renderItem={({ item, index }) => (
-            <RestaurantItemList
-              isFirst={index === 0}
-              isLast={index === restaurants.length - 1}
-              id={item.id}
-              name={item.name}
-              distance={item.distance}
-              imageURL={item.imageURL}
-              stars={item.stars}
-              isOpen={item.isOpen}
-            />
-          )}
-        />
-      </RestaurantsListWrapper>
+      <RestaurantList
+        onSelectMarker={index => this.onSelectMarker(index)}
+        indexRestaurantSelected={indexRestaurantSelected}
+        restaurants={restaurants}
+      />
     );
   }
 
@@ -262,8 +147,8 @@ class NearYou extends Component<Props, {}> {
       </ContentContainer>
       <CustomTabWrapper>
         <CustomTab
-          contentWidth={appStyle.metrics.width}
           onChangeMenuIndex={index => this.onDishesTypeChange(index)}
+          contentWidth={appStyle.metrics.width}
           data={customTabData}
           theme="dark"
         />
