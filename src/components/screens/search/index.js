@@ -1,55 +1,25 @@
 // @flow
 
 import React, { Component } from 'react';
-import { View, FlatList } from 'react-native';
+import {
+  View,
+  FlatList,
+  ActivityIndicator,
+  Platform,
+  Animated,
+} from 'react-native';
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as SearchRestaurantsActions } from 'store/ducks/search-restaurants';
 
 import styled from 'styled-components';
 import appStyles from 'styles';
 
-import RestaurantItemList from 'components/common/restaurant-item-list';
+import RestaurantItemList from 'components/common/RestaurantItemList';
 import FloatingActionButton from 'components/common/FloatingActionButton';
 import FilterModal from './components/FilterModal';
-
-const restaurants = [{
-  id: '1',
-  name: 'Jovem Lanches',
-  address: 'Rosinha Sampaio st., Quintino Cunha, Fortaleza',
-  picURL: '',
-  stars: 4.5,
-  reviews: 17,
-},
-{
-  id: '12',
-  name: 'Jovem Lanches',
-  address: 'Rosinha Sampaio st., Quintino Cunha, Fortaleza',
-  picURL: '',
-  stars: 4.5,
-  reviews: 17,
-},
-{
-  id: '31',
-  name: 'Jovem Lanches',
-  address: 'Rosinha Sampaio st., Quintino Cunha, Fortaleza',
-  picURL: '',
-  stars: 4.5,
-  reviews: 17,
-},
-{
-  id: '4',
-  name: 'Jovem Lanches',
-  address: 'Rosinha Sampaio st., Quintino Cunha, Fortaleza',
-  picURL: '',
-  stars: 4.5,
-  reviews: 17,
-},
-{
-  id: '123',
-  name: 'Jovem Lanches',
-  address: 'Rosinha Sampaio st., Quintino Cunha, Fortaleza',
-  picURL: '',
-  stars: 4.5,
-  reviews: 17,
-}];
+import RestaurantsNotFound from './components/RestaurantsNotFound';
 
 const Container = styled(View)`
   flex: 1;
@@ -61,6 +31,7 @@ const Container = styled(View)`
 const ListWrapper = styled(View)`
   flex: 1;
   padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const FloatingActionButtonWrapper = styled(View)`
@@ -72,35 +43,80 @@ const FloatingActionButtonWrapper = styled(View)`
   position: absolute;
 `;
 
-class Search extends Component {
+const LoadingRestaurants = styled(View)`
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const USER_LOCATION = {
+  latitude: -3.7193101,
+  longitude: -38.5892672,
+};
+
+type Props = {
+  searchRestaurantsRequest: Function,
+  restaurantsFromRequest: Object,
+};
+
+type State = {
+  maxDistance: number,
+  dishesTypes: Array<any>,
+  isModalVisible: boolean,
+};
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
+class Search extends Component<Props, State> {
   static navigationOptions = {
     title: 'Search Restaurants',
     headerStyle: {
       backgroundColor: appStyles.colors.primaryColor,
+      borderBottomWidth: 0,
     },
     headerTintColor: appStyles.colors.defaultWhite,
     headerTitleStyle: {
       color: appStyles.colors.defaultWhite,
       fontFamily: 'CircularStd-Bold',
-      fontWeight: '900',
-      fontSize: appStyles.metrics.navigationHeaderFontSize,
     },
   };
 
+  _restaurantListMarginTop = new Animated.Value(0);
   _restaurantListHeight = 0;
 
   state = {
     isModalVisible: false,
-    foodTypes: [],
-    maxDistance: 1,
+    dishesTypes: [],
+    maxDistance: 15,
+  }
+
+  componentDidMount() {
+    this.onSearchRestaurants();
+  }
+
+  onSearchRestaurants = (): void => {
+    const { searchRestaurantsRequest } = this.props;
+
+    const {
+      dishesTypes,
+      maxDistance,
+    } = this.state;
+
+    searchRestaurantsRequest({
+      userLocation: USER_LOCATION,
+      dishesTypes,
+      maxDistance,
+    });
   }
 
   onLayoutRestaurantList = (event: Object): void => {
     const { height } = event.nativeEvent.layout;
+
     this._restaurantListHeight = height;
   }
 
-  onToggleModal = () => {
+  onToggleModal = (): void => {
     const { isModalVisible } = this.state;
 
     this.setState({
@@ -109,52 +125,92 @@ class Search extends Component {
   }
 
   onApplyFilterParams = (filterParams: Object): void => {
-    const { maxDistance, foodTypes } = filterParams;
-    console.log(filterParams)
+    const { maxDistance, dishesTypes } = filterParams;
+
     this.setState({
       maxDistance,
-      foodTypes,
-    });
+      dishesTypes,
+    }, () => this.hideRestaurantsList());
   }
 
-  renderRestaurantList = () => (
-    <ListWrapper>
-      <FlatList
-        onLayout={this.onLayoutRestaurantList}
-        showsVerticalScrollIndicator={false}
-        data={restaurants}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <RestaurantItemList
-            name={item.name}
-            address={item.address}
-            picURL={item.picURL}
-            stars={item.stars}
-            reviews={item.reviews}
-          />
-        )}
-      />
-    </ListWrapper>
-  );
+  hideRestaurantsList = (): void => {
+    Animated.timing(this._restaurantListMarginTop, {
+      toValue: this._restaurantListHeight,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => this.onSearchRestaurants());
+  }
 
-  renderFloatingActionButton = () => (
+  showRestaurantList = (): void => {
+    Animated.spring(this._restaurantListMarginTop, {
+      toValue: 0,
+      duration: 5,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  renderRestaurantList = (): Object => {
+    const { restaurantsFromRequest } = this.props;
+    const { data } = restaurantsFromRequest;
+
+    const { restaurants, loading, error } = data;
+
+    if (loading || error) {
+      return null;
+    }
+
+    this.showRestaurantList();
+
+    return (
+      <ListWrapper>
+        <AnimatedFlatList
+          style={{
+            marginTop: this._restaurantListMarginTop._value,
+            transform: [
+              {
+                translateY: this._restaurantListMarginTop.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
+                }),
+              },
+            ],
+          }}
+          onLayout={this.onLayoutRestaurantList}
+          showsVerticalScrollIndicator={false}
+          data={restaurants}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <RestaurantItemList
+              imageURL={item.imageURL}
+              address={item.address}
+              stars={item.stars}
+              name={item.name}
+              id={item.id}
+            />
+          )}
+        />
+      </ListWrapper>
+    );
+  }
+
+  renderFloatingActionButton = (): Object => (
     <FloatingActionButtonWrapper
       listHeight={this._restaurantListHeight}
     >
       <FloatingActionButton
-        name="filter-variant"
+        name="tune"
         color="red"
         action={this.onToggleModal}
       />
     </FloatingActionButtonWrapper>
   );
 
-  renderModal = () => {
-    const { maxDistance, foodTypes } = this.state;
+  renderModal = (): Object => {
+    const { maxDistance, dishesTypes } = this.state;
 
     return (
       <FilterModal
-        lastFoodTypesChosen={foodTypes}
+        lastDishesTypesChosen={dishesTypes}
         lastDistanceChosen={maxDistance}
         onToggleModal={() => this.onToggleModal()}
         isModalVisible
@@ -163,17 +219,34 @@ class Search extends Component {
     );
   }
 
+  renderLoadingRestaurants = (): Object => (
+    <LoadingRestaurants>
+      <ActivityIndicator
+        color={appStyles.colors.green}
+        size={Platform.OS === 'ios' ? 'small' : 'large'}
+      />
+    </LoadingRestaurants>
+  );
+
   render() {
     const { isModalVisible } = this.state;
+    const { restaurantsFromRequest } = this.props;
+    const { notFound, loading } = restaurantsFromRequest;
 
     return (
       <Container>
-        {this.renderRestaurantList()}
-        {this.renderFloatingActionButton()}
+        {(notFound && !loading) ? <RestaurantsNotFound /> : this.renderRestaurantList()}
+        {loading ? this.renderLoadingRestaurants() : this.renderFloatingActionButton()}
         {isModalVisible ? this.renderModal() : null}
       </Container>
     );
   }
 }
 
-export default Search;
+const mapDispatchToProps = dispatch => bindActionCreators(SearchRestaurantsActions, dispatch);
+
+const mapStateToProps = state => ({
+  restaurantsFromRequest: state.searchRestaurants,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

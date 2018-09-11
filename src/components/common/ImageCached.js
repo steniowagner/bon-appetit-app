@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Image, Platform } from 'react-native';
+import { Animated, Platform } from 'react-native';
 
 import styled from 'styled-components';
 import appStyles from 'styles';
@@ -10,7 +10,7 @@ import CacheManager from 'components/utils/CacheManager';
 
 const FILE_PREFIX = Platform.OS === 'ios' ? '' : 'file://';
 
-const Pic = styled(Image).attrs({
+const Pic = styled(Animated.Image).attrs({
   source: ({ uri }) => ({ uri: FILE_PREFIX + uri }),
 })`
   height: 100%;

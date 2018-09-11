@@ -13,7 +13,7 @@ const Container = styled(View)`
 `;
 
 const DistanceSlider = styled(Slider).attrs({
-  maximumValue: 10,
+  maximumValue: 15,
   minimumValue: 1,
   step: 0.5,
   minimumTrackTintColor: ({ theme }) => theme.colors.red,
@@ -85,7 +85,7 @@ class MaxDistanceFilter extends Component<Props, State> {
         1 km
       </DistanceBoundsText>
       <DistanceBoundsText>
-        10 km
+        15 km
       </DistanceBoundsText>
     </DistanceBoundsWrapper>
   )

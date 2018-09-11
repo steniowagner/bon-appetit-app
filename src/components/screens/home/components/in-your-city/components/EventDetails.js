@@ -14,7 +14,7 @@ import {
 import styled from 'styled-components';
 import appStyle from 'styles';
 
-import RestaurantItemList from 'components/common/restaurant-item-list';
+import RestaurantItemList from 'components/common/RestaurantItemList';
 
 const Container = styled(View)`
   flex: 1;

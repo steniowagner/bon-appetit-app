@@ -10,6 +10,8 @@ import {
 import styled from 'styled-components';
 import appStyles from 'styles';
 
+import ImageCached from 'components/common/ImageCached';
+
 const Container = styled(Animated.View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('35%')}px;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
@@ -35,15 +37,7 @@ const ImageContentContainer = styled(Animated.View)`
   position: absolute;
 `;
 
-const FoodTypeImage = styled(Animated.Image).attrs({
-  source: { uri: '' },
-})`
-  width: 100%;
-  height: 100%;
-  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
-`;
-
-const FoodTypeSelectButtonWrapper = styled(Animated.View)`
+const DisheTypeSelectButtonWrapper = styled(Animated.View)`
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.darkLayer};
@@ -52,7 +46,7 @@ const FoodTypeSelectButtonWrapper = styled(Animated.View)`
   align-items: center;
 `;
 
-const FoodTypeText = styled(Animated.Text)`
+const DisheTypeText = styled(Animated.Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
   fontFamily: CircularStd-Bold;
@@ -60,11 +54,13 @@ const FoodTypeText = styled(Animated.Text)`
 `;
 
 type Props = {
-  onAddFoodTypeFilter: Function,
-  onRemoverFoodTypeFilter: Function,
+  onAddDisheTypeFilter: Function,
+  onRemoverDisheTypeFilter: Function,
+  imageURL: string,
+  title: string,
+  id: string,
   isItemAlreadySelected: boolean,
   isFirst: boolean,
-  title: string,
 };
 
 type State = {
@@ -72,7 +68,7 @@ type State = {
   pressTimestamp: number,
 };
 
-class FilterFoodListItem extends Component<Props, State> {
+class FilterDishesListItem extends Component<Props, State> {
   _selectorColor = new Animated.Value(0);
   _cardScale = new Animated.Value(0);
 
@@ -96,23 +92,23 @@ class FilterFoodListItem extends Component<Props, State> {
     }
 
     const {
-      onAddFoodTypeFilter,
-      onRemoverFoodTypeFilter,
-      title,
+      onAddDisheTypeFilter,
+      onRemoverDisheTypeFilter,
+      id,
     } = this.props;
 
     const { isSelected } = this.state;
 
     this.handleItemAnimations();
 
-    const properCallback = (isSelected ? onRemoverFoodTypeFilter : onAddFoodTypeFilter);
+    const properCallback = (isSelected ? onRemoverDisheTypeFilter : onAddDisheTypeFilter);
 
     this.setState({
       isSelected: !isSelected,
       pressTimestamp: Date.now(),
     });
 
-    properCallback(title);
+    properCallback(id);
   }
 
   shouldAllowPress = () => {
@@ -166,16 +162,16 @@ class FilterFoodListItem extends Component<Props, State> {
     const { title } = this.props;
 
     return (
-      <FoodTypeSelectButtonWrapper>
-        <FoodTypeText>
+      <DisheTypeSelectButtonWrapper>
+        <DisheTypeText>
           {title}
-        </FoodTypeText>
-      </FoodTypeSelectButtonWrapper>
+        </DisheTypeText>
+      </DisheTypeSelectButtonWrapper>
     );
   }
 
   render() {
-    const { isFirst } = this.props;
+    const { isFirst, imageURL } = this.props;
 
     return (
       <Container
@@ -205,7 +201,9 @@ class FilterFoodListItem extends Component<Props, State> {
         }
         >
           <ImageContentContainer>
-            <FoodTypeImage />
+            <ImageCached
+              uri={imageURL}
+            />
           </ImageContentContainer>
           <TouchableWithoutFeedback
             onPress={() => this.onSelectItem()}
@@ -218,4 +216,4 @@ class FilterFoodListItem extends Component<Props, State> {
   }
 }
 
-export default FilterFoodListItem;
+export default FilterDishesListItem;

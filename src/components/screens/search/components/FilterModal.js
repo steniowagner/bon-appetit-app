@@ -5,12 +5,14 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
+  BackHandler,
+  Platform,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
 
-import FilterFoodListItem from './FilterFoodListItem';
+import FilterDishesTypeListItem from './FilterDishesTypeListItem';
 import MaxDistance from './MaxDistanceFilter';
 
 const Container = styled(View)`
@@ -63,7 +65,7 @@ const QuestionText = styled(Text)`
   margin-left: ${({ theme }) => theme.metrics.extraLargeSize}px;
 `;
 
-const TypeOfFoodSectionContainer = styled(View)`
+const DishesTypesSectionContainer = styled(View)`
   width: 100%;
 `;
 
@@ -74,7 +76,7 @@ const MaxDistanceSectionContainer = styled(View)`
 
 const ApplyButton = styled(TouchableOpacity)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('8%')}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('9%')}px;
   background-color: ${({ theme }) => theme.colors.red};
   margin-top: ${({ theme }) => theme.metrics.extraLargeSize}px;
   justify-content: center;
@@ -87,10 +89,46 @@ const ApplyButtonText = styled(Text)`
   fontFamily: CircularStd-Black;
 `;
 
-const dataset = [{ title: 'Pizza' }, { title: 'Churrasco' }, { title: 'Salads' }, { title: 'Desserts' }, { title: 'Fast Food' }];
+const dataset = [{
+  title: 'Pizzas',
+  id: 'Pizza',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/pizza.jpg',
+}, {
+  title: 'Barbecue',
+  id: 'Barbecue',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/babercue.jpeg',
+}, {
+  title: 'Desserts',
+  id: 'Dessert',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/desserts.jpg',
+}, {
+  title: 'Pasta',
+  id: 'Pasta',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/pasta.jpg',
+}, {
+  title: 'Fast-Food',
+  id: 'Fast-Food',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/fast-food.jpg',
+}, {
+  title: 'Homemade',
+  id: 'Homemade',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/homemade.jpg',
+}, {
+  title: 'Japanese',
+  id: 'Japanese',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/japanese.jpg',
+}, {
+  title: 'Salads',
+  id: 'Salad',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/salad.jpg',
+}, {
+  title: 'Seafood',
+  id: 'Seafood',
+  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/seafood.jpg',
+}];
 
 type Props = {
-  lastFoodTypesChosen: Array<Object>,
+  lastDishesTypesChosen: Array<Object>,
   onApplyFilterParams: Function,
   onToggleModal: Function,
   lastDistanceChosen: number,
@@ -103,22 +141,40 @@ type State = {
 };
 
 class FilterModal extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.backButtonListener = null;
+  }
+
   state = {
     maxDistance: 1,
-    foodTypes: [],
+    dishesTypes: [],
   };
+
+  componentWillMount() {
+    if (Platform.OS === 'android') {
+      this.backButtonListener = BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+  }
 
   componentDidMount() {
     const {
-      lastFoodTypesChosen,
+      lastDishesTypesChosen,
       lastDistanceChosen,
     } = this.props;
 
     this.setState({
-      foodTypes: lastFoodTypesChosen,
+      dishesTypes: lastDishesTypesChosen,
       maxDistance: lastDistanceChosen,
-    }, () => console.log('updated: ', this.state.foodTypes));
+    });
   }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android' && this.backButtonListener) {
+      this.backButtonListener.remove();
+    }
+  }
+
 
   onChangeMaxDistance = (maxDistance: number): void => {
     this.setState({
@@ -126,37 +182,45 @@ class FilterModal extends Component<Props, State> {
     });
   }
 
-  onAddFoodTypeFilter = (foodType: string): void => {
-    const { foodTypes } = this.state;
+  onAddDishesTypeFilter = (disheType: string): void => {
+    const { dishesTypes } = this.state;
 
     this.setState({
-      foodTypes: [...foodTypes, foodType],
+      dishesTypes: [...dishesTypes, disheType],
     });
   }
 
-  onRemoverFoodTypeFilter = (foodType: string): void => {
-    const { foodTypes } = this.state;
+  onRemoverDishesTypeFilter = (disheType: string): void => {
+    const { dishesTypes } = this.state;
 
     this.setState({
-      foodTypes: foodTypes.filter(filter => filter !== foodType),
+      dishesTypes: dishesTypes.filter(filter => filter !== disheType),
     });
   }
 
   onPressApplyFiltersButton = () => {
     const { onApplyFilterParams, onToggleModal } = this.props;
-    const { maxDistance, foodTypes } = this.state;
+    const { maxDistance, dishesTypes } = this.state;
 
-    onApplyFilterParams({ maxDistance, foodTypes });
-    console.log('onPressApplyFiltersButton', foodTypes)
     onToggleModal();
+
+    onApplyFilterParams({ maxDistance, dishesTypes });
   }
 
-  checkFoodTypeItemAlreadySelected = (item: string): boolean => {
-    const { lastFoodTypesChosen } = this.props;
+  checkDisheTypeAlreadySelected = (item: string): boolean => {
+    const { lastDishesTypesChosen } = this.props;
 
-    const isFoodTypeItemAlreadySelected = lastFoodTypesChosen.indexOf(item) >= 0;
+    const isDishesTypeItemAlreadySelected = lastDishesTypesChosen.indexOf(item) >= 0;
 
-    return isFoodTypeItemAlreadySelected;
+    return isDishesTypeItemAlreadySelected;
+  }
+
+  handleBackButtonClick = () => {
+    const { onToggleModal } = this.props;
+
+    onToggleModal();
+
+    return true;
   }
 
   renderHeader = () => {
@@ -177,27 +241,29 @@ class FilterModal extends Component<Props, State> {
     );
   }
 
-  renderKindFoodSection = () => (
-    <TypeOfFoodSectionContainer>
+  renderDishesTypesSection = () => (
+    <DishesTypesSectionContainer>
       <QuestionText>
-        {'Which kind of food you\'re looking for?'}
+        {'Which kind of dish you\'re looking for?'}
       </QuestionText>
       <FlatList
         showsHorizontalScrollIndicator={false}
         horizontal
         data={dataset}
-        keyExtractor={item => item.title}
+        keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
-          <FilterFoodListItem
+          <FilterDishesTypeListItem
+            onRemoverDisheTypeFilter={disheType => this.onRemoverDishesTypeFilter(disheType)}
+            isItemAlreadySelected={this.checkDisheTypeAlreadySelected(item.id)}
+            onAddDisheTypeFilter={disheType => this.onAddDishesTypeFilter(disheType)}
+            imageURL={item.imageURL}
             isFirst={index === 0}
-            isItemAlreadySelected={this.checkFoodTypeItemAlreadySelected(item.title)}
             title={item.title}
-            onAddFoodTypeFilter={foodType => this.onAddFoodTypeFilter(foodType)}
-            onRemoverFoodTypeFilter={foodType => this.onRemoverFoodTypeFilter(foodType)}
+            id={item.id}
           />
         )}
       />
-    </TypeOfFoodSectionContainer>
+    </DishesTypesSectionContainer>
   );
 
   renderMaxDistanceSection = () => {
@@ -219,18 +285,21 @@ class FilterModal extends Component<Props, State> {
   }
 
   render() {
-    const { isModalVisible } = this.props;
+    const { isModalVisible, onToggleModal } = this.props;
 
     return (
       <Modal
         animationType="slide"
         transparent
         visible={isModalVisible}
+        onDismiss={() => console.tron.log('onDismiss')}
+        onRequestClose={() => onToggleModal()}
+        hardwareAccelerated
       >
         <Container>
           <ModalContainer>
             {this.renderHeader()}
-            {this.renderKindFoodSection()}
+            {this.renderDishesTypesSection()}
             {this.renderMaxDistanceSection()}
             <ApplyButton
               onPress={() => this.onPressApplyFiltersButton()}
