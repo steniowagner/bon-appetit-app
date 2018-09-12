@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -53,6 +52,7 @@
 		BF0D2926A77B4C0F9D93E551 /* CircularStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3537577C26804F8395024657 /* CircularStd-Bold.otf */; };
 		C03279957C4D44AA837EADB4 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9956E8F9699D43D199DE4C02 /* Octicons.ttf */; };
 		C09C980F211E875B00B9EE75 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C09C980E211E875B00B9EE75 /* MaterialCommunityIcons.ttf */; };
+		C0D058332148D3AA009427B3 /* DishesTypes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0D058322148D3AA009427B3 /* DishesTypes.xcassets */; };
 		C0D631F82130B17C000F254C /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0D631F72130B17C000F254C /* libBVLinearGradient.a */; };
 		D6CF45E5914D40CFBE5FE15C /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445616BB62F649EEA07CACC9 /* FontAwesome5_Solid.ttf */; };
 		D7D4664016AB46B78BB4FCE8 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44BCF53D2F0D49DA92A3C18C /* Entypo.ttf */; };
@@ -336,6 +336,20 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		C01255812148CE3F00327F7C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0D631A32130B001000F254C /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = BVLinearGradient;
+		};
+		C01255832148CE3F00327F7C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0D631A32130B001000F254C /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 64AA15081EF7F30100718508;
+			remoteInfo = "BVLinearGradient-tvOS";
+		};
 		C09C980C211E868D00B9EE75 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 77328A8812A64088998B6EFA /* RNFetchBlob.xcodeproj */;
@@ -395,6 +409,7 @@
 		B36F4F6C8A6C42E59F9E72DC /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		B8A913C2B30741A4A972402A /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		C09C980E211E875B00B9EE75 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		C0D058322148D3AA009427B3 /* DishesTypes.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DishesTypes.xcassets; sourceTree = "<group>"; };
 		C0D631A32130B001000F254C /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		C0D631F72130B17C000F254C /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF7ECC8C63904A688796BD8A /* CircularStd-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Black.otf"; path = "../assets/fonts/CircularStd-Black.otf"; sourceTree = "<group>"; };
@@ -644,6 +659,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				C0D058322148D3AA009427B3 /* DishesTypes.xcassets */,
 				13B07FAE1A68108700A75B9A /* bon_appetit */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* bon_appetitTests */,
@@ -701,6 +717,15 @@
 				95B30D060B5E4FCBB53285B7 /* Zocial.ttf */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		C012557D2148CE3F00327F7C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C01255822148CE3F00327F7C /* libBVLinearGradient.a */,
+				C01255842148CE3F00327F7C /* libBVLinearGradient.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		C09C97E3211E868800B9EE75 /* Recovered References */ = {
@@ -833,6 +858,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = C012557D2148CE3F00327F7C /* Products */;
+					ProjectRef = C0D631A32130B001000F254C /* BVLinearGradient.xcodeproj */;
+				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -1156,6 +1185,20 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		C01255822148CE3F00327F7C /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = C01255812148CE3F00327F7C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C01255842148CE3F00327F7C /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = C01255832148CE3F00327F7C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C09C980D211E868D00B9EE75 /* libRNFetchBlob.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1186,6 +1229,7 @@
 				C09C980F211E875B00B9EE75 /* MaterialCommunityIcons.ttf in Resources */,
 				3C05FEC93685463A848EFD47 /* Modesta-Script.ttf in Resources */,
 				D7D4664016AB46B78BB4FCE8 /* Entypo.ttf in Resources */,
+				C0D058332148D3AA009427B3 /* DishesTypes.xcassets in Resources */,
 				BCE08A3D17BD47F3B89DCA25 /* EvilIcons.ttf in Resources */,
 				63246ACA172C40FBA822EE3E /* Feather.ttf in Resources */,
 				8E25AD97671347B8B286231F /* FontAwesome.ttf in Resources */,

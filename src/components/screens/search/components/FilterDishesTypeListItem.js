@@ -5,12 +5,11 @@ import {
   TouchableWithoutFeedback,
   Animated,
   Easing,
+  Image,
 } from 'react-native';
 
 import styled from 'styled-components';
 import appStyles from 'styles';
-
-import ImageCached from 'components/common/ImageCached';
 
 const Container = styled(Animated.View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('35%')}px;
@@ -37,6 +36,14 @@ const ImageContentContainer = styled(Animated.View)`
   position: absolute;
 `;
 
+const DisheImage = styled(Image).attrs({
+  source: ({ uri }) => ({ uri }),
+})`
+  width: 100%;
+  height: 100%;
+  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
+`;
+
 const DisheTypeSelectButtonWrapper = styled(Animated.View)`
   width: 100%;
   height: 100%;
@@ -56,7 +63,7 @@ const DisheTypeText = styled(Animated.Text)`
 type Props = {
   onAddDisheTypeFilter: Function,
   onRemoverDisheTypeFilter: Function,
-  imageURL: string,
+  imageURI: string,
   title: string,
   id: string,
   isItemAlreadySelected: boolean,
@@ -171,7 +178,7 @@ class FilterDishesListItem extends Component<Props, State> {
   }
 
   render() {
-    const { isFirst, imageURL } = this.props;
+    const { isFirst, imageURI } = this.props;
 
     return (
       <Container
@@ -201,8 +208,8 @@ class FilterDishesListItem extends Component<Props, State> {
         }
         >
           <ImageContentContainer>
-            <ImageCached
-              uri={imageURL}
+            <DisheImage
+              uri={imageURI}
             />
           </ImageContentContainer>
           <TouchableWithoutFeedback

@@ -8,12 +8,14 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import FastImage from 'react-native-fast-image';
+
 import { withNavigation } from 'react-navigation';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 
-import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import styled from 'styled-components';
 
 import ReviewStars from 'components/common/ReviewStars';
 
@@ -53,12 +55,12 @@ const RestaurantImageWrapper = styled(View)`
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
-const RestaurantImage = styled(Image).attrs({
+const RestaurantImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
+  priority: FastImage.priority.high,
 })`
   width: 100%;
   height: 100%;
-  resizeMode: cover;
   position: absolute;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;

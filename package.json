@@ -17,6 +17,7 @@
     "react-app-rewired": "^1.5.2",
     "react-native": "0.56.0",
     "react-native-dotenv": "^0.2.0",
+    "react-native-fast-image": "^5.0.3",
     "react-native-linear-gradient": "^2.4.0",
     "react-native-maps": "^0.21.0",
     "react-native-shimmer-placeholder": "^1.0.29",

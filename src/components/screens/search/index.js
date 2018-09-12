@@ -95,6 +95,10 @@ class Search extends Component<Props, State> {
     this.onSearchRestaurants();
   }
 
+  componentDidUpdate() {
+    this.showRestaurantList();
+  }
+
   onSearchRestaurants = (): void => {
     const { searchRestaurantsRequest } = this.props;
 
@@ -144,7 +148,7 @@ class Search extends Component<Props, State> {
   showRestaurantList = (): void => {
     Animated.spring(this._restaurantListMarginTop, {
       toValue: 0,
-      duration: 5,
+      bounciness: 5,
       useNativeDriver: true,
     }).start();
   }
@@ -158,8 +162,6 @@ class Search extends Component<Props, State> {
     if (loading || error) {
       return null;
     }
-
-    this.showRestaurantList();
 
     return (
       <ListWrapper>
@@ -213,7 +215,6 @@ class Search extends Component<Props, State> {
         lastDishesTypesChosen={dishesTypes}
         lastDistanceChosen={maxDistance}
         onToggleModal={() => this.onToggleModal()}
-        isModalVisible
         onApplyFilterParams={params => this.onApplyFilterParams(params)}
       />
     );
@@ -229,15 +230,15 @@ class Search extends Component<Props, State> {
   );
 
   render() {
-    const { isModalVisible } = this.state;
     const { restaurantsFromRequest } = this.props;
     const { notFound, loading } = restaurantsFromRequest;
+    const { isModalVisible } = this.state;
 
     return (
       <Container>
         {(notFound && !loading) ? <RestaurantsNotFound /> : this.renderRestaurantList()}
         {loading ? this.renderLoadingRestaurants() : this.renderFloatingActionButton()}
-        {isModalVisible ? this.renderModal() : null}
+        {isModalVisible && this.renderModal()}
       </Container>
     );
   }

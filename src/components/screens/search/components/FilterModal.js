@@ -5,8 +5,6 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
-  BackHandler,
-  Platform,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -92,39 +90,39 @@ const ApplyButtonText = styled(Text)`
 const dataset = [{
   title: 'Pizzas',
   id: 'Pizza',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/pizza.jpg',
+  imageURI: 'pizza',
 }, {
   title: 'Barbecue',
   id: 'Barbecue',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/babercue.jpeg',
+  imageURI: 'babercue',
 }, {
   title: 'Desserts',
   id: 'Dessert',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/desserts.jpg',
+  imageURI: 'desserts',
 }, {
   title: 'Pasta',
   id: 'Pasta',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/pasta.jpg',
+  imageURI: 'pasta',
 }, {
   title: 'Fast-Food',
   id: 'Fast-Food',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/fast-food.jpg',
+  imageURI: 'fastfood',
 }, {
   title: 'Homemade',
   id: 'Homemade',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/homemade.jpg',
+  imageURI: 'homemade',
 }, {
   title: 'Japanese',
   id: 'Japanese',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/japanese.jpg',
+  imageURI: 'japanese',
 }, {
   title: 'Salads',
   id: 'Salad',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/salad.jpg',
+  imageURI: 'salad',
 }, {
   title: 'Seafood',
   id: 'Seafood',
-  imageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes-types/seafood.jpg',
+  imageURI: 'seafood',
 }];
 
 type Props = {
@@ -132,7 +130,6 @@ type Props = {
   onApplyFilterParams: Function,
   onToggleModal: Function,
   lastDistanceChosen: number,
-  isModalVisible: boolean,
 };
 
 type State = {
@@ -141,21 +138,10 @@ type State = {
 };
 
 class FilterModal extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.backButtonListener = null;
-  }
-
   state = {
     maxDistance: 1,
     dishesTypes: [],
   };
-
-  componentWillMount() {
-    if (Platform.OS === 'android') {
-      this.backButtonListener = BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-    }
-  }
 
   componentDidMount() {
     const {
@@ -168,13 +154,6 @@ class FilterModal extends Component<Props, State> {
       maxDistance: lastDistanceChosen,
     });
   }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android' && this.backButtonListener) {
-      this.backButtonListener.remove();
-    }
-  }
-
 
   onChangeMaxDistance = (maxDistance: number): void => {
     this.setState({
@@ -215,14 +194,6 @@ class FilterModal extends Component<Props, State> {
     return isDishesTypeItemAlreadySelected;
   }
 
-  handleBackButtonClick = () => {
-    const { onToggleModal } = this.props;
-
-    onToggleModal();
-
-    return true;
-  }
-
   renderHeader = () => {
     const { onToggleModal } = this.props;
 
@@ -256,7 +227,7 @@ class FilterModal extends Component<Props, State> {
             onRemoverDisheTypeFilter={disheType => this.onRemoverDishesTypeFilter(disheType)}
             isItemAlreadySelected={this.checkDisheTypeAlreadySelected(item.id)}
             onAddDisheTypeFilter={disheType => this.onAddDishesTypeFilter(disheType)}
-            imageURL={item.imageURL}
+            imageURI={item.imageURI}
             isFirst={index === 0}
             title={item.title}
             id={item.id}
@@ -285,14 +256,12 @@ class FilterModal extends Component<Props, State> {
   }
 
   render() {
-    const { isModalVisible, onToggleModal } = this.props;
+    const { onToggleModal } = this.props;
 
     return (
       <Modal
         animationType="slide"
         transparent
-        visible={isModalVisible}
-        onDismiss={() => console.tron.log('onDismiss')}
         onRequestClose={() => onToggleModal()}
         hardwareAccelerated
       >
