@@ -45,7 +45,11 @@ class Map extends Component<Props, {}> {
       longitude,
     }, 500);
 
-    this._markersRefs[indexLocationSelected].showCallout();
+    const isMarkerRefLoaded = this._markersRefs[indexLocationSelected];
+
+    if (isMarkerRefLoaded) {
+      this._markersRefs[indexLocationSelected].showCallout();
+    }
   }
 
   render() {

@@ -37,8 +37,8 @@ const ContentContainer = styled(View)`
   padding: ${({ theme }) => theme.metrics.mediumSize}px;
 `;
 
-const FoodImage = styled(Image).attrs({
-  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
+const DisheImage = styled(Image).attrs({
+  source: ({ imageURL }) => ({ uri: imageURL }),
 })`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')};
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')};
@@ -58,7 +58,7 @@ const BottomContentWrapper = styled(View)`
   justify-content: flex-end;
 `;
 
-const FoodTitle = styled(Text).attrs({
+const DisheTitle = styled(Text).attrs({
   numberOfLines: 1,
   ellipsizeMode: 'tail',
 })`
@@ -95,51 +95,39 @@ const DistanceIcon = styled(Icon).attrs({
 `;
 
 type Props = {
-  price: number,
   distance: number,
   reviews: number,
+  price: number,
   stars: number,
-  foodTitle: string,
-  foodImageURL: string,
-  isFirst: boolean,
+  imageURL: string,
+  title: string,
+  id: string,
   navigation: Function,
+  isFirst: boolean,
 };
 
 type State = {
-  isFoodImageLoaded: boolean,
+  isDisheImageLoaded: boolean,
 };
 
 class YMLSectionList extends Component<Props, State> {
   state = {
-    isFoodImageLoaded: false,
+    isDisheImageLoaded: false,
   };
 
-  onFoodImageLoaded = () => {
+  onDisheImageLoaded = () => {
     this.setState({
-      isFoodImageLoaded: true,
+      isDisheImageLoaded: true,
     });
   }
 
   onPressItem = () => {
-    const {
-      price,
-      distance,
-      reviews,
-      stars,
-      foodTitle,
-      navigation,
-      foodImageURL,
-    } = this.props;
+    const { navigation, id } = this.props;
 
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
       payload: {
-        price,
-        distance,
-        reviews,
-        stars,
-        foodTitle,
-        foodImageURL,
         mode: 'detail',
+        id,
       },
     });
   }
@@ -156,7 +144,7 @@ class YMLSectionList extends Component<Props, State> {
 
   renderBottomContent = () => {
     const {
-      foodTitle,
+      title,
       stars,
       reviews,
       distance,
@@ -164,9 +152,9 @@ class YMLSectionList extends Component<Props, State> {
 
     return (
       <BottomContentWrapper>
-        <FoodTitle>
-          {foodTitle}
-        </FoodTitle>
+        <DisheTitle>
+          {title}
+        </DisheTitle>
         <ReviewStars
           shouldShowReviewsText
           stars={stars}
@@ -185,8 +173,8 @@ class YMLSectionList extends Component<Props, State> {
   }
 
   render() {
-    const { isFoodImageLoaded } = this.state;
-    const { foodImageURL, isFirst } = this.props;
+    const { isDisheImageLoaded } = this.state;
+    const { imageURL, isFirst } = this.props;
 
     const ContentShimmerComponent = (
       <ContentShimmer
@@ -208,13 +196,13 @@ class YMLSectionList extends Component<Props, State> {
       </ContentContainer>
     );
 
-    const ProperComponent = (isFoodImageLoaded ? ContentComponent : ContentShimmerComponent);
+    const ProperComponent = (isDisheImageLoaded ? ContentComponent : ContentShimmerComponent);
 
     return (
       <Container isFirst={isFirst}>
-        <FoodImage
-          onLoad={() => this.onFoodImageLoaded()}
-          foodImageURL={foodImageURL}
+        <DisheImage
+          onLoad={() => this.onDisheImageLoaded()}
+          imageURL={imageURL}
         />
         {ProperComponent}
       </Container>

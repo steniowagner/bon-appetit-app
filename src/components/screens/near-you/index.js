@@ -7,14 +7,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as NearbyRestaurantsActions } from 'store/ducks/nearby-restaurants';
 
+import { getItemFromStorage } from 'components/utils/AsyncStoarageManager';
+import AppKeys from 'components/utils/Keys';
+import Messages from 'components/utils/Messages';
+
 import styled from 'styled-components';
 import appStyle from 'styles';
 
 import CustomTab from 'components/common/CustomTab';
 import Map from './Map';
-import RestaurantList from './restaurant-list';
-
-const ERROR_MESSAGE = 'Something gets wrong. Please, check your connection with the server.';
+import RestaurantsList from './restaurants-list';
 
 const Container = styled(View)`
   flex: 1;
@@ -32,19 +34,39 @@ const CustomTabWrapper = styled(View)`
 `;
 
 const customTabData = [{
-  title: 'Pizza',
+  title: 'Pizzas',
+  id: 'Pizza',
 }, {
-  title: 'Salad',
+  title: 'Barbecue',
+  id: 'Barbecue',
 }, {
-  title: 'Dessert',
+  title: 'Desserts',
+  id: 'Dessert',
+}, {
+  title: 'Pasta',
+  id: 'Pasta',
+}, {
+  title: 'Fast-Food',
+  id: 'Fast-Food',
+}, {
+  title: 'Homemade',
+  id: 'Homemade',
 }, {
   title: 'Japanese',
+  id: 'Japanese',
+}, {
+  title: 'Salads',
+  id: 'Salad',
+}, {
+  title: 'Seafood',
+  id: 'Seafood',
 }];
 
-const USER_LOCATION = {
-  latitude: -3.7193101,
-  longitude: -38.5892672,
+const FORTALEZA_CITY_LOCATION = {
+  latitude: -3.7899266,
+  longitude: -38.588988,
 };
+
 
 type Props = {
   getNearbyRestaurantsRequest: Function,
@@ -68,21 +90,36 @@ class NearYou extends Component<Props, {}> {
   };
 
   state = {
+    userLocation: {
+      latitude: FORTALEZA_CITY_LOCATION.latitude,
+      longitude: FORTALEZA_CITY_LOCATION.longitude,
+    },
     indexDishesTypeSelected: 0,
     indexRestaurantSelected: 0,
   };
 
-  componentDidMount() {
-    this.onRequestNearbyRestaurants();
+  async componentDidMount() {
+    const { userLocation } = this.state;
+    const persistedUserLocation = await getItemFromStorage(AppKeys.USER_LOCATION, [userLocation.latitude, userLocation.longitude]);
+    const { latitude, longitude } = JSON.parse(persistedUserLocation);
+
+    this.setState({
+      userLocation: {
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+      },
+    }, () => this.onRequestNearbyRestaurants());
   }
 
   onRequestNearbyRestaurants = (): void => {
     const { getNearbyRestaurantsRequest } = this.props;
 
     const { indexDishesTypeSelected } = this.state;
-    const dishesSelected = customTabData[indexDishesTypeSelected].title;
+    const dishesSelected = customTabData[indexDishesTypeSelected].id;
 
-    getNearbyRestaurantsRequest(dishesSelected, USER_LOCATION);
+    const { userLocation } = this.state;
+
+    getNearbyRestaurantsRequest(dishesSelected, userLocation);
   }
 
   onDishesTypeChange = (indexDishesTypeSelected: number): void => {
@@ -98,7 +135,7 @@ class NearYou extends Component<Props, {}> {
     });
   }
 
-  getRestaurantList = (): Array<any> => {
+  getRestaurantsList = (): Array<any> => {
     const { restaurantsFromRequest } = this.props;
     const { loading, data } = restaurantsFromRequest;
 
@@ -110,13 +147,13 @@ class NearYou extends Component<Props, {}> {
   }
 
   renderMap = (): Object => {
-    const { indexRestaurantSelected } = this.state;
-    const restaurants = this.getRestaurantList();
+    const { indexRestaurantSelected, userLocation } = this.state;
+    const restaurants = this.getRestaurantsList();
     const hasRetaurants = restaurants.length > 0;
 
     return (
       <Map
-        userLocation={USER_LOCATION}
+        userLocation={userLocation}
         onSelectMarker={index => this.onSelectMarker(index)}
         indexLocationSelected={indexRestaurantSelected}
         restaurants={restaurants}
@@ -127,11 +164,11 @@ class NearYou extends Component<Props, {}> {
 
   renderRestaurantsList = (): any => {
     const { indexRestaurantSelected } = this.state;
-    const restaurants = this.getRestaurantList();
+    const restaurants = this.getRestaurantsList();
     const hasRetaurants = restaurants.length > 0;
 
     return hasRetaurants && (
-      <RestaurantList
+      <RestaurantsList
         onSelectMarker={index => this.onSelectMarker(index)}
         indexRestaurantSelected={indexRestaurantSelected}
         restaurants={restaurants}
@@ -158,11 +195,11 @@ class NearYou extends Component<Props, {}> {
 
   render() {
     const { restaurantsFromRequest } = this.props;
-    const { error } = restaurantsFromRequest;
+    const { error, loading } = restaurantsFromRequest;
 
     return (
       <Container>
-        {error ? alert(ERROR_MESSAGE) : this.renderContent()}
+        {error ? alert(Messages.ERROR_MESSAGE) : this.renderContent(loading)}
       </Container>
     );
   }

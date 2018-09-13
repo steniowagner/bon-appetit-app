@@ -6,22 +6,6 @@ import styled from 'styled-components';
 
 import PopularSectionListItem from './PopularSectionListItem';
 
-const getTestData = () => {
-  const data = [];
-
-  for (let i = 0; i < 12; i++) {
-    data.push({
-      id: `${i}`,
-      foodTitle: 'Nissim Miojo',
-      foodImageURL: 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/acai-colares.jpg',
-      stars: 4.5,
-      price: 29.90,
-    });
-  }
-
-  return data;
-};
-
 const Container = styled(View)`
   justify-content: space-between;
   width: 100%;
@@ -32,21 +16,26 @@ const ListWrapper = styled(View)`
   flex-direction: row;
 `;
 
-const YouMightLikeSection = () => (
+type Props = {
+  dishes: any,
+};
+
+const YouMightLikeSection = ({ dishes }: Props): Object => (
   <Container>
     <ListWrapper>
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={getTestData()}
+        data={dishes}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
           <PopularSectionListItem
             isFirst={index === 0}
-            foodTitle={item.foodTitle}
-            foodImageURL={item.foodImageURL}
+            imageURL={item.imageURL}
+            disheTitle={item.title}
             stars={item.stars}
             price={item.price}
+            id={item.id}
           />
         )}
       />

@@ -8,8 +8,8 @@ import FoodDetailReview from 'components/common/restaurant-detail/components/foo
 import PopularSeeAll from 'components/screens/home/components/popular/popular-see-all';
 import YMLSeeAll from 'components/screens/home/components/you-might-like/yml-see-all';
 
-import EventDetails from './components/in-your-city/components/EventDetails';
-import AllEvents from './components/in-your-city/components/all-events-list';
+import EventDetails from './components/EventDetails';
+import AllEvents from './components/in-your-city/iyc-see-all';
 
 import Home from './index';
 

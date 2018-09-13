@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { createMaterialTopTabNavigator } from 'react-navigation';
+import { createTabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import HomeRoutes from 'components/screens/home/routes';
@@ -20,7 +20,7 @@ const getTabIcon = (icon: string): Object => ({ tintColor }: Props) => (
   <Icon name={icon} size={28} color={tintColor} />
 );
 
-const ApplicationTabs = () => createMaterialTopTabNavigator({
+const ApplicationTabs = () => createTabNavigator({
   Home: {
     screen: HomeRoutes,
     navigationOptions: {
@@ -56,11 +56,12 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
     },
   },
 }, {
-  initialRouteName: 'Search',
+  initialRouteName: 'Home',
   tabBarPosition: 'bottom',
   optimizationsEnabled: true,
   animationEnabled: true,
   swipeEnabled: false,
+  lazy: true,
   tabBarOptions: {
     showLabel: false,
     showIcon: true,

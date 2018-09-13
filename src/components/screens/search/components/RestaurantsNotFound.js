@@ -17,7 +17,7 @@ const Wrapper = styled(View)`
 `;
 
 const FoodNotFoundIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.darkText,
+  color: ({ theme }) => theme.colors.green,
   name: 'food-off',
   size: 120,
 })`
@@ -28,7 +28,7 @@ const FoodNotFoundIcon = styled(Icon).attrs({
 
 const BigText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('4%')}px;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('4.5%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
   fontFamily: CircularStd-Black;
   text-align: center;
@@ -38,12 +38,12 @@ const MediumText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.2%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
-  fontFamily: CircularStd-Black;
+  fontFamily: CircularStd-Bold;
   text-align: center;
 `;
 
 const SmallText = styled(Text)`
-  color: ${({ theme }) => theme.colors.darkText};
+  color: ${({ theme }) => theme.colors.subText};
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
   fontFamily: CircularStd-Medium;

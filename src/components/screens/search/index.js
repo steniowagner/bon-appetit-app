@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   View,
   FlatList,
@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as SearchRestaurantsActions } from 'store/ducks/search-restaurants';
 
+import Messages from 'components/utils/Messages';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
@@ -61,9 +62,9 @@ type Props = {
 };
 
 type State = {
-  maxDistance: number,
   dishesTypes: Array<any>,
   isModalVisible: boolean,
+  maxDistance: number,
 };
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -229,16 +230,25 @@ class Search extends Component<Props, State> {
     </LoadingRestaurants>
   );
 
-  render() {
-    const { restaurantsFromRequest } = this.props;
-    const { notFound, loading } = restaurantsFromRequest;
+  renderContent = (notFound: boolean, loading: boolean): Object => {
     const { isModalVisible } = this.state;
 
     return (
-      <Container>
+      <Fragment>
         {(notFound && !loading) ? <RestaurantsNotFound /> : this.renderRestaurantList()}
         {loading ? this.renderLoadingRestaurants() : this.renderFloatingActionButton()}
         {isModalVisible && this.renderModal()}
+      </Fragment>
+    );
+  }
+
+  render() {
+    const { restaurantsFromRequest } = this.props;
+    const { notFound, loading, error } = restaurantsFromRequest;
+
+    return (
+      <Container>
+        {error ? alert(Messages.ERROR_MESSAGE) : this.renderContent(notFound, loading)}
       </Container>
     );
   }

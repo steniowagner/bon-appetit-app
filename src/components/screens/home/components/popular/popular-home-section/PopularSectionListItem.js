@@ -23,14 +23,6 @@ const Container = styled(View)`
   margin-right: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
-const ContainerShimmer = styled(ShimmerPlaceholder)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('28%')};
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('30%')};
-  margin-left: ${({ theme }) => theme.metrics.largeSize}px;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  position: absolute;
-`;
-
 const DarkLayer = styled(View)`
   width: 100%;
   height: 70%;
@@ -39,13 +31,24 @@ const DarkLayer = styled(View)`
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
-const FoodImage = styled(Image).attrs({
-  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
+const DisheImage = styled(Image).attrs({
+  source: ({ imageURL }) => ({ uri: imageURL }),
 })`
   width: 100%;
   height: 70%;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
+
+const DisheImageShimmer = styled(ShimmerPlaceholder).attrs({
+  autoRun: true,
+  visible: true,
+})`
+  width: 100%;
+  height: 70%;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
+`;
+
+const ContentWrapper = styled(View)``;
 
 const BottomWrapper = styled(View)`
   width: 100%;
@@ -53,15 +56,15 @@ const BottomWrapper = styled(View)`
   padding-top: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
-const FoodTitle = styled(Text).attrs({
-  numberOfLines: 1,
+const DisheTitle = styled(Text).attrs({
+  numberOfLines: 2,
   ellipsizeMode: 'tail',
 })`
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
-  fontFamily: CircularStd-Bold;
   margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
+  fontFamily: CircularStd-Bold;
+  color: ${({ theme }) => theme.colors.darkText};
 `;
 
 const FlagPriceWrapper = styled(View)`
@@ -71,8 +74,9 @@ const FlagPriceWrapper = styled(View)`
 `;
 
 type Props = {
-  foodTitle: string,
-  foodImageURL: string,
+  disheTitle: string,
+  imageURL: string,
+  id: string,
   stars: number,
   price: number,
   navigation: Function,
@@ -80,43 +84,49 @@ type Props = {
 };
 
 type State = {
-  isFoodImageLoaded: boolean,
+  isDisheImageLoaded: boolean,
 };
 
 class PopularSectionListItem extends Component<Props, State> {
   state = {
-    isFoodImageLoaded: false,
+    isDisheImageLoaded: false,
   };
 
   onPressItem = () => {
-    const {
-      navigation,
-      foodTitle,
-      foodImageURL,
-      price,
-      stars,
-    } = this.props;
+    const { navigation, id } = this.props;
 
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
       payload: {
         mode: 'detail',
-        foodTitle,
-        foodImageURL,
-        price,
-        stars,
+        id,
       },
     });
   }
 
-  onFoodImageLoaded = () => {
+  onDisheImageLoaded = () => {
     this.setState({
-      isFoodImageLoaded: true,
+      isDisheImageLoaded: true,
     });
+  }
+
+  renderDisheImage = (): Object => {
+    const { isDisheImageLoaded } = this.state;
+    const { imageURL } = this.props;
+
+    return (
+      <Fragment>
+        <DisheImage
+          onLoad={() => this.onDisheImageLoaded()}
+          imageURL={imageURL}
+        />
+        {!isDisheImageLoaded && <DisheImageShimmer />}
+      </Fragment>
+    );
   }
 
   renderBottomContent = () => {
     const {
-      foodTitle,
+      disheTitle,
       stars,
       price,
     } = this.props;
@@ -125,13 +135,15 @@ class PopularSectionListItem extends Component<Props, State> {
       <Fragment>
         <DarkLayer>
           <FlagPriceWrapper>
-            <FlagPrice price={price} />
+            <FlagPrice
+              price={price}
+            />
           </FlagPriceWrapper>
         </DarkLayer>
         <BottomWrapper>
-          <FoodTitle>
-            {foodTitle}
-          </FoodTitle>
+          <DisheTitle>
+            {disheTitle}
+          </DisheTitle>
           <ReviewStars
             stars={stars}
             shouldShowReviewsText={false}
@@ -142,27 +154,22 @@ class PopularSectionListItem extends Component<Props, State> {
   }
 
   render() {
-    const { isFoodImageLoaded } = this.state;
-    const { foodImageURL, isFirst } = this.props;
+    const { isFirst } = this.props;
 
     return (
       <Fragment>
-        <Container isFirst={isFirst}>
+        <Container
+          isFirst={isFirst}
+        >
           <TouchableWithoutFeedback
             onPress={() => this.onPressItem()}
           >
-            <View>
-              <FoodImage
-                foodImageURL={foodImageURL}
-              />
+            <ContentWrapper>
+              {this.renderDisheImage()}
               {this.renderBottomContent()}
-            </View>
+            </ContentWrapper>
           </TouchableWithoutFeedback>
         </Container>
-        <ContainerShimmer
-          visible={!isFoodImageLoaded}
-          autoRun
-        />
       </Fragment>
     );
   }
