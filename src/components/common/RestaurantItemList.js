@@ -4,7 +4,6 @@ import React, { Component, Fragment } from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableWithoutFeedback,
 } from 'react-native';
 
@@ -92,7 +91,10 @@ const AddressIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.defaultWhite,
   name: 'map-marker',
   size: 20,
-})``;
+})`
+  width: 20px;
+  height: 20px;
+`;
 
 type Props = {
   imageURL: string,

@@ -22,19 +22,23 @@ type Props = {
   indexLocationSelected: number,
   restaurants: Array<Object>,
   onSelectMarker: Function,
-  hasRetaurants: boolean,
   userLocation: Object,
 };
 
 class Map extends Component<Props, {}> {
+  componentDidMount() {
+    this.animateToLocation();
+  }
+
   componentDidUpdate() {
     this.animateToLocation();
   }
 
   animateToLocation = (): void => {
-    const { indexLocationSelected, restaurants, hasRetaurants } = this.props;
+    const { indexLocationSelected, restaurants } = this.props;
+    const hasRestaurants = restaurants.length > 0;
 
-    if (!hasRetaurants) {
+    if (!hasRestaurants) {
       return;
     }
 
@@ -45,36 +49,39 @@ class Map extends Component<Props, {}> {
       longitude,
     }, 500);
 
-    const isMarkerRefLoaded = this._markersRefs[indexLocationSelected];
+    const isMarkerLoaded = !!this._markersRefs[indexLocationSelected].props;
 
-    if (isMarkerRefLoaded) {
-      this._markersRefs[indexLocationSelected].showCallout();
+    if (isMarkerLoaded) {
+      setTimeout(() => {
+        this._markersRefs[indexLocationSelected].showCallout();
+      }, 1000);
     }
   }
 
   render() {
     const {
-      restaurants,
-      hasRetaurants,
       onSelectMarker,
       userLocation,
+      restaurants,
     } = this.props;
 
-    this._markersRefs = [restaurants.length];
-
-    const markers = [...restaurants, {
-      id: 'user-location',
-      name: 'Your Position',
+    const userLocationMarker = {
       description: 'You\'re here',
+      name: 'Your Position',
+      id: 'user-location',
       location: {
         latitude: userLocation.latitude,
         longitude: userLocation.longitude,
       },
-    }];
+    };
+
+    const markers = [...restaurants, userLocationMarker];
+
+    this._markersRefs = [markers.length];
 
     const initialRegion = {
       ...userLocation,
-      latitudeDelta: 0.03152,
+      latitudeDelta: 0.01152,
       longitudeDelta: 0.0100,
     };
 
@@ -85,19 +92,19 @@ class Map extends Component<Props, {}> {
         rotateEnabled={false}
       >
         {
-          hasRetaurants && markers.map((restaurant, index) => {
+          markers.map((marker, index) => {
             const {
               name,
               description,
               location,
               id,
-            } = restaurant;
+            } = marker;
 
             const iconName = (id === 'user-location' ? 'account-location' : 'map-marker-radius');
 
             return (
               <Marker
-                ref={(marker) => { this._markersRefs[index] = marker; }}
+                ref={(markerRef) => { this._markersRefs[index] = markerRef; }}
                 onPress={() => {
                   if (id !== 'user-location') {
                     onSelectMarker(index);

@@ -237,7 +237,7 @@ class RestaurantItemList extends Component<Props, State> {
         onPress={() => this.onPressArrowButton()}
       >
         <Icon
-          color="darkText"
+          color="#1F1F21"
           name="arrow-right"
           size={28}
         />

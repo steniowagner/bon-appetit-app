@@ -67,7 +67,6 @@ const FORTALEZA_CITY_LOCATION = {
   longitude: -38.588988,
 };
 
-
 type Props = {
   getNearbyRestaurantsRequest: Function,
   restaurantsFromRequest: Object,
@@ -96,6 +95,7 @@ class NearYou extends Component<Props, {}> {
     },
     indexDishesTypeSelected: 0,
     indexRestaurantSelected: 0,
+    restaurantsCached: [],
   };
 
   async componentDidMount() {
@@ -109,6 +109,18 @@ class NearYou extends Component<Props, {}> {
         longitude: parseFloat(longitude),
       },
     }, () => this.onRequestNearbyRestaurants());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { indexDishesTypeSelected, restaurantsCached } = this.state;
+    const { restaurantsFromRequest } = nextProps;
+    const { restaurants } = restaurantsFromRequest.data;
+
+    const cached = Object.assign([], restaurantsCached, { [indexDishesTypeSelected]: restaurants });
+
+    this.setState({
+      restaurantsCached: cached,
+    });
   }
 
   onRequestNearbyRestaurants = (): void => {
@@ -126,7 +138,13 @@ class NearYou extends Component<Props, {}> {
     this.setState({
       indexDishesTypeSelected,
       indexRestaurantSelected: 0,
-    }, () => this.onRequestNearbyRestaurants());
+    }, () => {
+      const isRestaurantsCached = this.isRestaurantsCached();
+
+      if (!isRestaurantsCached) {
+        this.onRequestNearbyRestaurants();
+      }
+    });
   }
 
   onSelectMarker = (indexRestaurantSelected: number): void => {
@@ -135,7 +153,7 @@ class NearYou extends Component<Props, {}> {
     });
   }
 
-  getRestaurantsList = (): Array<any> => {
+  getRestaurantsFromRequest = (): Array<any> => {
     const { restaurantsFromRequest } = this.props;
     const { loading, data } = restaurantsFromRequest;
 
@@ -146,10 +164,30 @@ class NearYou extends Component<Props, {}> {
     return restaurants;
   }
 
-  renderMap = (): Object => {
-    const { indexRestaurantSelected, userLocation } = this.state;
-    const restaurants = this.getRestaurantsList();
-    const hasRetaurants = restaurants.length > 0;
+  getRestaurantsFromCache = (): Array<any> => {
+    const { indexDishesTypeSelected, restaurantsCached } = this.state;
+
+    return restaurantsCached[indexDishesTypeSelected];
+  }
+
+  getRestaurantsList = (): Array<any> => {
+    const isRestaurantsCached = this.isRestaurantsCached();
+
+    const restaurants = isRestaurantsCached ? this.getRestaurantsFromCache() : this.getRestaurantsFromRequest();
+
+    return restaurants;
+  }
+
+  isRestaurantsCached = () => {
+    const { indexDishesTypeSelected, restaurantsCached } = this.state;
+
+    const isCached = restaurantsCached[indexDishesTypeSelected];
+
+    return !!isCached;
+  }
+
+  renderMap = (restaurants: Array<Object>, indexRestaurantSelected: number): Object => {
+    const { userLocation } = this.state;
 
     return (
       <Map
@@ -157,49 +195,49 @@ class NearYou extends Component<Props, {}> {
         onSelectMarker={index => this.onSelectMarker(index)}
         indexLocationSelected={indexRestaurantSelected}
         restaurants={restaurants}
-        hasRetaurants={hasRetaurants}
       />
     );
   }
 
-  renderRestaurantsList = (): any => {
-    const { indexRestaurantSelected } = this.state;
+  renderRestaurantsList = (restaurants: Array<Object>, indexRestaurantSelected: number): Object => (
+    <RestaurantsList
+      onSelectMarker={index => this.onSelectMarker(index)}
+      indexRestaurantSelected={indexRestaurantSelected}
+      restaurants={restaurants}
+    />
+  );
+
+  renderContent = (): Object => {
     const restaurants = this.getRestaurantsList();
     const hasRetaurants = restaurants.length > 0;
 
-    return hasRetaurants && (
-      <RestaurantsList
-        onSelectMarker={index => this.onSelectMarker(index)}
-        indexRestaurantSelected={indexRestaurantSelected}
-        restaurants={restaurants}
-      />
+    const { indexRestaurantSelected } = this.state;
+
+    return (
+      <Fragment>
+        <ContentContainer>
+          {this.renderMap(restaurants, indexRestaurantSelected)}
+          {hasRetaurants && this.renderRestaurantsList(restaurants, indexRestaurantSelected)}
+        </ContentContainer>
+        <CustomTabWrapper>
+          <CustomTab
+            onChangeMenuIndex={index => this.onDishesTypeChange(index)}
+            contentWidth={appStyle.metrics.width}
+            data={customTabData}
+            theme="dark"
+          />
+        </CustomTabWrapper>
+      </Fragment>
     );
   }
 
-  renderContent = (): Object => (
-    <Fragment>
-      <ContentContainer>
-        {this.renderMap()}
-        {this.renderRestaurantsList()}
-      </ContentContainer>
-      <CustomTabWrapper>
-        <CustomTab
-          onChangeMenuIndex={index => this.onDishesTypeChange(index)}
-          contentWidth={appStyle.metrics.width}
-          data={customTabData}
-          theme="dark"
-        />
-      </CustomTabWrapper>
-    </Fragment>
-  );
-
   render() {
     const { restaurantsFromRequest } = this.props;
-    const { error, loading } = restaurantsFromRequest;
+    const { error } = restaurantsFromRequest;
 
     return (
       <Container>
-        {error ? alert(Messages.ERROR_MESSAGE) : this.renderContent(loading)}
+        {error ? alert(Messages.ERROR_MESSAGE) : this.renderContent()}
       </Container>
     );
   }

@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -16,7 +17,7 @@ import { Creators as HomeCreators } from 'store/ducks/home';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
-import appStyle from 'styles';
+import appStyles from 'styles';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 import { persistItemInStorage } from 'components/utils/AsyncStoarageManager';
@@ -77,26 +78,44 @@ type Props = {
   homeRequest: Object,
 };
 
-class HomeMainContent extends Component<Props, {}> {
+type State = {
+  isRefresing: boolean,
+};
+
+class HomeMainContent extends Component<Props, State> {
   static navigationOptions = {
     title: 'Bon Appetit',
     headerStyle: {
-      backgroundColor: appStyle.colors.primaryColor,
+      backgroundColor: appStyles.colors.primaryColor,
       borderBottomWidth: 0,
     },
-    headerTintColor: appStyle.colors.defaultWhite,
+    headerTintColor: appStyles.colors.defaultWhite,
     headerTitleStyle: {
-      color: appStyle.colors.defaultWhite,
+      color: appStyles.colors.defaultWhite,
       fontFamily: 'Modesta-Script',
       fontWeight: '200',
       fontSize: Platform.OS === 'ios' ? 26 : 30,
     },
   };
 
-  componentDidMount() {
-    const { getHomeRequest } = this.props;
+  state = {
+    isRefresing: false,
+  };
 
-    getHomeRequest();
+  componentDidMount() {
+    this.requestData();
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      isRefresing: false,
+    });
+  }
+
+  onRefreshData = () => {
+    this.setState({
+      refreshing: true,
+    });
   }
 
   getRequestResponseData = (): Array<Object> => {
@@ -118,6 +137,12 @@ class HomeMainContent extends Component<Props, {}> {
     return {
       ...data,
     };
+  }
+
+  requestData = (): void => {
+    const { getHomeRequest } = this.props;
+
+    getHomeRequest();
   }
 
   persistUserLocation = async (userLocation): void => {
@@ -144,6 +169,8 @@ class HomeMainContent extends Component<Props, {}> {
       popularDishes,
     } = this.getRequestResponseData();
 
+    const { isRefresing } = this.state;
+
     if (userLocation) {
       this.persistUserLocation(userLocation);
     }
@@ -157,6 +184,15 @@ class HomeMainContent extends Component<Props, {}> {
     const HomeContent = (
       <ScrollView
         showsVerticalScrollIndicator={false}
+        refreshControl={(
+          <RefreshControl
+            refreshing={isRefresing}
+            onRefresh={() => this.requestData()}
+            tintColor={appStyles.colors.green}
+            progressBackgroundColor={appStyles.colors.green}
+            colors={[appStyles.colors.white]}
+          />
+        )}
       >
         {hasInYourCityEvents && (
           <Section
@@ -203,7 +239,7 @@ class HomeMainContent extends Component<Props, {}> {
     <LoadingWrapper>
       <ActivityIndicator
         size={Platform.OS === 'ios' ? 'small' : 'large'}
-        color={appStyle.colors.green}
+        color={appStyles.colors.green}
       />
     </LoadingWrapper>
   )

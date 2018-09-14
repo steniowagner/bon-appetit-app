@@ -57,7 +57,7 @@ const BottomWrapper = styled(View)`
 `;
 
 const DisheTitle = styled(Text).attrs({
-  numberOfLines: 2,
+  numberOfLines: 1,
   ellipsizeMode: 'tail',
 })`
   margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
