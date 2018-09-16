@@ -18,7 +18,10 @@ console.disableYellowBox = true;
 
 const App = () => (
   <Fragment>
-    <StatusBar barStyle="light-content" />
+    <StatusBar
+      barStyle="light-content"
+      backgroundColor="#009730"
+    />
     <ThemeProvider theme={AppTheme}>
       <Provider store={store}>
         <ApplicationNavigator />

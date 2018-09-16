@@ -112,12 +112,6 @@ class HomeMainContent extends Component<Props, State> {
     });
   }
 
-  onRefreshData = () => {
-    this.setState({
-      refreshing: true,
-    });
-  }
-
   getRequestResponseData = (): Array<Object> => {
     const { homeRequest } = this.props;
     const { data, loading, error } = homeRequest;

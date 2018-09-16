@@ -10,7 +10,7 @@ const MapContainer = styled(MapView)`
 `;
 
 const CustomMarker = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.green,
+  color: ({ theme }) => theme.colors.primaryColor,
   name: ({ name }) => name,
   size: 30,
 })`

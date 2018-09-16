@@ -1,229 +1,124 @@
 // @flow
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  Image,
+  TouchableWithoutFeedback,
+  Platform,
   Text,
   View,
-  TouchableOpacity,
 } from 'react-native';
 
 import styled from 'styled-components';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-import { withNavigation } from 'react-navigation';
+import appStyles from 'styles';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
+import { withNavigation } from 'react-navigation';
 
-const Wrapper = styled(View)`
-  flex-direction: row;
-  align-items: center;
+import FastImage from 'react-native-fast-image';
+
+const Container = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')};
 `;
 
-const EventImage = styled(Image).attrs({
-  source: ({ eventImage }) => ({ uri: eventImage }),
-})`
-  padding: ${({ theme }) => `${theme.metrics.smallSize}px ${theme.metrics.largeSize}px`};
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('40%')}px;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('22%')}px;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  resizeMode: cover;
+const DarkWrapper = styled(View)`
+  width: 100%;
+  height: 100%;
+  justify-content: flex-end;
+  padding: ${({ theme }) => theme.metrics.largeSize}px;
+  background-color: ${({ theme }) => theme.colors.darkLayer}
 `;
 
-const EventImageShimmer = styled(ShimmerPlaceHolder)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('40%')}px;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('22%')}px;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
+const EventImage = styled(FastImage).attrs({
+  source: ({ imageURL }) => ({ uri: imageURL }),
+  resizeMode: 'cover',
+})`
+  width: 100%;
+  height: 100%;
   position: absolute;
 `;
 
-const TextContentWrapper = styled(View)`
-  padding-horizontal: ${({ theme }) => theme.metrics.smallSize}px;
-  justify-content: center;
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('60%')}px;
-  height: 100%;
-`;
+const getTextSize = (type: string): number => {
+  const types = {
+    restaurantsParticipating: Platform.OS === 'android' ? '2.6%' : '2.2%',
+    description: Platform.OS === 'android' ? '2.8%' : '2.4%',
+    title: Platform.OS === 'android' ? '3.8%' : '3.5%',
+  };
 
-const EventTitle = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
-  color: ${({ theme }) => theme.colors.darkText};
+  return appStyles.metrics.getHeightFromDP(types[type]);
+};
+
+const EventTitle = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})`
+  font-size: ${() => getTextSize('title')}px;
   font-family: CircularStd-Black;
+  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-const EventDescription = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.7%')}px;
-  color: ${({ theme }) => theme.colors.subText};
-  font-family: CircularStd-Bold;
-`;
-
-const RestaurantsParticipatingWrapper = styled(View)`
-  padding-top: ${({ theme }) => theme.metrics.smallSize}px;
-  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
+const EventDescription = styled(Text).attrs({
+  numberOfLines: 3,
+  ellipsizeMode: 'tail',
+})`
+  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
+  font-size: ${() => getTextSize('description')}px;
+  font-family: CircularStd-Medium;
+  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
 const RestaurantParticipatingText = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.65%')}px;
-  color: ${({ theme }) => theme.colors.darkText};
-  font-family: CircularStd-Medium;
-`;
-
-const ButtonWrapper = styled(TouchableOpacity)`
-  flex-direction: row;
-  align-self: flex-start;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ButtonTitle = styled(Text)`
-  color: ${({ theme }) => theme.colors.red};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')};
+  font-size: ${() => getTextSize('restaurantsParticipating')}px;
   font-family: CircularStd-Black;
-`;
-
-const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.red,
-  name: 'chevron-right',
-  size: 28,
-})`
-  margin-left: -5px;
-  width: 28px;
-  height: 28px;
-`;
-
-const RestaurantIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.darkText,
-  name: 'silverware-variant',
-  size: 18,
-})`
-  margin-right: ${({ theme }) => theme.metrics.extraSmallSize}
-  width: 18px;
-  height: 18px;
+  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
 type Props = {
-  eventTitle: string,
-  eventDescription: string,
-  eventImage: string,
+  description: string,
+  imageURL: string,
+  title: string,
+  id: string,
   restaurantsParticipating: number,
   navigation: Function,
-  isDataFetched: boolean,
 };
 
-type State = {
-  isEventImageLoaded: boolean,
+const onPressItem = (navigation: Function, id: string): void => {
+  navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, { id });
 };
 
-class AllEventsListItem extends Component<Props, State> {
-  state = {
-    isEventImageLoaded: false,
-  };
+const renderTextContent = (title: string, description: string, restaurantsParticipating: number): Object => (
+  <DarkWrapper>
+    <EventTitle>
+      {title}
+    </EventTitle>
+    <EventDescription>
+      {description}
+    </EventDescription>
+    <RestaurantParticipatingText>
+      {`${restaurantsParticipating} Restaurants participating`}
+    </RestaurantParticipatingText>
+  </DarkWrapper>
+);
 
-  onLoadEventImage = () => {
-    this.setState({
-      isEventImageLoaded: true,
-    });
-  }
-
-  renderRestaurantParticipating = (): Object => {
-    const { isDataFetched, restaurantsParticipating } = this.props;
-
-    return (
-      <ShimmerPlaceHolder
-        visible={isDataFetched}
-        autoRun
-      >
-        <RestaurantsParticipatingWrapper>
-          <RestaurantIcon />
-          <RestaurantParticipatingText>
-            {`${restaurantsParticipating} Restaurants participating`}
-          </RestaurantParticipatingText>
-        </RestaurantsParticipatingWrapper>
-      </ShimmerPlaceHolder>
-    );
-  }
-
-  renderSeeAllRestaurantsButton = (): Object => {
-    const {
-      eventTitle,
-      eventDescription,
-      eventImage,
-      navigation,
-      isDataFetched,
-    } = this.props;
-
-    const { isEventImageLoaded } = this.state;
-    const enableButton = isEventImageLoaded && isDataFetched;
-
-    const onSeeRestaurantButtonPress = () => {
-      navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
-        eventTitle,
-        eventDescription,
-        eventImage,
-      });
-    };
-
-    return enableButton
-      && (
-        <ButtonWrapper
-          onPress={() => onSeeRestaurantButtonPress()}
-        >
-          <ButtonTitle>
-            See Restaurants
-          </ButtonTitle>
-          <ArrowIcon />
-        </ButtonWrapper>
-      );
-  }
-
-  render() {
-    const {
-      eventTitle,
-      eventDescription,
-      eventImage,
-      isDataFetched,
-    } = this.props;
-
-    const { isEventImageLoaded } = this.state;
-
-    return (
-      <Wrapper>
-        <EventImage
-          eventImage={eventImage}
-          onLoad={() => this.onLoadEventImage()}
-        />
-        <EventImageShimmer
-          autoRun
-          visible={isEventImageLoaded}
-        />
-        <TextContentWrapper>
-          <ShimmerPlaceHolder
-            visible={isDataFetched}
-            autoRun
-          >
-            <EventTitle>
-              {eventTitle}
-            </EventTitle>
-          </ShimmerPlaceHolder>
-          <ShimmerPlaceHolder
-            visible={isDataFetched}
-            autoRun
-          >
-            <EventDescription>
-              {eventDescription}
-            </EventDescription>
-          </ShimmerPlaceHolder>
-          {this.renderRestaurantParticipating()}
-          {this.renderSeeAllRestaurantsButton()}
-        </TextContentWrapper>
-      </Wrapper>
-    );
-  }
-}
+const AllEventsListItem = ({
+  restaurantsParticipating,
+  description,
+  navigation,
+  imageURL,
+  title,
+  id,
+}: Props): Object => (
+  <TouchableWithoutFeedback
+    onPress={() => onPressItem(navigation, id)}
+  >
+    <Container>
+      <EventImage
+        imageURL={imageURL}
+      />
+      {renderTextContent(title, description, restaurantsParticipating)}
+    </Container>
+  </TouchableWithoutFeedback>
+);
 
 export default withNavigation(AllEventsListItem);

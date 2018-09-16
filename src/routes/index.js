@@ -75,7 +75,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
       backgroundColor: 'transparent',
     },
     inactiveTintColor: appStyles.colors.lightGray,
-    activeTintColor: appStyles.colors.red,
+    activeTintColor: appStyles.colors.primaryColor,
   },
 });
 

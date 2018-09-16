@@ -1,76 +1,166 @@
 // @flow
 
-import React, { Component } from 'react';
-import { View, FlatList } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  Platform,
+  FlatList,
+  View,
+} from 'react-native';
+
+import { Creators as EventCreators } from 'store/ducks/events';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import styled from 'styled-components';
-import appStyle from 'styles';
+import appStyles from 'styles';
 
+import Messages from 'components/utils/Messages';
 import AllEventsListItem from './IYCSeeallItemList';
 
 const Container = styled(View)`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.white};
-  padding-horizontal: 4px;
 `;
 
-class AllEvents extends Component {
+const LoadingContainer = styled(View)`
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+
+type Props = {
+  getEventsRequest: Function,
+  eventRequest: Object,
+};
+
+type State = {
+  events: Array<any>,
+};
+
+class AllEvents extends Component<Props, State> {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.title || '',
     headerStyle: {
-      backgroundColor: appStyle.colors.primaryColor,
+      backgroundColor: appStyles.colors.primaryColor,
       borderBottomWidth: 0,
     },
-    headerTintColor: appStyle.colors.defaultWhite,
+    headerTintColor: appStyles.colors.defaultWhite,
     headerTitleStyle: {
-      color: appStyle.colors.defaultWhite,
+      fontSize: appStyles.metrics.navigationHeaderFontSize,
       fontFamily: 'CircularStd-Black',
-      fontSize: appStyle.metrics.navigationHeaderFontSize,
+      color: appStyles.colors.defaultWhite,
     },
   });
 
   state = {
-    isDataFetched: true,
+    events: [],
   };
 
-  getTestData = () => {
-    const data = [];
+  componentDidMount() {
+    this.onRequestEvents();
+  }
 
-    for (let i = 0; i < 12; i++) {
-      data.push({
-        id: `${i}`,
-        eventImage: 'https://images.unsplash.com/photo-1511516412963-801b050c92aa?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=f23e22ac67f9dd47c1471491abfdda84&auto=format&fit=crop&w=1050&q=80',
-        restaurantsParticipating: 12,
-        eventTitle: 'Pasta Festival',
-        eventDescription: 'An amazing event with most extensive variety of the best of Itaian cuisine!',
+  componentWillReceiveProps(nextProps) {
+    const { eventRequest } = nextProps;
+    const { loading, error, data } = eventRequest;
+
+    const shouldUpdateEvents = !loading && !error;
+
+    if (shouldUpdateEvents) {
+      const { events } = this.state;
+
+      this.setState({
+        events: [...events, ...data.events],
       });
     }
+  }
 
-    return data;
-  };
+  onRequestEvents = (): void => {
+    const { getEventsRequest } = this.props;
+
+    getEventsRequest();
+  }
+
+  onRefreshList = (): void => {
+    this.onRequestEvents();
+  }
+
+  renderLoading = (): Object => (
+    <LoadingContainer>
+      <ActivityIndicator
+        color={appStyles.colors.primaryColor}
+        size={Platform.OS === 'ios' ? 'small' : 'large'}
+      />
+    </LoadingContainer>
+  )
+
+  renderList = (): Object => {
+    const { eventRequest } = this.props;
+    const { loading } = eventRequest;
+
+    const { events } = this.state;
+
+    return (
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        keyExtractor={item => item.id}
+        data={events}
+        refreshControl={(
+          <RefreshControl
+            onRefresh={() => this.onRequestEvents()}
+            progressBackgroundColor={appStyles.colors.green}
+            tintColor={appStyles.colors.green}
+            colors={[appStyles.colors.white]}
+            refreshing={loading}
+          />
+        )}
+        renderItem={({ item }) => (
+          <AllEventsListItem
+            restaurantsParticipating={item.restaurantsParticipating}
+            description={item.description}
+            imageURL={item.imageURL}
+            title={item.title}
+            id={item.id}
+          />
+        )}
+      />
+    );
+  }
+
+  renderMainContent = (isEmpty: boolean, isLoading: boolean): Object => {
+    const shouldShowEventList = !isEmpty && !isLoading;
+
+    return (
+      <Fragment>
+        {isLoading && this.renderLoading()}
+        {shouldShowEventList && this.renderList()}
+      </Fragment>
+    );
+  }
 
   render() {
-    const { isDataFetched } = this.state;
+    const { eventRequest } = this.props;
+    const {
+      isEmpty,
+      loading,
+      error,
+    } = eventRequest;
 
     return (
       <Container>
-        <FlatList
-          data={this.getTestData()}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <AllEventsListItem
-              isDataFetched={isDataFetched}
-              eventImage={item.eventImage}
-              restaurantsParticipating={item.restaurantsParticipating}
-              eventTitle={item.eventTitle}
-              eventDescription={item.eventDescription}
-            />
-          )}
-        />
+        {error ? alert(Messages.ERROR_MESSAGE) : this.renderMainContent(isEmpty, loading)}
       </Container>
     );
   }
 }
 
-export default AllEvents;
+const mapDispatchToProps = dispatch => bindActionCreators(EventCreators, dispatch);
+
+const mapStateToProps = state => ({
+  eventRequest: state.events,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AllEvents);
