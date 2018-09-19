@@ -72,7 +72,14 @@ type Props = {
   restaurantsFromRequest: Object,
 };
 
-class NearYou extends Component<Props, {}> {
+type State = {
+  userLocation: Object,
+  indexDishesTypeSelected: number,
+  indexRestaurantSelected: number,
+  restaurantsCached: Array<any>,
+};
+
+class NearYou extends Component<Props, State> {
   static navigationOptions = {
     title: 'Near You',
     headerStyle: {
@@ -191,9 +198,9 @@ class NearYou extends Component<Props, {}> {
 
     return (
       <Map
-        userLocation={userLocation}
         onSelectMarker={index => this.onSelectMarker(index)}
         indexLocationSelected={indexRestaurantSelected}
+        userLocation={userLocation}
         restaurants={restaurants}
       />
     );

@@ -9,24 +9,27 @@ import {
   Animated,
 } from 'react-native';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { Creators as SearchRestaurantsActions } from 'store/ducks/search-restaurants';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import Messages from 'components/utils/Messages';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
-import RestaurantItemList from 'components/common/RestaurantItemList';
+import { getItemFromStorage } from 'components/utils/AsyncStoarageManager';
+import AppKeys from 'components/utils/Keys';
+
 import FloatingActionButton from 'components/common/FloatingActionButton';
+import RestaurantItemList from 'components/common/RestaurantItemList';
+import ItemNotFound from 'components/common/ItemNotFound';
 import FilterModal from './components/FilterModal';
-import RestaurantsNotFound from './components/RestaurantsNotFound';
 
 const Container = styled(View)`
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.white};
   flex-direction: row;
   justify-content: flex-end;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const ListWrapper = styled(View)`
@@ -38,10 +41,10 @@ const ListWrapper = styled(View)`
 const FloatingActionButtonWrapper = styled(View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('22%')};
   height: ${({ theme }) => theme.metrics.getHeightFromDP('15%')};
-  margin-top: ${({ listHeight }) => listHeight}px;
-  margin-right: ${({ theme }) => theme.metrics.extraLargeSize}px;
   align-self: flex-end;
   position: absolute;
+  margin-right: ${({ theme }) => theme.metrics.extraLargeSize}px;
+  margin-top: ${({ listHeight }) => listHeight}px;
 `;
 
 const LoadingRestaurants = styled(View)`
@@ -50,11 +53,6 @@ const LoadingRestaurants = styled(View)`
   justify-content: center;
   align-items: center;
 `;
-
-const USER_LOCATION = {
-  latitude: -3.7193101,
-  longitude: -38.5892672,
-};
 
 type Props = {
   searchRestaurantsRequest: Function,
@@ -88,12 +86,25 @@ class Search extends Component<Props, State> {
 
   state = {
     isModalVisible: false,
+    userLocation: {
+      latitude: 0,
+      longitude: 0,
+    },
     dishesTypes: [],
     maxDistance: 15,
   }
 
-  componentDidMount() {
-    this.onSearchRestaurants();
+  async componentDidMount() {
+    const { userLocation } = this.state;
+    const persistedUserLocation = await getItemFromStorage(AppKeys.USER_LOCATION, [userLocation.latitude, userLocation.longitude]);
+    const { latitude, longitude } = JSON.parse(persistedUserLocation);
+
+    this.setState({
+      userLocation: {
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+      },
+    }, () => this.onSearchRestaurants());
   }
 
   componentDidUpdate() {
@@ -102,14 +113,14 @@ class Search extends Component<Props, State> {
 
   onSearchRestaurants = (): void => {
     const { searchRestaurantsRequest } = this.props;
-
     const {
+      userLocation,
       dishesTypes,
       maxDistance,
     } = this.state;
 
     searchRestaurantsRequest({
-      userLocation: USER_LOCATION,
+      userLocation,
       dishesTypes,
       maxDistance,
     });
@@ -202,7 +213,7 @@ class Search extends Component<Props, State> {
     >
       <FloatingActionButton
         name="tune"
-        color="red"
+        color="primaryColor"
         action={this.onToggleModal}
       />
     </FloatingActionButtonWrapper>
@@ -233,9 +244,18 @@ class Search extends Component<Props, State> {
   renderContent = (notFound: boolean, loading: boolean): Object => {
     const { isModalVisible } = this.state;
 
+    const RestaurantsNotFound = (
+      <ItemNotFound
+        description={'There\'s no Restaurants that matches with your Search.'}
+        tipText="How about looking for something else?"
+        iconName="food-off"
+        funnyText="Oops!"
+      />
+    );
+
     return (
       <Fragment>
-        {(notFound && !loading) ? <RestaurantsNotFound /> : this.renderRestaurantList()}
+        {(notFound && !loading) ? RestaurantsNotFound : this.renderRestaurantList()}
         {loading ? this.renderLoadingRestaurants() : this.renderFloatingActionButton()}
         {isModalVisible && this.renderModal()}
       </Fragment>

@@ -18,7 +18,7 @@ const Wrapper = styled(View)`
 
 const FoodNotFoundIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.green,
-  name: 'food-off',
+  name: ({ iconName }) => iconName,
   size: 120,
 })`
   width: 120px;
@@ -26,7 +26,7 @@ const FoodNotFoundIcon = styled(Icon).attrs({
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
 `;
 
-const BigText = styled(Text)`
+const FunnyText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('4.5%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
@@ -34,7 +34,7 @@ const BigText = styled(Text)`
   text-align: center;
 `;
 
-const MediumText = styled(Text)`
+const TipText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.2%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
@@ -42,7 +42,7 @@ const MediumText = styled(Text)`
   text-align: center;
 `;
 
-const SmallText = styled(Text)`
+const Description = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
@@ -50,21 +50,35 @@ const SmallText = styled(Text)`
   text-align: center;
 `;
 
-const RestaurantsNotFound = () => (
+type Props = {
+  description: string,
+  funnyText: string,
+  iconName: string,
+  tipText: string,
+};
+
+const NotFound = ({
+  description,
+  funnyText,
+  iconName,
+  tipText,
+}: Props) => (
   <Container>
     <Wrapper>
-      <FoodNotFoundIcon />
-      <BigText>
-        Oops!
-      </BigText>
-      <SmallText>
-        {'There\'s no Restaurants that matches with your Search.'}
-      </SmallText>
-      <MediumText>
-        How about looking for something else?
-      </MediumText>
+      <FoodNotFoundIcon
+        iconName={iconName}
+      />
+      <FunnyText>
+        {funnyText}
+      </FunnyText>
+      <Description>
+        {description}
+      </Description>
+      <TipText>
+        {tipText}
+      </TipText>
     </Wrapper>
   </Container>
 );
 
-export default RestaurantsNotFound;
+export default NotFound;

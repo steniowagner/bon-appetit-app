@@ -16,8 +16,8 @@ const DistanceSlider = styled(Slider).attrs({
   maximumValue: 15,
   minimumValue: 1,
   step: 0.5,
-  minimumTrackTintColor: ({ theme }) => theme.colors.red,
-  thumbTintColor: ({ theme }) => theme.colors.red,
+  minimumTrackTintColor: ({ theme }) => theme.colors.primaryColor,
+  thumbTintColor: ({ theme }) => theme.colors.primaryColor,
 })``;
 
 const CurrentDistanceText = styled(Text)`

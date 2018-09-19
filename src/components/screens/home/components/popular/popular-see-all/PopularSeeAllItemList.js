@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import {
+  TouchableOpacity,
+  Platform,
+  Image,
   View,
   Text,
-  TouchableOpacity,
-  Image,
-  Platform,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -264,7 +264,7 @@ class PopularSeeAllItemList extends Component<Props, State> {
     >
       <ArrowIcon />
     </ArrowButton>
-  )
+  );
 
   render() {
     const { isFoodImageLoaded } = this.state;

@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
+import ItemNotFound from 'components/common/ItemNotFound';
 import Messages from 'components/utils/Messages';
 import AllEventsListItem from './IYCSeeallItemList';
 
@@ -32,15 +33,11 @@ const LoadingContainer = styled(View)`
 `;
 
 type Props = {
-  getEventsRequest: Function,
-  eventRequest: Object,
+  getAllEventsRequest: Function,
+  getEvents: Object,
 };
 
-type State = {
-  events: Array<any>,
-};
-
-class AllEvents extends Component<Props, State> {
+class AllEvents extends Component<Props, {}> {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.title || '',
     headerStyle: {
@@ -55,37 +52,14 @@ class AllEvents extends Component<Props, State> {
     },
   });
 
-  state = {
-    events: [],
-  };
-
   componentDidMount() {
     this.onRequestEvents();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { eventRequest } = nextProps;
-    const { loading, error, data } = eventRequest;
-
-    const shouldUpdateEvents = !loading && !error;
-
-    if (shouldUpdateEvents) {
-      const { events } = this.state;
-
-      this.setState({
-        events: [...events, ...data.events],
-      });
-    }
-  }
-
   onRequestEvents = (): void => {
-    const { getEventsRequest } = this.props;
+    const { getAllEventsRequest } = this.props;
 
-    getEventsRequest();
-  }
-
-  onRefreshList = (): void => {
-    this.onRequestEvents();
+    getAllEventsRequest();
   }
 
   renderLoading = (): Object => (
@@ -98,10 +72,8 @@ class AllEvents extends Component<Props, State> {
   )
 
   renderList = (): Object => {
-    const { eventRequest } = this.props;
-    const { loading } = eventRequest;
-
-    const { events } = this.state;
+    const { getEvents } = this.props;
+    const { loadingAllEvents, events } = getEvents;
 
     return (
       <FlatList
@@ -114,13 +86,14 @@ class AllEvents extends Component<Props, State> {
             progressBackgroundColor={appStyles.colors.green}
             tintColor={appStyles.colors.green}
             colors={[appStyles.colors.white]}
-            refreshing={loading}
+            refreshing={loadingAllEvents}
           />
         )}
         renderItem={({ item }) => (
           <AllEventsListItem
             restaurantsParticipating={item.restaurantsParticipating}
             description={item.description}
+            dishesTypes={item.dishesTypes}
             imageURL={item.imageURL}
             title={item.title}
             id={item.id}
@@ -133,25 +106,36 @@ class AllEvents extends Component<Props, State> {
   renderMainContent = (isEmpty: boolean, isLoading: boolean): Object => {
     const shouldShowEventList = !isEmpty && !isLoading;
 
+    const BoringCity = (
+      <ItemNotFound
+        description={'Unfortunately, there\'s nothing happening in your City today.'}
+        tipText="More luck tomorrow!"
+        funnyText="So Boring..."
+        iconName="city"
+      />
+    );
+
     return (
       <Fragment>
-        {isLoading && this.renderLoading()}
         {shouldShowEventList && this.renderList()}
+        {isLoading && this.renderLoading()}
+        {isEmpty && BoringCity}
       </Fragment>
     );
   }
 
   render() {
-    const { eventRequest } = this.props;
+    const { getEvents } = this.props;
+
     const {
+      loadingAllEvents,
+      errorAllEvents,
       isEmpty,
-      loading,
-      error,
-    } = eventRequest;
+    } = getEvents;
 
     return (
       <Container>
-        {error ? alert(Messages.ERROR_MESSAGE) : this.renderMainContent(isEmpty, loading)}
+        {errorAllEvents ? alert(Messages.ERROR_MESSAGE) : this.renderMainContent(isEmpty, loadingAllEvents)}
       </Container>
     );
   }
@@ -160,7 +144,7 @@ class AllEvents extends Component<Props, State> {
 const mapDispatchToProps = dispatch => bindActionCreators(EventCreators, dispatch);
 
 const mapStateToProps = state => ({
-  eventRequest: state.events,
+  getEvents: state.events,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllEvents);

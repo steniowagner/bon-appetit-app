@@ -1,38 +1,65 @@
 import Immutable from 'seamless-immutable';
 
 export const Types = {
-  GET_REQUEST: 'events/GET_REQUEST',
-  GET_SUCCESS: 'events/GET_SUCCESS',
-  GET_FAILURE: 'events/GET_FAILURE',
+  GET_ALL_REQUEST: 'events/GET_ALL_REQUEST',
+  GET_ALL_SUCCESS: 'events/GET_ALL_SUCCESS',
+  GET_ALL_FAILURE: 'events/GET_ALL_FAILURE',
+  GET_RESTAURANTS_REQUEST: 'events/GET_RESTAURANTS_REQUEST',
+  GET_RESTAURANTS_SUCCESS: 'events/GET_RESTAURANTS_SUCCESS',
+  GET_RESTAURANTS_FAILURE: 'events/GET_RESTAURANTS_FAILURE',
 };
 
 const initialState = Immutable({
-  data: [],
-  loading: false,
-  error: null,
+  loadingRestaurants: false,
+  loadingAllEvents: false,
+  errorRestaurants: null,
+  errorAllEvents: null,
+  restaurants: [],
+  events: [],
 });
 
 export default function events(state = initialState, action) {
   switch (action.type) {
-    case Types.GET_REQUEST:
+    case Types.GET_ALL_REQUEST:
       return {
         ...state,
-        loading: true,
+        loadingAllEvents: true,
       };
 
-    case Types.GET_SUCCESS:
+    case Types.GET_ALL_SUCCESS:
       return {
-        isEmpty: action.payload.data.length === 0,
-        data: action.payload.data,
-        loading: false,
-        error: null,
+        isEmpty: action.payload.data.events.length === 0,
+        events: action.payload.data.events,
+        loadingAllEvents: false,
+        errorAllEvents: null,
       };
 
-    case Types.GET_FAILURE:
+    case Types.GET_ALL_FAILURE:
       return {
         ...state,
-        loading: false,
-        error: action.payload.error,
+        loadingAllEvents: false,
+        errorAllEvents: action.payload.error,
+      };
+
+    case Types.GET_RESTAURANTS_REQUEST:
+      return {
+        ...state,
+        loadingRestaurants: true,
+        restaurants: [],
+      };
+
+    case Types.GET_RESTAURANTS_SUCCESS:
+      return {
+        ...state,
+        loadingRestaurants: false,
+        restaurants: action.payload.data.restaurants,
+      };
+
+    case Types.GET_RESTAURANTS_ERROR:
+      return {
+        ...state,
+        loadingRestaurants: false,
+        errorRestaurants: action.payload.error,
       };
 
     default:
@@ -41,17 +68,34 @@ export default function events(state = initialState, action) {
 }
 
 export const Creators = {
-  getEventsRequest: () => ({
-    type: Types.GET_REQUEST,
+  getAllEventsRequest: () => ({
+    type: Types.GET_ALL_REQUEST,
   }),
 
-  getEventsSuccess: data => ({
-    type: Types.GET_SUCCESS,
+  getAllEventsSuccess: data => ({
+    type: Types.GET_ALL_SUCCESS,
     payload: { data },
   }),
 
-  getEventsFailure: error => ({
-    type: Types.GET_FAILURE,
+  getAllEventsFailure: error => ({
+    type: Types.GET_ALL_FAILURE,
     payload: { error },
+  }),
+
+  getRestaurantsRequest: (dishesTypes, restaurantsParticipating) => ({
+    type: Types.GET_RESTAURANTS_REQUEST,
+    payload: {
+      restaurantsParticipating,
+      dishesTypes,
+    },
+  }),
+
+  getRestaurantsSuccess: data => ({
+    type: Types.GET_RESTAURANTS_SUCCESS,
+    payload: { data },
+  }),
+
+  getRestaurantsError: () => ({
+    type: Types.GET_RESTAURANTS_ERROR,
   }),
 };

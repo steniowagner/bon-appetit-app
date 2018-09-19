@@ -31,6 +31,7 @@ const DarkWrapper = styled(View)`
 
 const EventImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
+  priority: FastImage.priority.high,
   resizeMode: 'cover',
 })`
   width: 100%;
@@ -80,11 +81,12 @@ type Props = {
   title: string,
   id: string,
   restaurantsParticipating: number,
+  dishesTypes: Array<Object>,
   navigation: Function,
 };
 
-const onPressItem = (navigation: Function, id: string): void => {
-  navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, { id });
+const onPressItem = (navigation: Function, payload: Object): void => {
+  navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, { payload });
 };
 
 const renderTextContent = (title: string, description: string, restaurantsParticipating: number): Object => (
@@ -103,22 +105,34 @@ const renderTextContent = (title: string, description: string, restaurantsPartic
 
 const AllEventsListItem = ({
   restaurantsParticipating,
+  dishesTypes,
   description,
   navigation,
   imageURL,
   title,
   id,
-}: Props): Object => (
-  <TouchableWithoutFeedback
-    onPress={() => onPressItem(navigation, id)}
-  >
-    <Container>
-      <EventImage
-        imageURL={imageURL}
-      />
-      {renderTextContent(title, description, restaurantsParticipating)}
-    </Container>
-  </TouchableWithoutFeedback>
-);
+}: Props): Object => {
+  const payload = {
+    restaurantsParticipating,
+    dishesTypes,
+    description,
+    imageURL,
+    title,
+    id,
+  };
+
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => onPressItem(navigation, payload)}
+    >
+      <Container>
+        <EventImage
+          imageURL={imageURL}
+        />
+        {renderTextContent(title, description, restaurantsParticipating)}
+      </Container>
+    </TouchableWithoutFeedback>
+  );
+};
 
 export default withNavigation(AllEventsListItem);

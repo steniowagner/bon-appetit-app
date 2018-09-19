@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
+  TouchableOpacity,
+  FlatList,
+  Modal,
   View,
   Text,
-  Modal,
-  FlatList,
-  TouchableOpacity,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -75,10 +75,10 @@ const MaxDistanceSectionContainer = styled(View)`
 const ApplyButton = styled(TouchableOpacity)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('9%')}px;
-  background-color: ${({ theme }) => theme.colors.red};
-  margin-top: ${({ theme }) => theme.metrics.extraLargeSize}px;
   justify-content: center;
   align-items: center;
+  margin-top: ${({ theme }) => theme.metrics.extraLargeSize}px;
+  background-color: ${({ theme }) => theme.colors.primaryColor};
 `;
 
 const ApplyButtonText = styled(Text)`

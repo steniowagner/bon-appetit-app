@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation';
-import { Platform } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 
 import RestaurantAddressMap from 'components/common/RestaurantAddressMap';
 import RestaurantDetail from 'components/common/restaurant-detail';
@@ -37,6 +37,13 @@ const ROUTES = createStackNavigator({
   [ROUTE_NAMES.EVENT_DETAILS]: {
     screen: EventDetails,
     navigationOptions: () => ({
+      ...Platform.select({
+        android: {
+          headerStyle: {
+            marginTop: StatusBar.currentHeight,
+          },
+        },
+      }),
       headerBackTitle: null,
       borderBottomWidth: 0,
     }),

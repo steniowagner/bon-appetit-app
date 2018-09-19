@@ -155,6 +155,7 @@ class PopularSectionListItem extends Component<Props, State> {
 
   render() {
     const { isFirst } = this.props;
+    const { isDisheImageLoaded } = this.state;
 
     return (
       <Fragment>
@@ -163,6 +164,7 @@ class PopularSectionListItem extends Component<Props, State> {
         >
           <TouchableWithoutFeedback
             onPress={() => this.onPressItem()}
+            disabled={!isDisheImageLoaded}
           >
             <ContentWrapper>
               {this.renderDisheImage()}

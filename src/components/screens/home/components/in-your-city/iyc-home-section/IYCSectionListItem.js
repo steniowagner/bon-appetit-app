@@ -77,8 +77,10 @@ type Props = {
   imageURL: string,
   title: string,
   id: string,
-  navigation: Function,
+  restaurantsParticipating: number,
   index: number,
+  dishesTypes: Array<string>,
+  navigation: Function,
 };
 
 type State = {
@@ -90,33 +92,52 @@ class InYourCityListItem extends Component<Props, State> {
     isImageLoaded: false,
   };
 
-  onLoadImage = () => {
+  onLoadImage = (): void => {
     this.setState({
       isImageLoaded: true,
     });
   }
 
-  render() {
+  onPressItem = (): void => {
     const {
+      restaurantsParticipating,
+      dishesTypes,
       description,
       navigation,
       imageURL,
       title,
-      index,
       id,
     } = this.props;
 
-    const { isImageLoaded } = this.state;
-
-    const onPressItem = () => {
-      navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, { id });
+    const payload = {
+      restaurantsParticipating,
+      dishesTypes,
+      description,
+      navigation,
+      imageURL,
+      title,
+      id,
     };
+
+    navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, { payload });
+  };
+
+  render() {
+    const {
+      description,
+      imageURL,
+      title,
+      index,
+    } = this.props;
+
+    const { isImageLoaded } = this.state;
 
     return (
       <Fragment>
         <Container index={index}>
           <TouchableWithoutFeedback
-            onPress={() => onPressItem()}
+            disabled={!isImageLoaded}
+            onPress={() => this.onPressItem()}
           >
             <Wrapper>
               <EventImage

@@ -1,196 +1,252 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
+  ActivityIndicator,
+  StatusBar,
+  FlatList,
+  Platform,
   Text,
   View,
-  StatusBar,
-  Image,
-  FlatList,
-  Animated,
-  Platform,
 } from 'react-native';
 
+import { Creators as EventCreators } from 'store/ducks/events';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
-import appStyle from 'styles';
+import appStyles from 'styles';
 
 import RestaurantItemList from 'components/common/RestaurantItemList';
+import Messages from 'components/utils/Messages';
+
+const getTextSize = (type: string): number => {
+  const types = {
+    restaurantsParticipating: Platform.OS === 'android' ? '2.6%' : '2.2%',
+    description: Platform.OS === 'android' ? '2.8%' : '2.4%',
+    title: Platform.OS === 'android' ? '3.8%' : '3.5%',
+  };
+
+  return appStyles.metrics.getHeightFromDP(types[type]);
+};
 
 const Container = styled(View)`
   flex: 1;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const HeaderCotainer = styled(Animated.View)`
-  justify-content: flex-end;
+const ListWrapper = styled(View)`
+  flex: 1;
+  padding: ${({ theme }) => theme.metrics.extraSmallSize}px;
+`;
+
+const LoadingWrapper = styled(View)`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const HeaderCotainer = styled(View)`
   width: 100%;
-`;
-
-const ContentWrapper = styled(View)`
+  height: ${({ theme }) => {
+    const percentage = Platform.OS === 'android' ? '33%' : '30%';
+    return theme.metrics.getHeightFromDP(percentage);
+  }}px;
   justify-content: flex-end;
-  position: absolute;
-  padding: ${({ theme }) => `0 ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px ${theme.metrics.mediumSize}px`};
 `;
 
-const EventImage = styled(Image).attrs({
+const HeaderCotainerShimmer = styled(ShimmerPlaceholder).attrs({
+  autoRun: true,
+  visible: false,
+})`
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('33%')}px;
+`;
+
+const DarkWrapper = styled(View)`
+  width: 100%;
+  height: 100%;
+  justify-content: flex-end;
+  padding: ${({ theme }) => theme.metrics.largeSize}px;
+  background-color: ${({ theme }) => theme.colors.darkLayer}
+`;
+
+const EventImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
+  priority: FastImage.priority.high,
+  resizeMode: 'cover',
 })`
   width: 100%;
   height: 100%;
   position: absolute;
 `;
-
-const DarkLayer = styled(View)`
-  width: 100%;
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.darkLayer};
-`;
-
-const EventTitle = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
-  color: ${({ theme }) => theme.colors.defaultWhite};
+const EventTitle = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})`
+  font-size: ${() => getTextSize('title')}px;
   font-family: CircularStd-Black;
-`;
-
-const EventDescription = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   color: ${({ theme }) => theme.colors.defaultWhite};
+`;
+
+const EventDescription = styled(Text).attrs({
+  numberOfLines: 3,
+  ellipsizeMode: 'tail',
+})`
+  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
+  font-size: ${() => getTextSize('description')}px;
   font-family: CircularStd-Medium;
+  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-const ListWrapper = styled(View)`
-  flex: 1;
-  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+const RestaurantParticipatingText = styled(Text)`
+  font-size: ${() => getTextSize('restaurantsParticipating')}px;
+  font-family: CircularStd-Black;
+  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
-
-const getTestData = () => {
-  const data = [];
-
-  for (let i = 0; i < 12; i++) {
-    data.push({
-      id: `${i}`,
-      name: 'Cabaña del Primo',
-      address: 'Maria Tomásia st., 503 - Aldeota, Fortaleza',
-      foodTypes: ['Churrascaria', 'Sobremesas', 'Massas', 'Frutos do Mar', 'Pastelaria', 'Pizzas'],
-      picURL: 'https://images.unsplash.com/photo-1533854964478-588049c5084e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9a3f43bf5f66dc44d7780904913a7fb3&auto=format&fit=crop&w=967&q=80',
-      stars: 4.5,
-    });
-  }
-
-  return data;
-};
-
-const MAX_HEADER_SCROLL_DISTANCE = 136;
-const MIN_HEADER_SCROLL_DISTANCE = Platform.OS === 'ios' ? 64 : 54;
 
 type Props = {
+  getRestaurantsRequest: Function,
+  loadingRestaurants: boolean,
   navigation: Function,
+  eventInfo: Object,
 };
 
 type State = {
-  scrollOffset: Object,
-}
+  isEventImageLoaded: boolean,
+};
 
 class EventInfo extends Component<Props, State> {
   static navigationOptions = {
     headerTransparent: true,
     headerBackTitle: null,
-    headerTintColor: appStyle.colors.defaultWhite,
+    headerTintColor: appStyles.colors.defaultWhite,
   };
 
   state = {
-    scrollOffset: new Animated.Value(0),
+    isEventImageLoaded: false,
   };
 
-  renderEventInfo = (): Object => {
+  componentDidMount() {
+    const { getRestaurantsRequest } = this.props;
+
+    const { restaurantsParticipating, dishesTypes } = this.getNavigationParams();
+
+    getRestaurantsRequest(dishesTypes, restaurantsParticipating);
+  }
+
+  onLoadEventImage = (): void => {
+    this.setState({
+      isEventImageLoaded: true,
+    });
+  }
+
+  getNavigationParams = (): Object => {
     const { navigation } = this.props;
+    const payload = navigation.getParam('payload', '');
 
-    const eventTitle = navigation.getParam('eventTitle', '');
-    const eventDescription = navigation.getParam('eventDescription', '');
+    return {
+      ...payload,
+    };
+  }
 
-    const { scrollOffset } = this.state;
+  renderLoading = (): Object => (
+    <LoadingWrapper>
+      <ActivityIndicator
+        size={Platform.OS === 'ios' ? 'small' : 'large'}
+        color={appStyles.colors.green}
+      />
+    </LoadingWrapper>
+  )
+
+  renderEventInfo = (): Object => {
+    const {
+      restaurantsParticipating,
+      description,
+      imageURL,
+      title,
+    } = this.getNavigationParams();
+
+    const { isEventImageLoaded } = this.state;
 
     return (
-      <ContentWrapper>
-        <Animated.View
-          style={{
-            opacity: scrollOffset.interpolate({
-              inputRange: [0, MAX_HEADER_SCROLL_DISTANCE / 5, MAX_HEADER_SCROLL_DISTANCE],
-              outputRange: [1, 1, 0],
-            }),
-          }}
-        >
+      <HeaderCotainer>
+        <EventImage
+          onLoad={() => this.onLoadEventImage()}
+          imageURL={imageURL}
+        />
+        <DarkWrapper>
           <EventTitle>
-            {eventTitle}
+            {title}
           </EventTitle>
           <EventDescription>
-            {eventDescription}
+            {description}
           </EventDescription>
-        </Animated.View>
-      </ContentWrapper>
+          <RestaurantParticipatingText>
+            {`${restaurantsParticipating} Restaurants participating`}
+          </RestaurantParticipatingText>
+        </DarkWrapper>
+        {!isEventImageLoaded && <HeaderCotainerShimmer />}
+      </HeaderCotainer>
     );
   }
 
-  renderHeader = (): Object => {
-    const { navigation } = this.props;
-    const eventImage = navigation.getParam('eventImage');
+  renderRestaurantList = (restaurantsList: Array<any>): Object => (
+    <ListWrapper>
+      <FlatList
+        data={restaurantsList}
+        keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <RestaurantItemList
+            foodTypes={item.foodTypes}
+            imageURL={item.imageURL}
+            address={item.address}
+            stars={item.stars}
+            name={item.name}
+          />
+        )}
+      />
+    </ListWrapper>
+  );
 
-    const { scrollOffset } = this.state;
-
-    return (
-      <Animated.View style={{
-        height: scrollOffset.interpolate({
-          inputRange: [0, MAX_HEADER_SCROLL_DISTANCE],
-          outputRange: [145, MIN_HEADER_SCROLL_DISTANCE],
-          extrapolate: 'clamp',
-        }),
-      }}
-      >
-        <HeaderCotainer>
-          <EventImage imageURL={eventImage} />
-          <DarkLayer />
-          {this.renderEventInfo()}
-        </HeaderCotainer>
-      </Animated.View>
-    );
-  }
-
-  renderRestaurantList = (): Object => {
-    const { scrollOffset } = this.state;
+  renderMainContent = (): Object => {
+    const { eventInfo, loadingRestaurants } = this.props;
+    const { restaurants } = eventInfo;
 
     return (
-      <ListWrapper>
-        <FlatList
-          scrollEventThrottle={16}
-          onScroll={Animated.event([{
-            nativeEvent: {
-              contentOffset: { y: scrollOffset },
-            },
-          }])}
-          data={getTestData()}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <RestaurantItemList
-              name={item.name}
-              address={item.address}
-              foodTypes={item.foodTypes}
-              picURL={item.picURL}
-              stars={item.stars}
-            />
-          )}
-        />
-      </ListWrapper>
+      <Fragment>
+        {this.renderEventInfo()}
+        {loadingRestaurants ? this.renderLoading() : this.renderRestaurantList(restaurants)}
+      </Fragment>
     );
   }
 
   render() {
+    const { eventInfo } = this.props;
+    const { error } = eventInfo;
+
     return (
       <Container>
-        <StatusBar barStyle="light-content" />
-        {this.renderHeader()}
-        {this.renderRestaurantList()}
+        <StatusBar
+          barStyle="light-content"
+          animated
+          translucent
+          backgroundColor="transparent"
+        />
+        {error ? alert(Messages.ERROR_MESSAGE) : this.renderMainContent()}
       </Container>
     );
   }
 }
 
-export default EventInfo;
+const mapDispatchToProps = dispatch => bindActionCreators(EventCreators, dispatch);
+
+const mapStateToProps = state => ({
+  eventInfo: state.events,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventInfo);

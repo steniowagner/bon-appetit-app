@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
-  View,
-  Text,
-  Image,
   TouchableWithoutFeedback,
   Platform,
+  Image,
+  View,
+  Text,
 } from 'react-native';
 
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';

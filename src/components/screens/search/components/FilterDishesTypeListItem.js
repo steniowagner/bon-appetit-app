@@ -24,16 +24,16 @@ const Container = styled(Animated.View)`
 const SelectionMarker = styled(Animated.View)`
   padding-vertical: ${({ theme }) => theme.metrics.getHeightFromDP('0.5%')}px;
   padding-horizontal: ${({ theme }) => theme.metrics.getWidthFromDP('1%')}px;
-  borderRadius: 10px;
   justify-content: center;
   align-items: center;
+  borderRadius: 10px;
 `;
 
 const ImageContentContainer = styled(Animated.View)`
   width: 100%;
   height: 100%;
-  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
   position: absolute;
+  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
 const DisheImage = styled(Image).attrs({
@@ -188,7 +188,7 @@ class FilterDishesListItem extends Component<Props, State> {
           style={{
             backgroundColor: this._selectorColor.interpolate({
               inputRange: [0, 1],
-              outputRange: [appStyles.colors.white, appStyles.colors.red],
+              outputRange: [appStyles.colors.white, appStyles.colors.primaryColor],
             }),
             transform: [
               {

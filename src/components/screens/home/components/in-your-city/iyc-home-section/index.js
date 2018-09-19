@@ -30,6 +30,8 @@ const InYourCitySection = ({ events }: Props): Object => (
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
           <IYCSectionListItem
+            restaurantsParticipating={item.restaurantsParticipating}
+            dishesTypes={item.dishesTypes}
             description={item.description}
             imageURL={item.imageURL}
             title={item.title}
