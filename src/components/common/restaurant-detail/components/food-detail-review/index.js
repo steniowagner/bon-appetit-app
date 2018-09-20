@@ -2,21 +2,25 @@
 
 import React, { Component, Fragment } from 'react';
 import {
+  Animated,
+  FlatList,
+  Platform,
   View,
   Text,
-  FlatList,
-  Image,
-  Animated,
 } from 'react-native';
 
+import { Creators as DishCreators } from 'store/ducks/dish';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
+import FloatingActionButton from 'components/common/FloatingActionButton';
 import CustomTab from 'components/common/CustomTab';
 
-import FloatingActionButton from 'components/common/FloatingActionButton';
 import IngredientsItemList from './components/IngredientsItemList';
 import ReviewItemList from './components/ReviewItemList';
 import FoodStatus from './components/FoodStatus';
@@ -28,10 +32,10 @@ const ImageWrapper = styled(View)`
 
 const FloatingActionButtonWrapper = styled(View)`
   width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('27%') - 28}px;
   align-items: flex-end;
-  padding-right: ${({ theme }) => theme.metrics.extraLargeSize * 2}px;
   position: absolute;
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('27%') - 28}px;
+  padding-right: ${({ theme }) => theme.metrics.extraLargeSize * 2}px;
 `;
 
 const SmokeShadow = styled(LinearGradient).attrs({
@@ -41,8 +45,9 @@ const SmokeShadow = styled(LinearGradient).attrs({
   height: ${({ theme }) => theme.metrics.getHeightFromDP('28%')};
   margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('12%')};
 `;
-const FoodImage = styled(Image).attrs({
-  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
+
+const DishImage = styled(FastImage).attrs({
+  source: ({ imageURL }) => ({ uri: imageURL }),
 })`
   width: 100%;
   height: 100%;
@@ -51,110 +56,46 @@ const FoodImage = styled(Image).attrs({
 
 const ContentContainer = styled(View)`
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.primaryColor};
   padding-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
+  background-color: ${({ theme }) => theme.colors.primaryColor};
 `;
 
 const CardContainer = styled(View)`
-  background-color: ${({ theme }) => theme.colors.defaultWhite};
   width: 100%;
   height: 100%;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-bottom: 0px;
+  padding-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-top: ${({ theme }) => theme.metrics.largeSize}px;
   border-top-left-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   border-top-right-radius: ${({ theme }) => theme.metrics.borderRadius}px;
+  background-color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
 const FoodDescription = styled(Text).attrs({
   numberOfLines: 3,
   ellipsizeMode: 'tail',
 })`
-  margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-vertical: ${({ theme }) => theme.metrics.mediumSize}px;
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')};
-  font-family: CircularStd-Book;
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '2.7%' : '2.4%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
+  font-family: CircularStd-Medium;
 `;
 
 const CustomTabWrapper = styled(View)`
   flex: 1;
 `;
 
-const FoodDescriptionShimmer = styled(ShimmerPlaceholder).attrs({
-  visible: false,
-  autoRun: true,
-})`
-  width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('15%')}px;
-  padding-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
-`;
-
-const ingredients = [
-  { id: '1', name: 'Ingrediente 1' },
-  { id: '2', name: 'Ingrediente 2' },
-  { id: '3', name: 'Ingrediente 3' },
-  { id: '4', name: 'Ingrediente 4' },
-  { id: '5', name: 'Ingrediente 5' },
-  { id: '6', name: 'Ingrediente 6' },
-  { id: '7', name: 'Ingrediente 7' },
-  { id: '8', name: 'Ingrediente 8' },
-];
-
-const revs = [
-  {
-    id: '1',
-    reviewer: 'Stenio Wagner',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
-  }, {
-    id: '2',
-    reviewer: 'Ana Eridan',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
-  }, {
-    id: '3',
-    reviewer: 'Manoel Elisval',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 4.5,
-  }, {
-    id: '421',
-    reviewer: 'Beatriz Eliana',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 6,
-  },
-  {
-    id: '12',
-    reviewer: 'Stenio Wagner',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
-  }, {
-    id: '22',
-    reviewer: 'Ana Eridan',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 3.5,
-  }, {
-    id: '32',
-    reviewer: 'Manoel Elisval',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 4.5,
-  }, {
-    id: '42',
-    reviewer: 'Beatriz Eliana',
-    reviewerImage: 'https://scontent.ffor8-1.fna.fbcdn.net/v/t1.0-9/15780909_1234950926552253_8691155177917421498_n.jpg?_nc_cat=0&oh=5696f0dcb226744fbc44d2e97698ce07&oe=5BFB442D',
-    review: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI',
-    stars: 6,
-  },
-];
+type Props = {
+  getDishRequest: Function,
+  navigation: Object,
+  dishInfo: Object,
+};
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-class FoodDetailReview extends Component {
+class FoodDetailReview extends Component<Props, {}> {
   static navigationOptions = {
     headerTintColor: appStyles.colors.defaultWhite,
     headerTransparent: true,
@@ -169,10 +110,11 @@ class FoodDetailReview extends Component {
     isDataFetched: true,
   }
 
-  onLoadFoodImage = () => {
-    this.setState({
-      isFoodImageLoaded: true,
-    });
+  componentDidMount() {
+    const { id } = this.getPropsFromNavigation();
+    const { getDishRequest } = this.props;
+
+    getDishRequest(id);
   }
 
   onChangeMenuIndex = (index: number): void => {
@@ -200,21 +142,55 @@ class FoodDetailReview extends Component {
     this._flatListHeight = height;
   }
 
+  getPropsFromNavigation = (): Object => {
+    const { navigation } = this.props;
+    const props = navigation.getParam('payload', {});
+
+    return {
+      ...props,
+    };
+  }
+
+  getReviews = (): Array<Object> => {
+    const { dishInfo } = this.props;
+    const { reviews } = dishInfo;
+    if (!reviews) {
+      return [];
+    }
+
+    return reviews;
+  }
+
+  getProperListDataset = (tabItemSelected: number): Array<any> => {
+    const { dishInfo } = this.props;
+    const { dish } = dishInfo;
+
+    if (!dish) {
+      return;
+    }
+
+    const { ingredients } = dishInfo.dish;
+    const reviews = this.getReviews();
+    const dataset = (tabItemSelected === 0 ? ingredients : reviews);
+
+    return dataset;
+  }
+
   renderListItem = (item, index) => {
     const { tabItemSelected } = this.state;
 
     const IngredientComponent = (
       <IngredientsItemList
-        ingredient={item.name}
-        index={index}
+        ingredient={item}
+        isFirst={index === 0}
       />
     );
 
     const ReviewComponent = (
       <ReviewItemList
         isFirst={index === 0}
-        reviewer={item.reviewer}
-        reviewerImage={item.reviewerImage}
+        reviewerImage={item.profileImageURL}
+        reviewer={item.name}
         review={item.review}
         stars={item.stars}
       />
@@ -226,33 +202,27 @@ class FoodDetailReview extends Component {
   }
 
   renderFoodDescription = () => {
-    const { isDataFetched } = this.state;
-    const { navigation } = this.props;
-    const { foodDescription } = navigation.getParam('payload', {});
+    const { dishDescription } = this.getPropsFromNavigation();
 
-    const FoodDescriptionComponents = (
+    return (
       <FoodDescription>
-        {foodDescription || 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI'}
+        {dishDescription}
       </FoodDescription>
     );
-
-    const ProperComponent = (isDataFetched ? FoodDescriptionComponents : <FoodDescriptionShimmer />);
-
-    return ProperComponent;
   }
 
   renderListSection = () => {
     const tabContentWidth = appStyles.metrics.getWidthFromDP('100%') - (appStyles.metrics.largeSize * 4);
     const { tabItemSelected, isDataFetched } = this.state;
-    const dataset = (tabItemSelected === 0) ? ingredients : revs;
+    const dataset = this.getProperListDataset(tabItemSelected);
 
     return isDataFetched && (
       <CustomTabWrapper>
         <CustomTab
-          theme="light"
-          contentWidth={tabContentWidth}
           data={[{ id: '1', title: 'Ingredients' }, { id: '2', title: 'Reviews' }]}
           onChangeMenuIndex={this.onChangeMenuIndex}
+          contentWidth={tabContentWidth}
+          theme="light"
         />
         <AnimatedFlatList
           style={[{
@@ -287,51 +257,54 @@ class FoodDetailReview extends Component {
     </FloatingActionButtonWrapper>
   )
 
-  renderFoodImage = () => {
-    const { navigation } = this.props;
-    const { foodImageURL } = navigation.getParam('payload', {});
-
-    return (
-      <ImageWrapper>
-        <FoodImage
-          foodImageURL={foodImageURL}
-        />
-        <SmokeShadow />
-      </ImageWrapper>
-    );
-  }
+  renderFoodImage = (imageURL: string): Object => (
+    <ImageWrapper>
+      <DishImage
+        imageURL={imageURL}
+      />
+      <SmokeShadow />
+    </ImageWrapper>
+  );
 
   render() {
-    const { isDataFetched } = this.state;
-    const { navigation } = this.props;
-
     const {
-      foodTitle,
-      price,
+      dishTitle,
+      imageURL,
       reviews,
+      price,
       stars,
-    } = navigation.getParam('payload', {});
+    } = this.getPropsFromNavigation();
+
+    const { dishInfo } = this.props;
+    const { loading, error } = dishInfo;
 
     return (
       <Fragment>
-        {this.renderFoodImage()}
-        <ContentContainer>
-          <CardContainer>
-            <FoodStatus
-              isDataFetched={isDataFetched}
-              foodTitle={foodTitle}
-              price={price}
-              reviews={reviews || 15}
-              stars={stars}
-            />
-            {this.renderFoodDescription()}
-            {this.renderListSection()}
-          </CardContainer>
-        </ContentContainer>
+        {this.renderFoodImage(imageURL)}
+        {(!loading && !error) && (
+          <ContentContainer>
+            <CardContainer>
+              <FoodStatus
+                dishTitle={dishTitle}
+                reviews={reviews}
+                price={price}
+                stars={stars}
+              />
+              {this.renderFoodDescription()}
+              {this.renderListSection()}
+            </CardContainer>
+          </ContentContainer>
+        )}
         {this.renderFloatingActionButton()}
       </Fragment>
     );
   }
 }
 
-export default FoodDetailReview;
+const mapDispatchToProps = dispatch => bindActionCreators(DishCreators, dispatch);
+
+const mapStateToProps = state => ({
+  dishInfo: state.dish.data,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FoodDetailReview);

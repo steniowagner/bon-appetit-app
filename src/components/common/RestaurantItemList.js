@@ -1,19 +1,17 @@
 // @flow
 
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import {
+  TouchableWithoutFeedback,
   View,
   Text,
-  TouchableWithoutFeedback,
 } from 'react-native';
 
-import FastImage from 'react-native-fast-image';
-
-import { withNavigation } from 'react-navigation';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
+import { withNavigation } from 'react-navigation';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 
 import ReviewStars from 'components/common/ReviewStars';
@@ -25,13 +23,6 @@ const CardContainer = styled(View)`
 
 const ContentWrapper = styled(View)`
   width: 100%;
-`;
-
-const ContainerShimmer = styled(ShimmerPlaceholder)`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
 const DarkLayer = styled(View)`
@@ -56,7 +47,6 @@ const RestaurantImageWrapper = styled(View)`
 
 const RestaurantImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
-  priority: FastImage.priority.high,
 })`
   width: 100%;
   height: 100%;
@@ -72,18 +62,17 @@ const Name = styled(Text)`
 `;
 
 const AddressWrapper = styled(View)`
-  margin-top: ${({ theme }) => theme.metrics.mediumSize}
+  width: 100%;
   flex-direction: row;
-  width: 70%;
+  align-items: center;
+  margin-top: ${({ theme }) => theme.metrics.mediumSize}
 `;
 
-const AddressIconWrapper = styled(View)`
-  margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px ${theme.metrics.smallSize}px 0 0`}
-`;
 
 const Address = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')}px;
+  margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   fontFamily: CircularStd-Medium;
 `;
 
@@ -96,97 +85,75 @@ const AddressIcon = styled(Icon).attrs({
   height: 20px;
 `;
 
-type Props = {
-  imageURL: string,
-  address: string,
-  name: string,
-  id: string,
-  navigation: Function,
-  stars: number,
-};
+const onItemPress = (props: Object): void => {
+  const {
+    navigation,
+    imageURL,
+    address,
+    stars,
+    name,
+    id,
+  } = props;
 
-type State = {
-  isImageLoaded: boolean,
-};
-
-class RestaurantItemList extends Component<Props, State> {
-  state = {
-    isImageLoaded: false,
+  const payload = {
+    imageURL,
+    address,
+    stars,
+    name,
+    id,
   };
 
-  onImageLoad = (): void => {
-    this.setState({
-      isImageLoaded: true,
-    });
-  }
+  navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, { payload });
+};
 
-  onItemPress = (): void => {
-    const { navigation, id } = this.props;
+const renderRestaurantImage = ({ imageURL }: string): Object => (
+  <RestaurantImageWrapper>
+    <RestaurantImage
+      imageURL={imageURL}
+    />
+  </RestaurantImageWrapper>
+);
 
-    navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, { id });
-  };
+const renderBottomRow = (address: string): Object => (
+  <Fragment>
+    <AddressWrapper>
+      <AddressIcon />
+      <Address>
+        {address}
+      </Address>
+    </AddressWrapper>
+  </Fragment>
+);
 
-  renderRestaurantImage = (): Object => {
-    const { imageURL } = this.props;
+const renderRestaurantInfo = (props: Object): Object => {
+  const { name, stars, address } = props;
 
-    return (
-      <RestaurantImageWrapper>
-        <RestaurantImage
-          onLoad={() => this.onImageLoad()}
-          imageURL={imageURL}
-        />
-      </RestaurantImageWrapper>
-    );
-  }
-
-  renderBottomRow = (address: string): Object => (
-    <Fragment>
-      <AddressWrapper>
-        <AddressIconWrapper>
-          <AddressIcon />
-        </AddressIconWrapper>
-        <Address>
-          {address}
-        </Address>
-      </AddressWrapper>
-    </Fragment>
+  return (
+    <Content>
+      <Name>
+        {name}
+      </Name>
+      <ReviewStars
+        textColor="white"
+        stars={stars}
+      />
+      {renderBottomRow(address)}
+    </Content>
   );
+};
 
-  renderRestaurantInfo = (): Object => {
-    const { name, stars, address } = this.props;
-
-    return (
-      <Content>
-        <Name>
-          {name}
-        </Name>
-        <ReviewStars
-          stars={stars}
-          textColor="white"
-        />
-        {this.renderBottomRow(address)}
-      </Content>
-    );
-  }
-
-  render() {
-    const { isImageLoaded } = this.state;
-
-    return (
-      <CardContainer>
-        <TouchableWithoutFeedback
-          onPress={() => this.onItemPress()}
-        >
-          <ContentWrapper>
-            {this.renderRestaurantImage()}
-            <DarkLayer />
-            {this.renderRestaurantInfo()}
-          </ContentWrapper>
-        </TouchableWithoutFeedback>
-        {!isImageLoaded && <ContainerShimmer autoRun visible={false} />}
-      </CardContainer>
-    );
-  }
-}
+const RestaurantItemList = (props): Object => (
+  <CardContainer>
+    <TouchableWithoutFeedback
+      onPress={() => onItemPress(props)}
+    >
+      <ContentWrapper>
+        {renderRestaurantImage(props)}
+        <DarkLayer />
+        {renderRestaurantInfo(props)}
+      </ContentWrapper>
+    </TouchableWithoutFeedback>
+  </CardContainer>
+);
 
 export default withNavigation(RestaurantItemList);

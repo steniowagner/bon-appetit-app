@@ -1,24 +1,32 @@
 // @flow
 
-import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import React from 'react';
+import { Text, View, Platform } from 'react-native';
+
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 
 import ReviewStars from 'components/common/ReviewStars';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-
 
 const Container = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('10%')}px;
   flex-direction: row;
-  margin-top: ${({ theme, isFirst }) => (isFirst ? theme.metrics.largeSize : 0)}px;
-  margin-bottom: ${({ theme }) => theme.metrics.largeSize}px;
+  margin-top: ${({ theme, isFirst }) => {
+    const marginTop = (Platform.OS === 'android' ? theme.metrics.mediumSize : theme.metrics.largeSize);
+    return (isFirst ? marginTop : 0);
+  }}px;
+  margin-bottom: ${({ theme }) => {
+    const marginBottom = (Platform.OS === 'android' ? theme.metrics.mediumSize : theme.metrics.largeSize);
+    return marginBottom;
+  }}px;
 `;
 
 const MainContent = styled(View)`
   width: 80%;
   height: 100%;
+  justify-content: center;
+  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const ReviewerName = styled(Text).attrs({
@@ -26,7 +34,10 @@ const ReviewerName = styled(Text).attrs({
   ellipsizeMode: 'tail',
 })`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')};
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '2.8%' : '2.4%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
   font-family: CircularStd-Bold;
 `;
 
@@ -36,20 +47,13 @@ const ProfileAvatarWrapper = styled(View)`
   justify-content: center;
 `;
 
-const ProfileAvatar = styled(Image).attrs({
+const ProfileAvatar = styled(FastImage).attrs({
   source: ({ uri }) => ({ uri }),
 })`
   margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
   width: 48px;
   height: 48px;
-  border-radius: 24px;
-`;
-
-const ProfileAvatarShimmer = styled(ShimmerPlaceHolder)`
-  margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
+  border-radius: 48px;
 `;
 
 const ReviewText = styled(Text).attrs({
@@ -57,105 +61,69 @@ const ReviewText = styled(Text).attrs({
   ellipsizeMode: 'tail',
 })`
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.2%')};
-  font-family: CircularStd-Book;
+  margin-top: ${({ theme }) => {
+    const marginTop = (Platform.OS === 'android' ? theme.metrics.extraSmallSize / 2 : theme.metrics.extraSmallSize);
+    return marginTop;
+  }}px;
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '2.4%' : '2%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
+  font-family: CircularStd-Medium;
 `;
 
 const TopContetWrapper = styled(View)`
-  flex-direction: row;
   width: 100%;
+  flex-direction: row;
   justify-content: space-between;
 `;
 
 type Props = {
   reviewerImage: string,
-  review: string,
   reviewer: string,
+  review: string,
   isFirst: boolean,
   stars: number,
 };
 
-type State = {
-  isLoaded: boolean,
-};
+const renderProfileAvatar = (reviewerImage: string): Object => (
+  <ProfileAvatarWrapper>
+    <ProfileAvatar
+      uri={reviewerImage}
+    />
+  </ProfileAvatarWrapper>
+);
 
-class ReviewItemList extends Component<Props, State> {
-  state = {
-    isImageLoaded: false,
-  }
+const renderMainContent = (reviewer: string, review: string, stars: number): Object => (
+  <MainContent>
+    <TopContetWrapper>
+      <ReviewerName>
+        {reviewer}
+      </ReviewerName>
+      <ReviewStars
+        shouldShowReviewsText={false}
+        stars={stars}
+      />
+    </TopContetWrapper>
+    <ReviewText>
+      {review}
+    </ReviewText>
+  </MainContent>
+);
 
-  onImageLoaded = () => {
-    this.setState({
-      isImageLoaded: true,
-    });
-  }
-
-  renderProfileAvatar = () => {
-    const { reviewerImage } = this.props;
-    const { isImageLoaded } = this.state;
-
-    return (
-      <ProfileAvatarWrapper>
-        <ProfileAvatarShimmer
-          visible={isImageLoaded}
-          autoRun
-        >
-          <ProfileAvatar
-            onLoad={() => this.onImageLoaded()}
-            uri={reviewerImage}
-          />
-        </ProfileAvatarShimmer>
-      </ProfileAvatarWrapper>
-    );
-  }
-
-  renderMainContent = () => {
-    const {
-      reviewer,
-      review,
-      stars,
-    } = this.props;
-
-    const { isImageLoaded } = this.state;
-
-    return (
-      <MainContent>
-        <ShimmerPlaceHolder
-          style={{ width: '100%', height: '100%'}}
-          visible={isImageLoaded}
-          autoRun
-        >
-          <TopContetWrapper>
-            <ReviewerName>
-              {reviewer}
-            </ReviewerName>
-            <View>
-              <ReviewStars
-                shouldShowReviewsText={false}
-                stars={stars}
-              />
-            </View>
-          </TopContetWrapper>
-          <ReviewText>
-            {review}
-          </ReviewText>
-        </ShimmerPlaceHolder>
-      </MainContent>
-    );
-  }
-
-  render() {
-    const { isFirst } = this.props;
-
-    return (
-      <Container
-        isFirst={isFirst}
-      >
-        {this.renderProfileAvatar()}
-        {this.renderMainContent()}
-      </Container>
-    );
-  }
-}
+const ReviewItemList = ({
+  reviewerImage,
+  reviewer,
+  review,
+  isFirst,
+  stars,
+}: Props): Object => (
+  <Container
+    isFirst={isFirst}
+  >
+    {renderProfileAvatar(reviewerImage)}
+    {renderMainContent(reviewer, review, stars)}
+  </Container>
+);
 
 export default ReviewItemList;

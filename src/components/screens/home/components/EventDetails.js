@@ -75,20 +75,20 @@ const DarkWrapper = styled(View)`
 
 const EventImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
-  priority: FastImage.priority.high,
   resizeMode: 'cover',
 })`
   width: 100%;
   height: 100%;
   position: absolute;
 `;
+
 const EventTitle = styled(Text).attrs({
   numberOfLines: 1,
   ellipsizeMode: 'tail',
 })`
+  color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${() => getTextSize('title')}px;
   font-family: CircularStd-Black;
-  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
 const EventDescription = styled(Text).attrs({
@@ -97,9 +97,9 @@ const EventDescription = styled(Text).attrs({
 })`
   margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
+  color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${() => getTextSize('description')}px;
   font-family: CircularStd-Medium;
-  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
 const RestaurantParticipatingText = styled(Text)`
@@ -110,7 +110,6 @@ const RestaurantParticipatingText = styled(Text)`
 
 type Props = {
   getRestaurantsRequest: Function,
-  loadingRestaurants: boolean,
   navigation: Function,
   eventInfo: Object,
 };
@@ -121,9 +120,9 @@ type State = {
 
 class EventInfo extends Component<Props, State> {
   static navigationOptions = {
+    headerTintColor: appStyles.colors.defaultWhite,
     headerTransparent: true,
     headerBackTitle: null,
-    headerTintColor: appStyles.colors.defaultWhite,
   };
 
   state = {
@@ -207,6 +206,7 @@ class EventInfo extends Component<Props, State> {
             address={item.address}
             stars={item.stars}
             name={item.name}
+            id={item.id}
           />
         )}
       />
@@ -214,8 +214,8 @@ class EventInfo extends Component<Props, State> {
   );
 
   renderMainContent = (): Object => {
-    const { eventInfo, loadingRestaurants } = this.props;
-    const { restaurants } = eventInfo;
+    const { eventInfo } = this.props;
+    const { restaurants, loadingRestaurants } = eventInfo;
 
     return (
       <Fragment>
@@ -232,10 +232,10 @@ class EventInfo extends Component<Props, State> {
     return (
       <Container>
         <StatusBar
+          backgroundColor="transparent"
           barStyle="light-content"
           animated
           translucent
-          backgroundColor="transparent"
         />
         {error ? alert(Messages.ERROR_MESSAGE) : this.renderMainContent()}
       </Container>

@@ -1,20 +1,31 @@
 // @flow
 
-import React, { Component } from 'react';
-import { View, FlatList, Animated } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Platform,
+  Animated,
+  View,
+} from 'react-native';
+
+import { Creators as RestaurantCreators } from 'store/ducks/restaurant';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import styled from 'styled-components';
 import appStyles from 'styles';
 
+import { getItemFromStorage } from 'components/utils/AsyncStoarageManager';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
+import AppKeys from 'components/utils/Keys';
 
-import CustomTab from 'components/common/CustomTab';
 import FloatinActionButton from 'components/common/FloatingActionButton';
-import HeaderSection from './components/HeaderSection';
-import AboutRestaurantSection from './components/AboutRestaurantSection';
-import MenuListItem from './components/MenuListItem';
+import CustomTab from 'components/common/CustomTab';
 
-import data from './test-data';
+import AboutRestaurantSection from './components/AboutRestaurantSection';
+import HeaderSection from './components/HeaderSection';
+import MenuListItem from './components/MenuListItem';
 
 const Container = styled(View)`
   flex: 1;
@@ -35,14 +46,22 @@ const AboutRestaurantWrapper = styled(View)`
 
 const FloatingActionButtonWrapper = styled(View)`
   width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('20%') - 28}px;
-  padding-right: ${({ theme }) => theme.metrics.largeSize}px;
   align-items: flex-end;
   position: absolute;
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('25%') - 28}px;
+  padding-right: ${({ theme }) => theme.metrics.largeSize}px;
+`;
+
+const LoadingWrapper = styled(View)`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 `;
 
 type Props = {
+  getRestaurantRequest: Function,
   navigation: Function,
+  restaurantInfo: Object,
 };
 
 type State = {
@@ -50,21 +69,12 @@ type State = {
   isDataFetched: boolean,
 };
 
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+const FORTALEZA_CITY_LOCATION = {
+  latitude: -3.7899266,
+  longitude: -38.588988,
+};
 
-const menu = [{
-  id: '1',
-  title: 'Pizzas',
-}, {
-  id: '2',
-  title: 'Churrascos',
-}, {
-  id: '3',
-  title: 'Saladas',
-}, {
-  id: '4',
-  title: 'Oriental',
-}];
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class RestaurantDetail extends Component<Props, State> {
   static navigationOptions = {
@@ -79,8 +89,32 @@ class RestaurantDetail extends Component<Props, State> {
 
   state = {
     indexMenuSelected: 0,
-    isDataFetched: true,
+    userLocation: {
+      latitude: FORTALEZA_CITY_LOCATION.latitude,
+      longitude: FORTALEZA_CITY_LOCATION.longitude,
+    },
   };
+
+  async componentWillMount() {
+    const persistedUserLocation = await getItemFromStorage(AppKeys.USER_LOCATION, [0, 0]);
+    const { latitude, longitude } = JSON.parse(persistedUserLocation);
+
+    this.requestRestaurantInfo({ latitude, longitude });
+  }
+
+  async componentDidMount() {
+    const persistedUserLocation = await getItemFromStorage(AppKeys.USER_LOCATION, [0, 0]);
+    const { latitude, longitude } = JSON.parse(persistedUserLocation);
+
+    // this.requestRestaurantInfo({ latitude, longitude });
+
+    this.setState({
+      userLocation: {
+        latitude,
+        longitude,
+      },
+    });
+  }
 
   onChangeMenuIndex = (indexSelected: number): void => {
     const { indexMenuSelected } = this.state;
@@ -125,19 +159,150 @@ class RestaurantDetail extends Component<Props, State> {
     this._flatListWidth = width;
   }
 
+  getPropsFromNavigation = (): Object => {
+    const { navigation } = this.props;
+    const params = navigation.getParam('payload', {});
+
+    return {
+      ...params,
+    };
+  }
+
+  getPropsFromRequest = (): Object => {
+    const { restaurantInfo } = this.props;
+    const { data } = restaurantInfo;
+
+    return {
+      ...data,
+    };
+  }
+
+  requestRestaurantInfo = (userLocation: Object): void => {
+    const { getRestaurantRequest } = this.props;
+    const { id } = this.getPropsFromNavigation();
+
+    getRestaurantRequest(userLocation, id);
+  }
+
+  renderLoading = (): Object => (
+    <LoadingWrapper>
+      <ActivityIndicator
+        size={Platform.OS === 'ios' ? 'small' : 'large'}
+        color={appStyles.colors.green}
+      />
+    </LoadingWrapper>
+  )
+
+  renderHeaderSection = (): Object => {
+    const {
+      imageURL,
+      name,
+      stars,
+    } = this.getPropsFromNavigation();
+
+    return (
+      <HeaderSection
+        restaurantImage={imageURL}
+        restaurantName={name}
+        stars={stars}
+      />
+    );
+  }
+
+  renderAboutRestaurantSection = () => {
+    const { restaurant } = this.getPropsFromRequest();
+
+    if (!restaurant) {
+      return;
+    }
+
+    const {
+      operatingHours,
+      description,
+      location,
+      isOpen,
+    } = restaurant;
+
+    return (
+      <AboutRestaurantWrapper>
+        <AboutRestaurantSection
+          operatingHours={operatingHours}
+          address={location.address}
+          about={description}
+          isOpen={isOpen}
+        />
+      </AboutRestaurantWrapper>
+    );
+  }
+
+  renderFloatingActionButton = () => {
+    const { restaurant } = this.getPropsFromRequest();
+
+    if (!restaurant) {
+      return;
+    }
+
+    const {
+      distance,
+      location,
+      isOpen,
+      stars,
+      name,
+    } = restaurant;
+
+    const { userLocation } = this.state;
+    const { navigation } = this.props;
+
+    const payload = {
+      restaurantLocation: {
+        id: 'restaurant_location',
+        latitude: location.coordinates[0],
+        longitude: location.coordinates[1],
+      },
+      userLocation: {
+        ...userLocation,
+        id: 'user_location',
+      },
+      restaurantName: name,
+      status: isOpen,
+      distance,
+      stars,
+    };
+
+    return (
+      <FloatingActionButtonWrapper>
+        <FloatinActionButton
+          action={() => navigation.navigate(ROUTE_NAMES.RESTAURANT_ADDRESS_MAP, { payload })}
+          name="map-marker-multiple"
+          color="yellow"
+        />
+      </FloatingActionButtonWrapper>
+    );
+  }
+
   renderMenuSection = () => {
-    const { indexMenuSelected, isDataFetched } = this.state;
+    const { indexMenuSelected } = this.state;
+    const { menu } = this.getPropsFromRequest();
+
+    if (!menu) {
+      return;
+    }
+
+    const customTabMenu = menu.map(item => ({
+      title: item.type[0],
+      id: item.type[0],
+    }));
+
+    const menuData = menu.map(item => item.dishes);
 
     return (
       <Menu>
-        {isDataFetched && (
-          <CustomTab
-            data={menu}
-            theme="light"
-            contentWidth={appStyles.metrics.width}
-            onChangeMenuIndex={this.onChangeMenuIndex}
-          />
-        )}
+        <CustomTab
+          onChangeMenuIndex={this.onChangeMenuIndex}
+          contentWidth={appStyles.metrics.width}
+          theme="light"
+          data={customTabMenu}
+        />
         <AnimatedFlatList
           style={{
             padding: appStyles.metrics.smallSize,
@@ -155,16 +320,18 @@ class RestaurantDetail extends Component<Props, State> {
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
           onLayout={this.onFlatlistLayout}
-          data={data[indexMenuSelected]}
+          data={menuData[indexMenuSelected]}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <MenuListItem
-              isDataFetched={isDataFetched}
-              foodImageURL={item.foodImageURL}
-              foodTitle={item.foodTitle}
-              foodDescription={item.foodDescription}
+              dishDescription={item.description}
+              imageURL={item.imageURL}
+              dishTitle={item.title}
+              reviews={item.reviews}
               price={item.price}
               stars={item.stars}
+              type={item.type}
+              id={item._id}
             />
           )}
         />
@@ -172,77 +339,36 @@ class RestaurantDetail extends Component<Props, State> {
     );
   }
 
-  renderAboutRestaurantSection = () => {
-    const { isDataFetched } = this.state;
-    const { navigation } = this.props;
-    const { address } = navigation.getParam('payload', {});
-
-    return (
-      <AboutRestaurantWrapper>
-        <AboutRestaurantSection
-          address={address}
-          status="Aberto agora (até às 23:30)"
-          about="Gastronomia requintada de carnes nobres argentinas, ambiente chique e intimista convidativo a longas estadias."
-          isDataFetched={isDataFetched}
-        />
-      </AboutRestaurantWrapper>
-    );
-  }
-
-  renderFloatingActionButton = () => {
-    const { navigation } = this.props;
-    const { isDataFetched } = this.state;
-
-    return isDataFetched
-    && (
-      <FloatingActionButtonWrapper>
-        <FloatinActionButton
-          name="map-marker-multiple"
-          color="yellow"
-          action={() => navigation.navigate(ROUTE_NAMES.RESTAURANT_ADDRESS_MAP, {
-            payload: {
-              restaurantName: 'Cabãna del Primo',
-              userLocation: {
-                id: 'user_location',
-                latitude: -3.7195263,
-                longitude: -38.589332,
-              },
-              restaurantLocation: {
-                id: 'restaurant_location',
-                latitude: -3.7138213,
-                longitude: -38.5886952,
-              },
-              distance: 4,
-              status: 'open',
-            },
-          })}
-        />
-      </FloatingActionButtonWrapper>
-    );
-  }
-
   render() {
-    const { navigation } = this.props;
-    const {
-      name,
-      stars,
-      picURL,
-    } = navigation.getParam('payload', {});
+    const { name } = this.getPropsFromNavigation();
+    const { restaurantInfo } = this.props;
+    const { loading, data } = restaurantInfo;
 
-    return (
-      <Container>
-        <HeaderSection
-          restaurantImage={picURL}
-          restaurantName={name}
-          reviews={18}
-          stars={stars}
-        />
+    const hasDirtyData = (data.restaurant && data.restaurant.name !== name);
+
+    const Content = (
+      <Fragment>
         {this.renderAboutRestaurantSection()}
         {this.renderFloatingActionButton()}
         {this.renderMenuSection()}
+      </Fragment>
+    );
+
+    const LoadingContent = this.renderLoading();
+
+    return (
+      <Container>
+        {this.renderHeaderSection()}
+        {(loading || hasDirtyData) ? LoadingContent : Content}
       </Container>
     );
   }
 }
 
-export default RestaurantDetail;
+const mapDispatchToProps = dispatch => bindActionCreators(RestaurantCreators, dispatch);
+
+const mapStateToProps = state => ({
+  restaurantInfo: state.restaurant,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RestaurantDetail);

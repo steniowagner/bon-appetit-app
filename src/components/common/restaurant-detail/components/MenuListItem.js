@@ -2,18 +2,17 @@
 
 import React, { Component } from 'react';
 import {
-  View,
-  Text,
-  Image,
   TouchableWithoutFeedback,
+  Text,
+  View,
 } from 'react-native';
 
-import { withNavigation } from 'react-navigation';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
+import { withNavigation } from 'react-navigation';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 
 import FlagPrice from 'components/common/FlagPrice';
 
@@ -27,42 +26,20 @@ const ContentWrapper = styled(View)`
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.defaultWhite};
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   padding: ${({ theme }) => theme.metrics.smallSize}px;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
+  background-color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-const FoodImage = styled(Image).attrs({
-  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
+const DishImage = styled(FastImage).attrs({
+  source: ({ imageURL }) => ({ uri: imageURL }),
 })`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('22%')}px;
   height: 100%;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
-const FoodImageShimmer = styled(ShimmerPlaceHolder)`
-  height: 100%;
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('22%')}px;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
-  position: absolute;
-`;
-
-const TextContent = styled(View)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')}px;
-  padding: ${({ theme }) => `0 0 ${theme.metrics.smallSize}px ${theme.metrics.smallSize}px`};
-  height: 100%;
-`;
-
-const MainContentShimmer = styled(ShimmerPlaceHolder)`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('70%')}px;
-  height: 100%;
-  margin-left: ${({ theme }) => theme.metrics.getWidthFromDP('25%')}px;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  position: absolute;
-`;
-
-const FoodTitle = styled(Text).attrs({
+const DishTitle = styled(Text).attrs({
   numberOfLines: 1,
   ellipsizeMode: 'tail',
 })`
@@ -72,7 +49,7 @@ const FoodTitle = styled(Text).attrs({
   fontFamily: CircularStd-Black;
 `;
 
-const FoodDescription = styled(Text).attrs({
+const DishDescription = styled(Text).attrs({
   numberOfLines: 3,
   ellipsizeMode: 'tail',
 })`
@@ -83,21 +60,26 @@ const FoodDescription = styled(Text).attrs({
 
 const FlagsContent = styled(View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('20%')}px;
-  align-items: center;
+  height: 100%;
   justify-content: space-between;
   align-items: flex-end;
-  height: 100%;
 `;
 
 const FlagStars = styled(View)`
-  background-color: ${({ theme }) => theme.colors.yellow};
   border-radius: 50px;
+  background-color: ${({ theme }) => theme.colors.yellow};
+`;
+
+const TextContent = styled(View)`
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')}px;
+  height: 100%;
+  padding: ${({ theme }) => `0 0 ${theme.metrics.smallSize}px ${theme.metrics.smallSize}px`};
 `;
 
 const Stars = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.2%')}px;
   padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.2%')}px;
   fontFamily: CircularStd-Bold;
 `;
 
@@ -118,13 +100,14 @@ const FlagStarsContent = styled(View)`
 `;
 
 type Props = {
-  foodTitle: string,
-  foodDescription: string,
-  foodImageURL: string,
+  dishDescription: string,
+  dishTitle: string,
+  imageURL: string,
+  id: string,
+  reviews: number,
   price: number,
   stars: number,
   navigation: Function,
-  isDataFetched: boolean,
 };
 
 type State = {
@@ -142,18 +125,39 @@ class MenuListItem extends Component<Props, State> {
     });
   }
 
-  onPressItem = (payload: Object, navigation: Function): void => {
+  onPressItem = (): void => {
+    const {
+      dishDescription,
+      navigation,
+      dishTitle,
+      imageURL,
+      reviews,
+      price,
+      stars,
+      id,
+    } = this.props;
+
+    const payload = {
+      dishDescription,
+      dishTitle,
+      imageURL,
+      reviews,
+      price,
+      stars,
+      id,
+    };
+
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL_REVIEW, { payload });
   };
 
-  renderTextContent = (foodTitle: string, foodDescription: string): Object => (
+  renderTextContent = (dishTitle: string, dishDescription: string): Object => (
     <TextContent>
-      <FoodTitle>
-        {foodTitle}
-      </FoodTitle>
-      <FoodDescription>
-        {foodDescription}
-      </FoodDescription>
+      <DishTitle>
+        {dishTitle}
+      </DishTitle>
+      <DishDescription>
+        {dishDescription}
+      </DishDescription>
     </TextContent>
   );
 
@@ -173,48 +177,28 @@ class MenuListItem extends Component<Props, State> {
 
   render() {
     const {
-      foodTitle,
-      foodDescription,
-      foodImageURL,
+      dishDescription,
+      dishTitle,
+      imageURL,
       price,
       stars,
-      navigation,
-      isDataFetched,
     } = this.props;
 
-    const navigationParams = {
-      mode: 'review',
-      foodTitle,
-      foodDescription,
-      foodImageURL,
-      price,
-      stars,
-    };
-
     const { isFoodImageLoaded } = this.state;
-    const enableTouchPress = isFoodImageLoaded && isDataFetched;
 
     return (
       <Container>
         <TouchableWithoutFeedback
-          disabled={!enableTouchPress}
-          onPress={() => this.onPressItem(navigationParams, navigation)}
+          onPress={() => this.onPressItem()}
+          disabled={!isFoodImageLoaded}
         >
           <ContentWrapper>
-            <FoodImage
+            <DishImage
               onLoad={() => this.onLoadFoodImage()}
-              foodImageURL={foodImageURL}
+              imageURL={imageURL}
             />
-            <FoodImageShimmer
-              visible={isFoodImageLoaded}
-              autoRun
-            />
-            {this.renderTextContent(foodTitle, foodDescription)}
+            {this.renderTextContent(dishTitle, dishDescription)}
             {this.renderFlagContent(stars, price)}
-            <MainContentShimmer
-              visible={isDataFetched}
-              autoRun
-            />
           </ContentWrapper>
         </TouchableWithoutFeedback>
       </Container>

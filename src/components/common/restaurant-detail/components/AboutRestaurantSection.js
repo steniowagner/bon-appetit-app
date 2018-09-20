@@ -1,16 +1,10 @@
 // @flow
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 
-import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-
-const EstablishmentInfoContainer = styled(ShimmerPlaceholder)`
-  width: 80%;
-`;
+import styled from 'styled-components';
 
 const EstablishmentInfoWrapper = styled(View)`
   flex-direction: row;
@@ -18,70 +12,81 @@ const EstablishmentInfoWrapper = styled(View)`
   margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
-const EstablishmentInfoText = styled(Text)`
-  color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
+const EstablishmentInfoText = styled(Text).attrs({
+  ellipsizeMode: 'tail',
+  numberOfLines: 2,
+})`
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('65%')};
   margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  color: ${({ theme }) => theme.colors.defaultWhite};
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '2.6%' : '2.3%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
   fontFamily: CircularStd-Book;
 `;
 
 const RestaurantAboutText = styled(Text)`
-  color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
-  padding-top: ${({ theme }) => theme.metrics.smallSize}px;
   padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  padding-top: ${({ theme }) => theme.metrics.smallSize}px;
+  color: ${({ theme }) => theme.colors.defaultWhite};
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '2.7%' : '2.4%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
   fontFamily: CircularStd-Medium;
 `;
 
 const InfoIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.defaultWhite,
   name: ({ iconTitle }) => iconTitle,
-  size: 16,
+  size: 18,
 })`
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 `;
 
 type Props = {
   address: string,
-  status: string,
   about: string,
-  isDataFetched: boolean,
+  operatingHours: Object,
+  isOpen: boolean,
+};
+
+const getRestaurantStatus = (isOpen: boolean, operatingHours: Object): string => {
+  const { open, close } = operatingHours;
+
+  const restaurantStatus = (isOpen ? `Open now (until ${close})` : `Closed now (open ${open})`);
+
+  return restaurantStatus;
 };
 
 const AboutRestaurantSection = ({
+  operatingHours,
   address,
-  status,
+  isOpen,
   about,
-  isDataFetched,
 }: Props) => (
   <React.Fragment>
-    <EstablishmentInfoContainer
-      autoRun
-      visible={isDataFetched}
-    >
-      <EstablishmentInfoWrapper>
-        <InfoIcon iconTitle="map-marker-outline" />
-        <EstablishmentInfoText>
-          {address}
-        </EstablishmentInfoText>
-      </EstablishmentInfoWrapper>
-      <EstablishmentInfoWrapper>
-        <InfoIcon iconTitle="clock-outline" />
-        <EstablishmentInfoText>
-          {status}
-        </EstablishmentInfoText>
-      </EstablishmentInfoWrapper>
-    </EstablishmentInfoContainer>
-    <ShimmerPlaceholder
-      autoRun
-      visible={isDataFetched}
-      style={{ marginTop: 20 }}
-    >
-      <RestaurantAboutText>
-        {about}
-      </RestaurantAboutText>
-    </ShimmerPlaceholder>
+    <EstablishmentInfoWrapper>
+      <InfoIcon
+        iconTitle="map-marker-outline"
+      />
+      <EstablishmentInfoText>
+        {address}
+      </EstablishmentInfoText>
+    </EstablishmentInfoWrapper>
+    <EstablishmentInfoWrapper>
+      <InfoIcon
+        iconTitle="clock-outline"
+      />
+      <EstablishmentInfoText>
+        {getRestaurantStatus(isOpen, operatingHours)}
+      </EstablishmentInfoText>
+    </EstablishmentInfoWrapper>
+    <RestaurantAboutText>
+      {about}
+    </RestaurantAboutText>
   </React.Fragment>
 );
 

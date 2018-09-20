@@ -8,8 +8,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
 import appStyle from 'styles';
 
-import FloatinActionButton from './FloatingActionButton';
-import ReviewStars from './ReviewStars';
+import FloatinActionButton from 'components/common/FloatingActionButton';
+import ReviewStars from 'components/common/ReviewStars';
 
 const Container = styled(View)`
   flex: 1;
@@ -22,10 +22,9 @@ const MapContainer = styled(View)`
 
 const FloatingActionButtonWrapper = styled(View)`
   margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('74%') - 28}px;
-  padding-right: ${({ theme }) => theme.metrics.largeSize}px;
-
   align-self: flex-end;
   position: absolute;
+  padding-right: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const FooterContainer = styled(View)`
@@ -47,19 +46,19 @@ const ResturantName = styled(Text).attrs({
 `;
 
 const EstablishmentStatus = styled(Text)`
-  color: ${({ theme, status }) => (status === 'open' ? theme.colors.green : theme.colors.red)};
+  color: ${({ theme, isOpen }) => (isOpen ? theme.colors.green : theme.colors.red)};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
   padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   fontFamily: CircularStd-Medium;
 `;
 
 const MarkerIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.darkText,
+  color: ({ theme }) => theme.colors.primaryColor,
   name: ({ name }) => name,
-  size: 25,
+  size: 28,
 })`
-  width: 25px;
-  height: 25px;
+  width: 28px;
+  height: 28px;
 `;
 
 type Props = {
@@ -79,8 +78,8 @@ const INITIAL_REGION = {
 };
 
 class RestaurantAddressMap extends Component<Props, State> {
-  static navigationOptions = ({ navigation: { state: { params } } }) => ({
-    title: params.payload.restaurantName || '',
+  static navigationOptions = () => ({
+    title: '',
     headerStyle: {
       backgroundColor: appStyle.colors.primaryColor,
     },
@@ -88,7 +87,6 @@ class RestaurantAddressMap extends Component<Props, State> {
     headerTitleStyle: {
       color: appStyle.colors.defaultWhite,
       fontFamily: 'CircularStd-Black',
-      fontSize: appStyle.metrics.navigationHeaderFontSize,
     },
   });
 
@@ -97,26 +95,34 @@ class RestaurantAddressMap extends Component<Props, State> {
   };
 
   componentDidMount() {
-    const { navigation } = this.props;
-    const { userLocation, restaurantLocation } = navigation.getParam('payload', '');
+    const { userLocation, restaurantLocation } = this.getPropsFromNavigation();
 
     this.setState({
       markers: [userLocation, restaurantLocation],
     });
   }
 
-  getStatusText = (distance: string, status: string): string => {
-    const statusText = (status === 'open' ? 'Open' : 'Closed');
+  getStatusText = (distance: string, isOpen: boolean): string => {
+    const statusText = (isOpen ? 'Open' : 'Closed');
 
-    return `${statusText} now. ${distance}km from you`;
+    return `${statusText} now. ${distance} km from you`;
   }
 
-  fitMarkersOnScreen = () => {
+  getPropsFromNavigation = (): Object => {
+    const { navigation } = this.props;
+    const payload = navigation.getParam('payload', '');
+
+    return {
+      ...payload,
+    };
+  }
+
+  fitMarkersOnScreen = (): void => {
     const edgePadding = {
-      top: 80,
-      right: 80,
-      bottom: 80,
-      left: 80,
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: 50,
     };
 
     const { markers } = this.state;
@@ -127,16 +133,13 @@ class RestaurantAddressMap extends Component<Props, State> {
     });
   }
 
-  renderMap = () => {
-    const { navigation } = this.props;
-    const { restaurantName } = navigation.getParam('payload', '');
-
+  renderMap = (): Object => {
+    const { restaurantName } = this.getPropsFromNavigation();
     const { markers } = this.state;
 
     return (
       <MapContainer>
         <MapView
-          style={{ width: '100%', height: '100%' }}
           ref={(ref) => { this.mapRef = ref; }}
           onLayout={() => this.fitMarkersOnScreen()}
           initialRegion={{
@@ -145,6 +148,12 @@ class RestaurantAddressMap extends Component<Props, State> {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           }}
+          style={{ width: '100%', height: '100%' }}
+          showsPointsOfInterest={false}
+          rotateEnabled={false}
+          scrollEnabled={false}
+          showBuildings={false}
+          zoomEnabled={false}
         >
           {markers.map(marker => (
             <Marker
@@ -153,7 +162,7 @@ class RestaurantAddressMap extends Component<Props, State> {
               coordinate={marker}
             >
               <MarkerIcon
-                name={marker.id === 'user_location' ? 'emoticon' : 'food-fork-drink'}
+                name={marker.id === 'user_location' ? 'account-location' : 'map-marker-radius'}
               />
             </Marker>
           ))}
@@ -162,9 +171,13 @@ class RestaurantAddressMap extends Component<Props, State> {
     );
   }
 
-  renderFooter = () => {
-    const { navigation } = this.props;
-    const { restaurantName, distance, status } = navigation.getParam('payload', '');
+  renderFooter = (): Object => {
+    const {
+      restaurantName,
+      distance,
+      isOpen,
+      stars,
+    } = this.getPropsFromNavigation();
 
     return (
       <FooterContainer>
@@ -172,19 +185,18 @@ class RestaurantAddressMap extends Component<Props, State> {
           {restaurantName}
         </ResturantName>
         <ReviewStars
-          shouldShowReviewsText
-          reviews={18}
-          stars={4.5}
-          textColor="darkText"
+          stars={stars}
         />
-        <EstablishmentStatus status={status}>
-          {this.getStatusText(distance, status)}
+        <EstablishmentStatus
+          isOpen={isOpen}
+        >
+          {this.getStatusText(distance, isOpen)}
         </EstablishmentStatus>
       </FooterContainer>
     );
   }
 
-  renderFloatingActionButton = () => (
+  renderFloatingActionButton = (): Object => (
     <FloatingActionButtonWrapper>
       <FloatinActionButton
         name="directions"

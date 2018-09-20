@@ -31,7 +31,6 @@ const DarkWrapper = styled(View)`
 
 const EventImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
-  priority: FastImage.priority.high,
   resizeMode: 'cover',
 })`
   width: 100%;

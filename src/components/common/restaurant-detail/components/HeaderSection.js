@@ -1,22 +1,20 @@
 // @flow
 
-import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import React from 'react';
+import {
+  Platform,
+  Text,
+  View,
+} from 'react-native';
 
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 
 import ReviewStars from 'components/common/ReviewStars';
 
 const Container = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('20%')}px;
-`;
-
-const ContainerShimmer = styled(ShimmerPlaceHolder)`
-  width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('20%')}px;
-  position: absolute;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
 `;
 
 const DarkLayer = styled(View)`
@@ -26,8 +24,8 @@ const DarkLayer = styled(View)`
   position: absolute;
 `;
 
-const RestaurantImage = styled(Image).attrs({
-  source: ({ imageURL }) => ({ uri: (imageURL || 'https://images.unsplash.com/photo-1521917441209-e886f0404a7b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=c9da9e12bc69d92a619d44059a8d335f&auto=format&fit=crop&w=1000&q=80')}),
+const RestaurantImage = styled(FastImage).attrs({
+  source: ({ imageURL }) => ({ uri: imageURL }),
 })`
   width: 100%;
   height: 100%;
@@ -38,74 +36,47 @@ const ContentWrapper = styled(View)`
   width: 100%;
   height: 100%;
   padding-left: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
+  padding-bottom: ${({ theme }) => theme.metrics.largeSize}px;
   justify-content: flex-end;
 `;
 
 const RestaurantName = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5.4%')}px;
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '3.8%' : '3.4%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
   fontFamily: CircularStd-Bold;
 `;
 
 type Props = {
   restaurantImage: string,
   restaurantName: string,
-  reviews: number,
   stars: number,
 };
 
-type State = {
-  isHeaderImageLoaded: boolean,
-};
-
-class HeaderSection extends Component<Props, State> {
-  state = {
-    isHeaderImageLoaded: false,
-  }
-
-  onLoadHeaderImage = () => {
-    this.setState({
-      isHeaderImageLoaded: true,
-    });
-  }
-
-  render() {
-    const {
-      restaurantImage,
-      restaurantName,
-      reviews,
-      stars,
-    } = this.props;
-
-    const { isHeaderImageLoaded } = this.state;
-
-    return (
-      <Container>
-        <RestaurantImage
-          onLoad={() => this.onLoadHeaderImage()}
-          imageURL={restaurantImage || "Cabña del Primo"}
-        />
-        <DarkLayer />
-        <ContentWrapper>
-          <RestaurantName>
-            {restaurantName}
-          </RestaurantName>
-          <ReviewStars
-            shouldShowReviewsText
-            textColor="defaultWhite"
-            reviews={reviews}
-            stars={stars || 3.5}
-          />
-        </ContentWrapper>
-        <ContainerShimmer
-          visible={isHeaderImageLoaded}
-          autoRun
-        />
-      </Container>
-    );
-  }
-}
+const HeaderSection = ({
+  restaurantImage,
+  restaurantName,
+  stars,
+}: Props): Object => (
+  <Container>
+    <RestaurantImage
+      imageURL={restaurantImage}
+    />
+    <DarkLayer />
+    <ContentWrapper>
+      <RestaurantName>
+        {restaurantName}
+      </RestaurantName>
+      <ReviewStars
+        shouldShowReviewsText={false}
+        textColor="defaultWhite"
+        stars={stars}
+      />
+    </ContentWrapper>
+  </Container>
+);
 
 export default HeaderSection;

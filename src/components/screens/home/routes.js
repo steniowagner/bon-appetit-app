@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 import { Platform, StatusBar } from 'react-native';
 
-import RestaurantAddressMap from 'components/common/RestaurantAddressMap';
+import RestaurantAddressMap from 'components/common/restaurant-detail/components/RestaurantAddressMap';
 import RestaurantDetail from 'components/common/restaurant-detail';
 import FoodDetail from 'components/common/food-detail';
 import FoodDetailReview from 'components/common/restaurant-detail/components/food-detail-review';
@@ -60,6 +60,13 @@ const ROUTES = createStackNavigator({
     screen: RestaurantDetail,
     navigationOptions: () => ({
       headerBackTitle: null,
+      ...Platform.select({
+        android: {
+          headerStyle: {
+            marginTop: StatusBar.currentHeight,
+          },
+        },
+      }),
     }),
   },
 
@@ -74,6 +81,13 @@ const ROUTES = createStackNavigator({
     screen: FoodDetail,
     navigationOptions: () => ({
       headerBackTitle: null,
+      ...Platform.select({
+        android: {
+          headerStyle: {
+            marginTop: StatusBar.currentHeight,
+          },
+        },
+      }),
     }),
   },
 
@@ -81,6 +95,13 @@ const ROUTES = createStackNavigator({
     screen: FoodDetailReview,
     navigationOptions: () => ({
       headerBackTitle: null,
+      ...Platform.select({
+        android: {
+          headerStyle: {
+            marginTop: StatusBar.currentHeight,
+          },
+        },
+      }),
     }),
   },
 

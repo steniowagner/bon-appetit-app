@@ -9,21 +9,21 @@ const IngredientsText = styled(Text).attrs({
   numberOfLines: 3,
   ellipsizeMode: 'tail',
 })`
+  padding-top:  ${({ theme, isFirst }) => (isFirst ? theme.metrics.largeSize : 0)}px;
+  padding-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')};
-  font-family: CircularStd-Book;
-  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-  padding-top:  ${({ theme, index }) => (index === 0 ? theme.metrics.mediumSize : 0)}px;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')};
+  font-family: CircularStd-Medium;
 `;
 
 type Props = {
   ingredient: string,
-  index: number,
+  isFirst: boolean,
 };
 
-const IngredientsItemList = ({ ingredient, index }: Props) => (
+const IngredientsItemList = ({ ingredient, isFirst }: Props) => (
   <IngredientsText
-    index={index}
+    isFirst={isFirst}
   >
     {ingredient}
   </IngredientsText>
