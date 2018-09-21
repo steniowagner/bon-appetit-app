@@ -1,44 +1,32 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import {
-  View,
-  Text,
-  Image,
   TouchableOpacity,
   Platform,
+  Text,
+  View,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import appStyle from 'styles';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 import { withNavigation } from 'react-navigation';
 
-import FlagPrice from 'components/common/FlagPrice';
 import ReviewStars from 'components/common/ReviewStars';
+import FlagPrice from 'components/common/FlagPrice';
 
 const Container = styled(View)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('30%')};
   margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
   margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
-  padding: ${({ theme }) => theme.metrics.mediumSize}px;
+  padding: ${({ theme }) => theme.metrics.smallSize}px;
+  padding-right: ${({ theme }) => theme.metrics.mediumSize}px;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   background-color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-const ContentWrapper = styled(View)``;
-
-const FoodImageShimmer = styled(ShimmerPlaceholder).attrs({
-  autoRun: true,
-  visible: false,
-})`
-  width: 100%;
-  height: 100%;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-`;
-
-const FoodImageWrapper = styled(View)`
+const DisheImageWrapper = styled(View)`
   width: 30%;
   height: 100%;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
@@ -46,21 +34,21 @@ const FoodImageWrapper = styled(View)`
   position: absolute;
 `;
 
-const FoodImage = styled(Image).attrs({
-  source: ({ foodImageURL }) => ({ uri: foodImageURL }),
+const DisheImage = styled(FastImage).attrs({
+  source: ({ imageURL }) => ({ uri: imageURL }),
   resizeMode: 'cover',
 })`
   width: 100%;
   height: 100%;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
   position: absolute;
+  padding: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const TextContentContainer = styled(View)`
+  height: 100%;
+  justify-content: space-between;
   margin-left: ${({ theme }) => theme.metrics.getWidthFromDP('28%')}px;
   padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  justify-content: space-between;
-  height: 100%;
 `;
 
 const TopRowContent = styled(View)`
@@ -68,37 +56,37 @@ const TopRowContent = styled(View)`
   justify-content: space-between;
 `;
 
-const FoodTitle = styled(Text).attrs({
-  numberOfLines: 1,
+const DisheTitle = styled(Text).attrs({
   ellipsizeMode: 'tail',
+  numberOfLines: 1,
 })`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
   fontFamily: CircularStd-Black;
   width: 75%;
 `;
 
-const FoodDescription = styled(Text).attrs({
-  numberOfLines: 4,
+const DisheDescription = styled(Text).attrs({
   ellipsizeMode: 'tail',
+  numberOfLines: 4,
 })`
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
-  fontFamily: CircularStd-Book;
   margin-vertical: ${({ theme }) => theme.metrics.mediumSize}px;
+  color: ${({ theme }) => theme.colors.darkText};
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')}px;
+  fontFamily: CircularStd-Book;
 `;
 
 const BottomRowContent = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
-const RestaurantStatus = styled(Text)`
-  color: ${({ color }) => color};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
+const RestaurantDistance = styled(Text)`
+  color: ${({ theme }) => theme.colors.darkText};
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.6%')}px;
   fontFamily: CircularStd-Bold;
-  text-align: center;
 `;
 
 const ArrowIconWrapper = styled(View)`
@@ -108,7 +96,7 @@ const ArrowIconWrapper = styled(View)`
 `;
 
 const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.red,
+  color: ({ theme }) => theme.colors.darkText,
   name: 'arrow-right',
   size: 25,
 })`
@@ -116,227 +104,112 @@ const ArrowIcon = styled(Icon).attrs({
   height: 25px;
 `;
 
-const ShimmerContainer = styled(View).attrs({
-  visible: false,
-  autoRun: true,
-})`
-  width: 100%;
-  height: 60%;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: ${({ theme }) => theme.metrics.extraLargeSize}px;
-`;
-
 type Props = {
-  foodDescription: string,
-  foodImageURL: string,
-  foodTitle: string,
+  restaurantId: string,
+  description: string,
+  imageURL: string,
+  title: string,
   distance: number,
+  reviews: number,
   price: number,
   stars: number,
-  reviews: number,
-  isDataFetched: boolean,
-  isOpen: boolean,
   navigation: Function,
 };
 
-type State = {
-  isFoodImageLoaded: boolean,
+const onPressItem = (navigation: Function, restaurantId: string): void => {
+  navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
+    payload: { restaurantId },
+  });
 };
 
-class YMLSeeAllItemList extends Component<Props, State> {
-  state = {
-    isFoodImageLoaded: false,
-  };
+const renderDisheImage = (imageURL: string): Object => (
+  <DisheImageWrapper>
+    <DisheImage
+      imageURL={imageURL}
+    />
+  </DisheImageWrapper>
+);
 
-  onFoodImageLoaded = () => {
-    this.setState({
-      isFoodImageLoaded: true,
-    });
-  }
-
-  onPressItem = () => {
-    const {
-      foodDescription,
-      foodImageURL,
-      foodTitle,
-      distance,
-      price,
-      stars,
-      navigation,
-      isOpen,
-    } = this.props;
-
-    navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
-      payload: {
-        isOpen,
-        mode: 'detail',
-        foodDescription,
-        foodImageURL,
-        foodTitle,
-        distance,
-        price,
-        stars,
-      },
-    });
-  }
-
-  renderFoodImage = () => {
-    const { isFoodImageLoaded } = this.state;
-    const { foodImageURL } = this.props;
-
-    const FoodImageComponents = (
-      <Fragment>
-        <FoodImageWrapper>
-          <FoodImage
-            foodImageURL={foodImageURL}
-            onLoad={() => this.onFoodImageLoaded()}
-          />
-          {!isFoodImageLoaded && <FoodImageShimmer />}
-        </FoodImageWrapper>
-      </Fragment>
-    );
-
-    return FoodImageComponents;
-  }
-
-  renderTopRowContent = () => {
-    const {
-      foodTitle,
-      price,
-      stars,
-      reviews,
-    } = this.props;
-
-    return (
-      <View>
-        <TopRowContent>
-          <FoodTitle>
-            {foodTitle}
-          </FoodTitle>
-          <FlagPrice
-            price={price}
-          />
-        </TopRowContent>
-        <ReviewStars
-          shouldShowReviewsText
-          stars={stars}
-          reviews={reviews}
-          textColor="darkText"
-        />
-      </View>
-    );
-  }
-
-  renderBottomRowContent = () => {
-    const { isOpen, distance } = this.props;
-
-    const restaurantStatus = {
-      open: {
-        color: appStyle.colors.green,
-        text: `${distance}km from you`,
-      },
-      closed: {
-        color: appStyle.colors.red,
-        text: 'Restaurant closed now',
-      },
-    };
-
-    const status = (isOpen ? 'open' : 'closed');
-
-    return (
-      <BottomRowContent>
-        <RestaurantStatus
-          color={restaurantStatus[status].color}
-        >
-          {restaurantStatus[status].text}
-        </RestaurantStatus>
-        <ArrowIconWrapper>
-          <TouchableOpacity
-            onPress={() => this.onPressItem()}
-          >
-            <ArrowIcon />
-          </TouchableOpacity>
-        </ArrowIconWrapper>
-      </BottomRowContent>
-    );
-  }
-
-  renderTextContent = () => {
-    const { foodDescription } = this.props;
-
-    return (
-      <Fragment>
-        {this.renderTopRowContent()}
-        <FoodDescription>
-          {foodDescription}
-        </FoodDescription>
-        {this.renderBottomRowContent()}
-      </Fragment>
-    );
-  }
-
-  renderTextContentShimmer = () => (
-    <ShimmerContainer>
-      <ShimmerPlaceholder
-        visible={false}
-        autoRun
+const renderTopRowContent = (title: string, reviews: string, price: number, stars: number): Object => (
+  <View>
+    <TopRowContent>
+      <DisheTitle>
+        {title}
+      </DisheTitle>
+      <FlagPrice
+        price={price}
       />
-      <ShimmerPlaceholder
-        style={{
-          height: 50,
-          marginVertical: 15,
-        }}
-        visible={false}
-        autoRun
-      />
-      <ShimmerPlaceholder
-        visible={false}
-        autoRun
-      />
-    </ShimmerContainer>
-  );
+    </TopRowContent>
+    <ReviewStars
+      shouldShowReviewsText
+      textColor="darkText"
+      reviews={reviews}
+      stars={stars}
+    />
+  </View>
+);
 
-  render() {
-    const { isDataFetched } = this.props;
-
-    const TextContentShimmer = this.renderTextContentShimmer();
-    const TextContentComponent = this.renderTextContent();
-
-    return (
-      <Container
-        style={{
-          ...Platform.select({
-            ios: {
-              elevation: 1,
-              shadowOffset: {
-                width: 0,
-                height: 0,
-              },
-              shadowRadius: 3,
-              shadowOpacity: 0.35,
-            },
-            android: {
-              elevation: 4,
-              shadowOffset: {
-                width: 1,
-                height: -3,
-              },
-              shadowRadius: 2,
-              shadowOpacity: 5.0,
-            },
-          }),
-        }}
+const renderBottomRowContent = (distance: number, restaurantId: string, navigation: Function): Object => (
+  <BottomRowContent>
+    <RestaurantDistance>
+      {`${distance} km from you`}
+    </RestaurantDistance>
+    <ArrowIconWrapper>
+      <TouchableOpacity
+        onPress={() => onPressItem(navigation, restaurantId)}
       >
-        <ContentWrapper>
-          {this.renderFoodImage()}
-          <TextContentContainer>
-            {isDataFetched ? TextContentComponent : TextContentShimmer}
-          </TextContentContainer>
-        </ContentWrapper>
-      </Container>
-    );
-  }
-}
+        <ArrowIcon />
+      </TouchableOpacity>
+    </ArrowIconWrapper>
+  </BottomRowContent>
+);
+
+const YMLSeeAllItemList = ({
+  restaurantId,
+  description,
+  navigation,
+  distance,
+  imageURL,
+  reviews,
+  price,
+  title,
+  stars,
+}: Props): Object => (
+  <Container
+    style={{
+      ...Platform.select({
+        ios: {
+          elevation: 1,
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowRadius: 3,
+          shadowOpacity: 0.35,
+        },
+        android: {
+          elevation: 4,
+          shadowOffset: {
+            width: 1,
+            height: -3,
+          },
+          shadowRadius: 2,
+          shadowOpacity: 5.0,
+        },
+      }),
+    }}
+  >
+    <View>
+      {renderDisheImage(imageURL)}
+      <TextContentContainer>
+        {renderTopRowContent(title, reviews, price, stars)}
+        <DisheDescription>
+          {description}
+        </DisheDescription>
+        {renderBottomRowContent(distance, restaurantId, navigation)}
+      </TextContentContainer>
+    </View>
+  </Container>
+);
 
 export default withNavigation(YMLSeeAllItemList);

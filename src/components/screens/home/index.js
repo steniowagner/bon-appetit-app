@@ -60,7 +60,9 @@ class HomeMainContent extends Component<Props, State> {
       color: appStyles.colors.defaultWhite,
       fontFamily: 'Modesta-Script',
       fontWeight: '200',
-      fontSize: Platform.OS === 'ios' ? 26 : 30,
+      fontSize: (Platform.OS === 'ios'
+        ? appStyles.metrics.getHeightFromDP('4.5%')
+        : appStyles.metrics.getHeightFromDP('6%')),
     },
   };
 
