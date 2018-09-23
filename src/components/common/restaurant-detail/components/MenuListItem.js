@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   TouchableWithoutFeedback,
   Text,
@@ -40,8 +40,8 @@ const DishImage = styled(FastImage).attrs({
 `;
 
 const DishTitle = styled(Text).attrs({
-  numberOfLines: 1,
   ellipsizeMode: 'tail',
+  numberOfLines: 1,
 })`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')}px;
   color: ${({ theme }) => theme.colors.darkText};
@@ -50,8 +50,8 @@ const DishTitle = styled(Text).attrs({
 `;
 
 const DishDescription = styled(Text).attrs({
-  numberOfLines: 3,
   ellipsizeMode: 'tail',
+  numberOfLines: 3,
 })`
   color: ${({ theme }) => theme.colors.subText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
@@ -101,109 +101,74 @@ const FlagStarsContent = styled(View)`
 
 type Props = {
   description: string,
-  title: string,
   imageURL: string,
-  id: string,
-  reviews: number,
+  title: string,
   price: number,
   stars: number,
   navigation: Function,
 };
 
-type State = {
-  isFoodImageLoaded: boolean,
+const onPressItem = (props: Props): void => {
+  const { navigation } = props;
+
+  const payload = {
+    ...props,
+  };
+
+  delete payload['navigation'];
+
+  navigation.navigate(ROUTE_NAMES.FOOD_DETAIL_REVIEW, { payload });
 };
 
-class MenuListItem extends Component<Props, State> {
-  state = {
-    isFoodImageLoaded: false,
-  };
+const renderTextContent = (title: string, description: string): Object => (
+  <TextContent>
+    <DishTitle>
+      {title}
+    </DishTitle>
+    <DishDescription>
+      {description}
+    </DishDescription>
+  </TextContent>
+);
 
-  onLoadFoodImage = () => {
-    this.setState({
-      isFoodImageLoaded: true,
-    });
-  }
+const renderFlagContent = (stars: number, price: number): Object => (
+  <FlagsContent>
+    <FlagStars>
+      <FlagStarsContent>
+        <IconStar />
+        <Stars>
+          {stars}
+        </Stars>
+      </FlagStarsContent>
+    </FlagStars>
+    <FlagPrice price={price} />
+  </FlagsContent>
+);
 
-  onPressItem = (): void => {
-    const {
-      description,
-      navigation,
-      title,
-      imageURL,
-      reviews,
-      price,
-      stars,
-      id,
-    } = this.props;
+const MenuListItem = (props: Props): Object => {
+  const {
+    description,
+    imageURL,
+    price,
+    stars,
+    title,
+  } = props;
 
-    const payload = {
-      description,
-      title,
-      imageURL,
-      reviews,
-      price,
-      stars,
-      id,
-    };
-
-    navigation.navigate(ROUTE_NAMES.FOOD_DETAIL_REVIEW, { payload });
-  };
-
-  renderTextContent = (title: string, description: string): Object => (
-    <TextContent>
-      <DishTitle>
-        {title}
-      </DishTitle>
-      <DishDescription>
-        {description}
-      </DishDescription>
-    </TextContent>
+  return (
+    <Container>
+      <TouchableWithoutFeedback
+        onPress={() => onPressItem(props)}
+      >
+        <ContentWrapper>
+          <DishImage
+            imageURL={imageURL}
+          />
+          {renderTextContent(title, description)}
+          {renderFlagContent(stars, price)}
+        </ContentWrapper>
+      </TouchableWithoutFeedback>
+    </Container>
   );
-
-  renderFlagContent = (stars: number, price: number): Object => (
-    <FlagsContent>
-      <FlagStars>
-        <FlagStarsContent>
-          <IconStar />
-          <Stars>
-            {stars}
-          </Stars>
-        </FlagStarsContent>
-      </FlagStars>
-      <FlagPrice price={price} />
-    </FlagsContent>
-  );
-
-  render() {
-    const {
-      description,
-      title,
-      imageURL,
-      price,
-      stars,
-    } = this.props;
-
-    const { isFoodImageLoaded } = this.state;
-
-    return (
-      <Container>
-        <TouchableWithoutFeedback
-          onPress={() => this.onPressItem()}
-          disabled={!isFoodImageLoaded}
-        >
-          <ContentWrapper>
-            <DishImage
-              onLoad={() => this.onLoadFoodImage()}
-              imageURL={imageURL}
-            />
-            {this.renderTextContent(title, description)}
-            {this.renderFlagContent(stars, price)}
-          </ContentWrapper>
-        </TouchableWithoutFeedback>
-      </Container>
-    );
-  }
-}
+};
 
 export default withNavigation(MenuListItem);

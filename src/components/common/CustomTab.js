@@ -163,7 +163,7 @@ class CustomTab extends Component<Props, State> {
     const { red } = appStyles.colors;
     const { theme } = this.props;
 
-    const inactiveCellTextColor = (theme === 'light' ? appStyles.colors.primaryColor : appStyles.colors.defaultWhite);
+    const inactiveCellTextColor = (theme === 'light' ? appStyles.colors.subText : appStyles.colors.defaultWhite);
     const cellTextColor = (itemSelectedIndex === cellIndex ? red : inactiveCellTextColor);
 
     return cellTextColor;
@@ -239,7 +239,7 @@ class CustomTab extends Component<Props, State> {
 
   render() {
     const { theme } = this.props;
-    const themeColor = (theme === 'light' ? appStyles.colors.defaultWhite : appStyles.colors.primaryColor);
+    const themeColor = (theme === 'light' ? appStyles.colors.defaultWhite : appStyles.colors.subText);
 
     return (
       <Container

@@ -34,12 +34,12 @@ const Container = styled(View)`
 const Menu = styled(View)`
   flex: 1;
   padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-  background-color: ${({ theme }) => theme.colors.primaryColor};
+  background-color: ${({ theme }) => theme.colors.dark};
 `;
 
 const AboutRestaurantWrapper = styled(View)`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.primaryColor};
+  background-color: ${({ theme }) => theme.colors.dark};
   padding: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
@@ -53,7 +53,7 @@ const FloatingActionButtonWrapper = styled(View)`
 
 type Props = {
   getRestaurantRequest: Function,
-  clearState: Function,
+  resetState: Function,
   navigation: Function,
   restaurantInfo: Object,
 };
@@ -102,10 +102,10 @@ class RestaurantDetail extends Component<Props, State> {
     });
   }
 
-  componentWillUnmount() {
-    const { clearState } = this.props;
+  async componentWillUnmount() {
+    const { resetState } = this.props;
 
-    clearState();
+    await resetState();
   }
 
   onChangeMenuIndex = (indexSelected: number): void => {
@@ -130,7 +130,7 @@ class RestaurantDetail extends Component<Props, State> {
 
       Animated.spring(this._animatedFlatlistPosition, {
         toValue: 0,
-        bounciness: 8,
+        bounciness: 6,
         useNativeDriver: true,
       }),
     ]);
@@ -314,7 +314,7 @@ class RestaurantDetail extends Component<Props, State> {
               price={item.price}
               stars={item.stars}
               type={item.type}
-              id={item._id}
+              id={item.id}
             />
           )}
         />

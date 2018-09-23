@@ -14,5 +14,4 @@ export default {
   linkedin: '#0077B5',
   github: '#333333',
   subText: 'rgba(0, 0, 0, 0.6)',
-  transparent: 'rgba(0, 0, 0, 0)',
 };

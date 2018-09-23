@@ -3,8 +3,8 @@
 import React, { Component, Fragment } from 'react';
 import {
   TouchableOpacity,
-  Animated,
   StatusBar,
+  Animated,
   FlatList,
   Platform,
   Text,
@@ -20,7 +20,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 import appStyles from 'styles';
-
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 import FloatingActionButton from 'components/common/FloatingActionButton';
@@ -53,11 +52,8 @@ const CardContainer = styled(View)`
 
 const VisitRestaurantButton = styled(TouchableOpacity)`
   width: 100%;
-  height: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '8%' : '7.5%');
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
-  background-color: ${({ theme }) => theme.colors.primaryColor};
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('9%')}px;
+  background-color: ${({ theme }) => theme.colors.red};
   align-items: center;
 `;
 

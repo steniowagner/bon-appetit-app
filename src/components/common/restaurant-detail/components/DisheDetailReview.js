@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import appStyles from 'styles';
 
 import CustomTab from 'components/common/CustomTab';
+import Loading from 'components/common/Loading';
 
 import IngredientsItemList from 'components/common/dishe-detail/components/IngredientsItemList';
 import ReviewItemList from 'components/common/dishe-detail/components/ReviewItemList';
@@ -31,7 +32,7 @@ const ImageWrapper = styled(View)`
 `;
 
 const SmokeShadow = styled(LinearGradient).attrs({
-  colors: ['transparent', appStyles.colors.primaryColor, appStyles.colors.primaryColor],
+  colors: ['transparent', appStyles.colors.dark, appStyles.colors.dark],
 })`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('28%')};
@@ -49,7 +50,7 @@ const DisheImage = styled(FastImage).attrs({
 const ContentContainer = styled(View)`
   flex: 1;
   padding-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
-  background-color: ${({ theme }) => theme.colors.primaryColor};
+  background-color: ${({ theme }) => theme.colors.dark};
 `;
 
 const CardContainer = styled(View)`
@@ -87,7 +88,7 @@ type Props = {
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-class FoodDetailReview extends Component<Props, {}> {
+class DisheDetailReview extends Component<Props, {}> {
   static navigationOptions = {
     headerTintColor: appStyles.colors.defaultWhite,
     headerTransparent: true,
@@ -99,7 +100,6 @@ class FoodDetailReview extends Component<Props, {}> {
 
   state = {
     tabItemSelected: 0,
-    isDataFetched: true,
   }
 
   componentDidMount() {
@@ -153,7 +153,7 @@ class FoodDetailReview extends Component<Props, {}> {
     return reviews;
   }
 
-  getProperListDataset = (tabItemSelected: number): Array<any> => {
+  getProperListDataset = (tabItemSelected: number): Array<Object> => {
     const { ingredients, reviews } = this.getListItems();
 
     const dataset = (tabItemSelected === 0 ? ingredients : reviews);
@@ -163,10 +163,20 @@ class FoodDetailReview extends Component<Props, {}> {
 
   getListItems = (): Object => {
     const { dishInfo } = this.props;
+    const hasData = Object.keys(dishInfo).length > 0;
+
+    let defaultIngredients = [];
+    let defaultReviews = [];
+
+    if (hasData) {
+      const { dishe, reviews } = dishInfo;
+      defaultIngredients = dishe.ingredients;
+      defaultReviews = reviews;
+    }
 
     return {
-      ingredients: dishInfo.dishe.ingredients,
-      reviews: dishInfo.reviews,
+      ingredients: defaultIngredients,
+      reviews: defaultReviews,
     };
   }
 
@@ -207,10 +217,10 @@ class FoodDetailReview extends Component<Props, {}> {
 
   renderListSection = () => {
     const tabContentWidth = appStyles.metrics.getWidthFromDP('100%') - (appStyles.metrics.largeSize * 4);
-    const { tabItemSelected, isDataFetched } = this.state;
+    const { tabItemSelected } = this.state;
     const dataset = this.getProperListDataset(tabItemSelected);
 
-    return isDataFetched && (
+    return (
       <CustomTabWrapper>
         <CustomTab
           data={[{ id: '1', title: 'Ingredients' }, { id: '2', title: 'Reviews' }]}
@@ -250,18 +260,35 @@ class FoodDetailReview extends Component<Props, {}> {
     </ImageWrapper>
   );
 
-  render() {
+  renderContent = (): Object => {
     const {
-      imageURL,
       reviews,
       title,
       price,
       stars,
     } = this.getPropsFromNavigation();
 
+    return (
+      <Fragment>
+        <Header
+          price={parseFloat(price).toFixed(2)}
+          reviews={reviews}
+          stars={stars}
+          title={title}
+        />
+        {this.renderDisheDescription()}
+        {this.renderListSection()}
+      </Fragment>
+    );
+  }
+
+  render() {
+    const { imageURL } = this.getPropsFromNavigation();
+
     const { dishInfo } = this.props;
     const { requestSingleLoading, requestSingleError } = dishInfo;
-    const shouldShowContent = (!requestSingleLoading && !requestSingleError);
+    const hasData = Object.keys(dishInfo).length > 0;
+    const isLoading = (requestSingleLoading || requestSingleError || !hasData);
 
     return (
       <Fragment>
@@ -272,20 +299,11 @@ class FoodDetailReview extends Component<Props, {}> {
           translucent
         />
         {this.renderFoodImage(imageURL)}
-        {shouldShowContent && (
-          <ContentContainer>
-            <CardContainer>
-              <Header
-                price={parseFloat(price).toFixed(2)}
-                reviews={reviews}
-                stars={stars}
-                title={title}
-              />
-              {this.renderDisheDescription()}
-              {this.renderListSection()}
-            </CardContainer>
-          </ContentContainer>
-        )}
+        <ContentContainer>
+          <CardContainer>
+            {isLoading ? <Loading /> : this.renderContent()}
+          </CardContainer>
+        </ContentContainer>
       </Fragment>
     );
   }
@@ -297,4 +315,4 @@ const mapStateToProps = state => ({
   dishInfo: state.dish.requestSingleData,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FoodDetailReview);
+export default connect(mapStateToProps, mapDispatchToProps)(DisheDetailReview);

@@ -4,7 +4,7 @@ export const Types = {
   GET_REQUEST: 'restaurant/GET_REQUEST',
   GET_SUCCESS: 'restaurant/GET_SUCCESS',
   GET_FAILURE: 'restaurant/GET_FAILURE',
-  CLEAR: 'restaurant/CLEAR',
+  RESET_STATE: 'restaurant/RESET_STATE',
 };
 
 const initialState = Immutable({
@@ -35,7 +35,7 @@ export default function restaurant(state = initialState, action) {
         loading: false,
       };
 
-    case Types.CLEAR:
+    case Types.RESET_STATE:
       return {
         ...initialState,
       };
@@ -62,7 +62,7 @@ export const Creators = {
     payload: { error },
   }),
 
-  clearState: () => ({
-    type: Types.CLEAR,
+  resetState: () => ({
+    type: Types.RESET_STATE,
   }),
 };
