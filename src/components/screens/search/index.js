@@ -23,6 +23,8 @@ import AppKeys from 'components/utils/Keys';
 import FloatingActionButton from 'components/common/FloatingActionButton';
 import RestaurantItemList from 'components/common/RestaurantItemList';
 import ItemNotFound from 'components/common/ItemNotFound';
+import Loading from 'components/common/Loading';
+
 import FilterModal from './components/FilterModal';
 
 const Container = styled(View)`
@@ -45,13 +47,6 @@ const FloatingActionButtonWrapper = styled(View)`
   position: absolute;
   margin-right: ${({ theme }) => theme.metrics.extraLargeSize}px;
   margin-top: ${({ listHeight }) => listHeight}px;
-`;
-
-const LoadingRestaurants = styled(View)`
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
 `;
 
 type Props = {
@@ -232,15 +227,6 @@ class Search extends Component<Props, State> {
     );
   }
 
-  renderLoadingRestaurants = (): Object => (
-    <LoadingRestaurants>
-      <ActivityIndicator
-        color={appStyles.colors.green}
-        size={Platform.OS === 'ios' ? 'small' : 'large'}
-      />
-    </LoadingRestaurants>
-  );
-
   renderContent = (notFound: boolean, loading: boolean): Object => {
     const { isModalVisible } = this.state;
 
@@ -256,7 +242,7 @@ class Search extends Component<Props, State> {
     return (
       <Fragment>
         {(notFound && !loading) ? RestaurantsNotFound : this.renderRestaurantList()}
-        {loading ? this.renderLoadingRestaurants() : this.renderFloatingActionButton()}
+        {loading ? <Loading /> : this.renderFloatingActionButton()}
         {isModalVisible && this.renderModal()}
       </Fragment>
     );

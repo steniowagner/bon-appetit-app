@@ -2,9 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  ActivityIndicator,
   FlatList,
-  Platform,
   Animated,
   View,
 } from 'react-native';
@@ -22,6 +20,7 @@ import AppKeys from 'components/utils/Keys';
 
 import FloatinActionButton from 'components/common/FloatingActionButton';
 import CustomTab from 'components/common/CustomTab';
+import Loading from 'components/common/Loading';
 
 import AboutRestaurantSection from './components/AboutRestaurantSection';
 import HeaderSection from './components/HeaderSection';
@@ -52,21 +51,15 @@ const FloatingActionButtonWrapper = styled(View)`
   padding-right: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
-const LoadingWrapper = styled(View)`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
-
 type Props = {
   getRestaurantRequest: Function,
+  clearState: Function,
   navigation: Function,
   restaurantInfo: Object,
 };
 
 type State = {
   indexMenuSelected: number,
-  isDataFetched: boolean,
 };
 
 const FORTALEZA_CITY_LOCATION = {
@@ -95,18 +88,11 @@ class RestaurantDetail extends Component<Props, State> {
     },
   };
 
-  async componentWillMount() {
-    const persistedUserLocation = await getItemFromStorage(AppKeys.USER_LOCATION, [0, 0]);
-    const { latitude, longitude } = JSON.parse(persistedUserLocation);
-
-    this.requestRestaurantInfo({ latitude, longitude });
-  }
-
   async componentDidMount() {
     const persistedUserLocation = await getItemFromStorage(AppKeys.USER_LOCATION, [0, 0]);
     const { latitude, longitude } = JSON.parse(persistedUserLocation);
 
-    // this.requestRestaurantInfo({ latitude, longitude });
+    this.requestRestaurantInfo({ latitude, longitude });
 
     this.setState({
       userLocation: {
@@ -114,6 +100,12 @@ class RestaurantDetail extends Component<Props, State> {
         longitude,
       },
     });
+  }
+
+  componentWillUnmount() {
+    const { clearState } = this.props;
+
+    clearState();
   }
 
   onChangeMenuIndex = (indexSelected: number): void => {
@@ -183,15 +175,6 @@ class RestaurantDetail extends Component<Props, State> {
 
     getRestaurantRequest(userLocation, id);
   }
-
-  renderLoading = (): Object => (
-    <LoadingWrapper>
-      <ActivityIndicator
-        size={Platform.OS === 'ios' ? 'small' : 'large'}
-        color={appStyles.colors.green}
-      />
-    </LoadingWrapper>
-  )
 
   renderHeaderSection = (): Object => {
     const {
@@ -324,9 +307,9 @@ class RestaurantDetail extends Component<Props, State> {
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <MenuListItem
-              dishDescription={item.description}
+              description={item.description}
               imageURL={item.imageURL}
-              dishTitle={item.title}
+              title={item.title}
               reviews={item.reviews}
               price={item.price}
               stars={item.stars}
@@ -340,11 +323,8 @@ class RestaurantDetail extends Component<Props, State> {
   }
 
   render() {
-    const { name } = this.getPropsFromNavigation();
     const { restaurantInfo } = this.props;
-    const { loading, data } = restaurantInfo;
-
-    const hasDirtyData = (data.restaurant && data.restaurant.name !== name);
+    const { loading } = restaurantInfo;
 
     const Content = (
       <Fragment>
@@ -354,12 +334,10 @@ class RestaurantDetail extends Component<Props, State> {
       </Fragment>
     );
 
-    const LoadingContent = this.renderLoading();
-
     return (
       <Container>
         {this.renderHeaderSection()}
-        {(loading || hasDirtyData) ? LoadingContent : Content}
+        {loading ? <Loading /> : Content}
       </Container>
     );
   }

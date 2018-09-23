@@ -95,13 +95,12 @@ const DistanceIcon = styled(Icon).attrs({
 `;
 
 type Props = {
-  distance: number,
-  reviews: number,
-  price: number,
-  stars: number,
   imageURL: string,
   title: string,
   id: string,
+  reviews: number,
+  price: number,
+  stars: number,
   navigation: Function,
   isFirst: boolean,
 };
@@ -122,11 +121,11 @@ class YMLSectionList extends Component<Props, State> {
   }
 
   onPressItem = () => {
-    const { navigation, id } = this.props;
+    const { navigation, id, imageURL } = this.props;
 
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
       payload: {
-        mode: 'detail',
+        imageURL,
         id,
       },
     });
@@ -147,7 +146,6 @@ class YMLSectionList extends Component<Props, State> {
       title,
       stars,
       reviews,
-      distance,
     } = this.props;
 
     return (
@@ -165,7 +163,7 @@ class YMLSectionList extends Component<Props, State> {
         <DistanceWrapper>
           <DistanceIcon />
           <DistanceText>
-            {`${distance} km from you`}
+            {`${parseFloat(reviews / stars).toFixed(1)} km from you`}
           </DistanceText>
         </DistanceWrapper>
       </BottomContentWrapper>

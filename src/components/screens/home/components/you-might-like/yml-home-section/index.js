@@ -29,13 +29,13 @@ const YMLHomeSection = ({ dishes }: Props) => (
         renderItem={({ item, index }) => (
           <YMLSectionListItem
             isFirst={index === 0}
-            id={item.id}
-            price={item.price}
-            distance={item.distance}
+            distance={parseFloat(item.reviews / item.stars).toFixed(1)}
+            imageURL={item.imageURL}
             reviews={item.reviews}
+            price={item.price}
             stars={item.stars}
             title={item.title}
-            imageURL={item.imageURL}
+            id={item.id}
           />
         )}
       />

@@ -1,37 +1,65 @@
 import Immutable from 'seamless-immutable';
 
 export const Types = {
-  GET_REQUEST: 'dish/GET_REQUEST',
-  GET_SUCCESS: 'dish/GET_SUCCESS',
-  GET_FAILURE: 'dish/GET_FAILURE',
+  GET_SINGLE_REQUEST: 'dish/GET_SINGLE_REQUEST',
+  GET_SINGLE_SUCCESS: 'dish/GET_SINGLE_SUCCESS',
+  GET_SINGLE_FAILURE: 'dish/GET_SINGLE_FAILURE',
+  GET_ALL_REQUEST: 'dish/GET_ALL_REQUEST',
+  GET_ALL_SUCCESS: 'dish/GET_ALL_SUCCESS',
+  GET_ALL_FAILURE: 'dish/GET_ALL_FAILURE',
 };
 
 const initialState = Immutable({
-  data: [],
-  loading: false,
-  error: null,
+  requestSingleLoading: false,
+  requestSingleError: null,
+  requestSingleData: {},
+  requestAllLoading: false,
+  requestAllError: null,
+  requestAllData: [],
 });
 
 export default function dish(state = initialState, action) {
   switch (action.type) {
-    case Types.GET_REQUEST:
+    case Types.GET_SINGLE_REQUEST:
       return {
         ...state,
-        loading: true,
+        requestSingleLoading: true,
       };
 
-    case Types.GET_SUCCESS:
-      return {
-        data: action.payload.data,
-        loading: false,
-        error: null,
-      };
-
-    case Types.GET_FAILURE:
+    case Types.GET_SINGLE_SUCCESS:
       return {
         ...state,
-        loading: false,
-        error: action.payload.error,
+        requestSingleData: action.payload.data,
+        requestSingleLoading: false,
+        requestSingleError: null,
+      };
+
+    case Types.GET_SINGLE_FAILURE:
+      return {
+        ...state,
+        requestSingleLoading: false,
+        requestSingleError: action.payload.error,
+      };
+
+    case Types.GET_ALL_REQUEST:
+      return {
+        ...state,
+        requestAllLoading: true,
+      };
+
+    case Types.GET_ALL_SUCCESS:
+      return {
+        ...state,
+        requestAllData: action.payload.data,
+        requestAllLoading: false,
+        requestAllError: null,
+      };
+
+    case Types.GET_ALL_FAILURE:
+      return {
+        ...state,
+        requestAllLoading: false,
+        requestAllError: action.payload.error,
       };
 
     default:
@@ -40,18 +68,32 @@ export default function dish(state = initialState, action) {
 }
 
 export const Creators = {
-  getDishRequest: id => ({
-    type: Types.GET_REQUEST,
+  getSingleDishRequest: id => ({
+    type: Types.GET_SINGLE_REQUEST,
     id,
   }),
 
-  getDishSuccess: data => ({
-    type: Types.GET_SUCCESS,
+  getSingleDishSuccess: data => ({
+    type: Types.GET_SINGLE_SUCCESS,
     payload: { data },
   }),
 
-  getDishFailure: error => ({
-    type: Types.GET_FAILURE,
+  getSingleDishFailure: error => ({
+    type: Types.GET_SINGLE_FAILURE,
+    payload: { error },
+  }),
+
+  getAllDishesRequest: () => ({
+    type: Types.GET_ALL_REQUEST,
+  }),
+
+  getAllDishesSuccess: data => ({
+    type: Types.GET_ALL_SUCCESS,
+    payload: { data },
+  }),
+
+  getAllDishesFailure: error => ({
+    type: Types.GET_ALL_FAILURE,
     payload: { error },
   }),
 };

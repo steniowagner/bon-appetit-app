@@ -17,7 +17,7 @@ const ListWrapper = styled(View)`
 `;
 
 type Props = {
-  dishes: any,
+  dishes: Array<Object>,
 };
 
 const YouMightLikeSection = ({ dishes }: Props): Object => (
@@ -32,9 +32,9 @@ const YouMightLikeSection = ({ dishes }: Props): Object => (
           <PopularSectionListItem
             isFirst={index === 0}
             imageURL={item.imageURL}
-            disheTitle={item.title}
-            stars={item.stars}
             price={item.price}
+            stars={item.stars}
+            title={item.title}
             id={item.id}
           />
         )}

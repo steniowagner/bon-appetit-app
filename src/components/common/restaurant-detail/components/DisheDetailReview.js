@@ -2,6 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import {
+  StatusBar,
   Animated,
   FlatList,
   Platform,
@@ -18,24 +19,15 @@ import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
-import FloatingActionButton from 'components/common/FloatingActionButton';
 import CustomTab from 'components/common/CustomTab';
 
-import IngredientsItemList from './components/IngredientsItemList';
-import ReviewItemList from './components/ReviewItemList';
-import FoodStatus from './components/FoodStatus';
+import IngredientsItemList from 'components/common/dishe-detail/components/IngredientsItemList';
+import ReviewItemList from 'components/common/dishe-detail/components/ReviewItemList';
+import Header from 'components/common/dishe-detail/components/Header';
 
 const ImageWrapper = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('27%')};
-`;
-
-const FloatingActionButtonWrapper = styled(View)`
-  width: 100%;
-  align-items: flex-end;
-  position: absolute;
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('27%') - 28}px;
-  padding-right: ${({ theme }) => theme.metrics.extraLargeSize * 2}px;
 `;
 
 const SmokeShadow = styled(LinearGradient).attrs({
@@ -46,7 +38,7 @@ const SmokeShadow = styled(LinearGradient).attrs({
   margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('12%')};
 `;
 
-const DishImage = styled(FastImage).attrs({
+const DisheImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
 })`
   width: 100%;
@@ -70,9 +62,9 @@ const CardContainer = styled(View)`
   background-color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-const FoodDescription = styled(Text).attrs({
-  numberOfLines: 3,
+const DisheDescription = styled(Text).attrs({
   ellipsizeMode: 'tail',
+  numberOfLines: 3,
 })`
   margin-vertical: ${({ theme }) => theme.metrics.mediumSize}px;
   color: ${({ theme }) => theme.colors.subText};
@@ -80,7 +72,7 @@ const FoodDescription = styled(Text).attrs({
     const percentage = (Platform.OS === 'android' ? '2.7%' : '2.4%');
     return theme.metrics.getHeightFromDP(percentage);
   }};
-  font-family: CircularStd-Medium;
+  font-family: CircularStd-Book;
 `;
 
 const CustomTabWrapper = styled(View)`
@@ -88,7 +80,7 @@ const CustomTabWrapper = styled(View)`
 `;
 
 type Props = {
-  getDishRequest: Function,
+  getSingleDishRequest: Function,
   navigation: Object,
   dishInfo: Object,
 };
@@ -112,9 +104,9 @@ class FoodDetailReview extends Component<Props, {}> {
 
   componentDidMount() {
     const { id } = this.getPropsFromNavigation();
-    const { getDishRequest } = this.props;
+    const { getSingleDishRequest } = this.props;
 
-    getDishRequest(id);
+    getSingleDishRequest(id);
   }
 
   onChangeMenuIndex = (index: number): void => {
@@ -162,18 +154,20 @@ class FoodDetailReview extends Component<Props, {}> {
   }
 
   getProperListDataset = (tabItemSelected: number): Array<any> => {
-    const { dishInfo } = this.props;
-    const { dish } = dishInfo;
+    const { ingredients, reviews } = this.getListItems();
 
-    if (!dish) {
-      return;
-    }
-
-    const { ingredients } = dishInfo.dish;
-    const reviews = this.getReviews();
     const dataset = (tabItemSelected === 0 ? ingredients : reviews);
 
     return dataset;
+  }
+
+  getListItems = (): Object => {
+    const { dishInfo } = this.props;
+
+    return {
+      ingredients: dishInfo.dishe.ingredients,
+      reviews: dishInfo.reviews,
+    };
   }
 
   renderListItem = (item, index) => {
@@ -188,9 +182,9 @@ class FoodDetailReview extends Component<Props, {}> {
 
     const ReviewComponent = (
       <ReviewItemList
+        profileImageURL={item.profileImageURL}
+        name={item.name}
         isFirst={index === 0}
-        reviewerImage={item.profileImageURL}
-        reviewer={item.name}
         review={item.review}
         stars={item.stars}
       />
@@ -201,13 +195,13 @@ class FoodDetailReview extends Component<Props, {}> {
     return ProperComponent;
   }
 
-  renderFoodDescription = () => {
-    const { dishDescription } = this.getPropsFromNavigation();
+  renderDisheDescription = () => {
+    const { description } = this.getPropsFromNavigation();
 
     return (
-      <FoodDescription>
-        {dishDescription}
-      </FoodDescription>
+      <DisheDescription>
+        {description}
+      </DisheDescription>
     );
   }
 
@@ -247,19 +241,9 @@ class FoodDetailReview extends Component<Props, {}> {
     );
   }
 
-  renderFloatingActionButton = () => (
-    <FloatingActionButtonWrapper>
-      <FloatingActionButton
-        name="star"
-        color="yellow"
-        action={() => {}}
-      />
-    </FloatingActionButtonWrapper>
-  )
-
   renderFoodImage = (imageURL: string): Object => (
     <ImageWrapper>
-      <DishImage
+      <DisheImage
         imageURL={imageURL}
       />
       <SmokeShadow />
@@ -268,34 +252,40 @@ class FoodDetailReview extends Component<Props, {}> {
 
   render() {
     const {
-      dishTitle,
       imageURL,
       reviews,
+      title,
       price,
       stars,
     } = this.getPropsFromNavigation();
 
     const { dishInfo } = this.props;
-    const { loading, error } = dishInfo;
+    const { requestSingleLoading, requestSingleError } = dishInfo;
+    const shouldShowContent = (!requestSingleLoading && !requestSingleError);
 
     return (
       <Fragment>
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle="light-content"
+          animated
+          translucent
+        />
         {this.renderFoodImage(imageURL)}
-        {(!loading && !error) && (
+        {shouldShowContent && (
           <ContentContainer>
             <CardContainer>
-              <FoodStatus
-                dishTitle={dishTitle}
+              <Header
+                price={parseFloat(price).toFixed(2)}
                 reviews={reviews}
-                price={price}
                 stars={stars}
+                title={title}
               />
-              {this.renderFoodDescription()}
+              {this.renderDisheDescription()}
               {this.renderListSection()}
             </CardContainer>
           </ContentContainer>
         )}
-        {this.renderFloatingActionButton()}
       </Fragment>
     );
   }
@@ -304,7 +294,7 @@ class FoodDetailReview extends Component<Props, {}> {
 const mapDispatchToProps = dispatch => bindActionCreators(DishCreators, dispatch);
 
 const mapStateToProps = state => ({
-  dishInfo: state.dish.data,
+  dishInfo: state.dish.requestSingleData,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodDetailReview);

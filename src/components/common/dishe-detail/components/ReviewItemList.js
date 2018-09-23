@@ -53,7 +53,7 @@ const ProfileAvatar = styled(FastImage).attrs({
   margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
   width: 48px;
   height: 48px;
-  border-radius: 48px;
+  border-radius: 24px;
 `;
 
 const ReviewText = styled(Text).attrs({
@@ -79,26 +79,26 @@ const TopContetWrapper = styled(View)`
 `;
 
 type Props = {
-  reviewerImage: string,
-  reviewer: string,
+  profileImageURL: string,
   review: string,
+  name: string,
   isFirst: boolean,
   stars: number,
 };
 
-const renderProfileAvatar = (reviewerImage: string): Object => (
+const renderProfileAvatar = (profileImageURL: string): Object => (
   <ProfileAvatarWrapper>
     <ProfileAvatar
-      uri={reviewerImage}
+      uri={profileImageURL}
     />
   </ProfileAvatarWrapper>
 );
 
-const renderMainContent = (reviewer: string, review: string, stars: number): Object => (
+const renderMainContent = (name: string, review: string, stars: number): Object => (
   <MainContent>
     <TopContetWrapper>
       <ReviewerName>
-        {reviewer}
+        {name}
       </ReviewerName>
       <ReviewStars
         shouldShowReviewsText={false}
@@ -112,8 +112,8 @@ const renderMainContent = (reviewer: string, review: string, stars: number): Obj
 );
 
 const ReviewItemList = ({
-  reviewerImage,
-  reviewer,
+  profileImageURL,
+  name,
   review,
   isFirst,
   stars,
@@ -121,8 +121,8 @@ const ReviewItemList = ({
   <Container
     isFirst={isFirst}
   >
-    {renderProfileAvatar(reviewerImage)}
-    {renderMainContent(reviewer, review, stars)}
+    {renderProfileAvatar(profileImageURL)}
+    {renderMainContent(name, review, stars)}
   </Container>
 );
 

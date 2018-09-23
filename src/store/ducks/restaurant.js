@@ -4,6 +4,7 @@ export const Types = {
   GET_REQUEST: 'restaurant/GET_REQUEST',
   GET_SUCCESS: 'restaurant/GET_SUCCESS',
   GET_FAILURE: 'restaurant/GET_FAILURE',
+  CLEAR: 'restaurant/CLEAR',
 };
 
 const initialState = Immutable({
@@ -34,6 +35,11 @@ export default function restaurant(state = initialState, action) {
         loading: false,
       };
 
+    case Types.CLEAR:
+      return {
+        ...initialState,
+      };
+
     default:
       return state;
   }
@@ -54,5 +60,9 @@ export const Creators = {
   getRestaurantFailure: error => ({
     type: Types.GET_FAILURE,
     payload: { error },
+  }),
+
+  clearState: () => ({
+    type: Types.CLEAR,
   }),
 };

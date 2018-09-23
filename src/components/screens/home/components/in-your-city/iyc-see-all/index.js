@@ -2,9 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  ActivityIndicator,
   RefreshControl,
-  Platform,
   FlatList,
   View,
 } from 'react-native';
@@ -17,19 +15,14 @@ import styled from 'styled-components';
 import appStyles from 'styles';
 
 import ItemNotFound from 'components/common/ItemNotFound';
+import Loading from 'components/common/Loading';
 import Messages from 'components/utils/Messages';
+
 import AllEventsListItem from './IYCSeeallItemList';
 
 const Container = styled(View)`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.white};
-`;
-
-const LoadingContainer = styled(View)`
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
 `;
 
 type Props = {
@@ -61,15 +54,6 @@ class AllEvents extends Component<Props, {}> {
 
     getAllEventsRequest();
   }
-
-  renderLoading = (): Object => (
-    <LoadingContainer>
-      <ActivityIndicator
-        color={appStyles.colors.primaryColor}
-        size={Platform.OS === 'ios' ? 'small' : 'large'}
-      />
-    </LoadingContainer>
-  )
 
   renderList = (): Object => {
     const { getEvents } = this.props;
@@ -118,7 +102,7 @@ class AllEvents extends Component<Props, {}> {
     return (
       <Fragment>
         {shouldShowEventList && this.renderList()}
-        {isLoading && this.renderLoading()}
+        {isLoading && <Loading />}
         {isEmpty && BoringCity}
       </Fragment>
     );

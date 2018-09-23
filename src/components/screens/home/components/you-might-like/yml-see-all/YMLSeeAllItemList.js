@@ -105,20 +105,19 @@ const ArrowIcon = styled(Icon).attrs({
 `;
 
 type Props = {
-  restaurantId: string,
   description: string,
   imageURL: string,
   title: string,
-  distance: number,
+  id: string,
   reviews: number,
   price: number,
   stars: number,
   navigation: Function,
 };
 
-const onPressItem = (navigation: Function, restaurantId: string): void => {
+const onPressItem = (navigation: Function, imageURL: string, id: string): void => {
   navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
-    payload: { restaurantId },
+    payload: { imageURL, id },
   });
 };
 
@@ -149,14 +148,14 @@ const renderTopRowContent = (title: string, reviews: string, price: number, star
   </View>
 );
 
-const renderBottomRowContent = (distance: number, restaurantId: string, navigation: Function): Object => (
+const renderBottomRowContent = (distance: number, imageURL: string, id: string, navigation: Function): Object => (
   <BottomRowContent>
     <RestaurantDistance>
       {`${distance} km from you`}
     </RestaurantDistance>
     <ArrowIconWrapper>
       <TouchableOpacity
-        onPress={() => onPressItem(navigation, restaurantId)}
+        onPress={() => onPressItem(navigation, imageURL, id)}
       >
         <ArrowIcon />
       </TouchableOpacity>
@@ -165,15 +164,14 @@ const renderBottomRowContent = (distance: number, restaurantId: string, navigati
 );
 
 const YMLSeeAllItemList = ({
-  restaurantId,
   description,
   navigation,
-  distance,
   imageURL,
   reviews,
   price,
   title,
   stars,
+  id,
 }: Props): Object => (
   <Container
     style={{
@@ -206,7 +204,7 @@ const YMLSeeAllItemList = ({
         <DisheDescription>
           {description}
         </DisheDescription>
-        {renderBottomRowContent(distance, restaurantId, navigation)}
+        {renderBottomRowContent(parseFloat(reviews / stars).toFixed(1), imageURL, id, navigation)}
       </TextContentContainer>
     </View>
   </Container>

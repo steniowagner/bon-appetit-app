@@ -49,7 +49,7 @@ const DishTitle = styled(Text).attrs({
   ellipsizeMode: 'tail',
   numberOfLines: 1,
 })`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('35%')}px;
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('38%')}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => {
     const percentage = Platform.OS === 'android' ? '3%' : '2.6%';
@@ -114,26 +114,9 @@ const shadowStyle = {
   }),
 };
 
-const onPressArrowButton = (props: Object) => {
-  const {
-    foodImageURL,
-    description,
-    navigation,
-    foodTitle,
-    price,
-    stars,
-    id,
-  } = props;
-
+const onPressArrowButton = (navigation: Object, imageURL: string, id: string) => {
   navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
-    payload: {
-      foodImageURL,
-      description,
-      foodTitle,
-      stars,
-      price,
-      id,
-    },
+    payload: { imageURL, id },
   });
 };
 
@@ -173,9 +156,9 @@ const renderAboutDishe = (disheInfo: Object) => {
   );
 };
 
-const renderArrowButton = (props: Object): Object => (
+const renderArrowButton = (navigation: Object, imageURL: string, id: string): Object => (
   <ArrowButton
-    onPress={() => onPressArrowButton(props)}
+    onPress={() => onPressArrowButton(navigation, imageURL, id)}
     style={{ ...shadowStyle }}
   >
     <ArrowIcon />
@@ -203,15 +186,7 @@ const PopularSeeAllItemList = ({
         price,
       })}
     </CardContainer>
-    {renderArrowButton({
-      description,
-      navigation,
-      imageURL,
-      title,
-      stars,
-      price,
-      id,
-    })}
+    {renderArrowButton(navigation, imageURL, id)}
   </Container>
 );
 

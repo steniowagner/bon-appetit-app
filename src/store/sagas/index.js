@@ -12,7 +12,7 @@ import { searchRestaurantsRequest } from './search-restaurants';
 import { requestAllEvents, getRestaurantsRequest } from './events';
 import { restaurantRequest } from './restaurant';
 import { homeRequest } from './home';
-import { dishRequest } from './dish';
+import { requestSingleDish, requestAllDishes } from './dish';
 
 export default function* rootSaga() {
   return yield all([
@@ -22,6 +22,7 @@ export default function* rootSaga() {
     takeLatest(EventTypes.GET_RESTAURANTS_REQUEST, getRestaurantsRequest),
     takeLatest(EventTypes.GET_ALL_REQUEST, requestAllEvents),
     takeLatest(HomeTypes.GET_REQUEST, homeRequest),
-    takeLatest(DishTyes.GET_REQUEST, dishRequest),
+    takeLatest(DishTyes.GET_SINGLE_REQUEST, requestSingleDish),
+    takeLatest(DishTyes.GET_ALL_REQUEST, requestAllDishes),
   ]);
 }

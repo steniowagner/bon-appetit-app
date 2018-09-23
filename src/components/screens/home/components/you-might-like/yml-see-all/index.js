@@ -1,29 +1,23 @@
 import React, { Component, Fragment } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  View,
-} from 'react-native';
+import { FlatList } from 'react-native';
+
+import { Creators as DishCreators } from 'store/ducks/dish';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import styled from 'styled-components';
 import appStyles from 'styles';
 
+import Loading from 'components/common/Loading';
 import YMLSeeAllItemList from './YMLSeeAllItemList';
 
 const List = styled(FlatList)`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.white};
 `;
-
-const LoadingWrapper = styled(View)`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
-
 type Props = {
-
+  getAllDishesRequest: Function,
+  dishInfo: Object,
 };
 
 class PopularSeeAll extends Component<Props, {}> {
@@ -41,48 +35,53 @@ class PopularSeeAll extends Component<Props, {}> {
   });
 
   componentDidMount() {
+    const { getAllDishesRequest } = this.props;
 
+    getAllDishesRequest();
   }
 
-  renderLoading = (): Object => (
-    <LoadingWrapper>
-      <ActivityIndicator
-        size={Platform.OS === 'ios' ? 'small' : 'large'}
-        color={appStyles.colors.green}
-      />
-    </LoadingWrapper>
-  );
+  renderList = (): Object => {
+    const { dishInfo } = this.props;
+    const { dishes } = dishInfo.requestAllData;
 
-  renderList = (dishes: Array<Object>) => (
-    <List
-      showsVerticalScrollIndicator={false}
-      data={dishes}
-      keyExtractor={item => item.id}
-      renderItem={({ item }) => (
-        <YMLSeeAllItemList
-          imageURL={item.imageURL}
-          price={item.price}
-          title={item.title}
-          stars={item.stars}
-          description={item.description}
-          isOpen={item.isOpen}
-          distance={item.distance}
-          isDataFetched={item.isDataFetched}
-          reviews={item.reviews}
-        />
-      )}
-    />
-  );
+    return (
+      <List
+        showsVerticalScrollIndicator={false}
+        data={dishes}
+        keyExtractor={item => item._id}
+        renderItem={({ item }) => (
+          <YMLSeeAllItemList
+            price={parseFloat(item.price).toFixed(2)}
+            description={item.description}
+            imageURL={item.imageURL}
+            distance={item.distance}
+            reviews={item.reviews}
+            title={item.title}
+            stars={item.stars}
+            id={item._id}
+          />
+        )}
+      />
+    );
+  }
 
   render() {
-    const loading = true;
+    const { dishInfo } = this.props;
+    const { requestAllLoading, requestAllError } = dishInfo;
+    const shouldShowContent = (!requestAllLoading && !requestAllError);
 
     return (
       <Fragment>
-        {loading ? this.renderLoading() : this.renderList([])}
+        {shouldShowContent ? this.renderList() : <Loading />}
       </Fragment>
     );
   }
 }
 
-export default PopularSeeAll;
+const mapDispatchToProps = dispatch => bindActionCreators(DishCreators, dispatch);
+
+const mapStateToProps = state => ({
+  dishInfo: state.dish,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PopularSeeAll);

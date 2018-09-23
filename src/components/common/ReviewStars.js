@@ -16,7 +16,7 @@ const Reviews = styled(Text)`
   color: ${({ theme, textColor }) => theme.colors[textColor]};
   margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   font-size: ${({ theme, isSmall }) => {
-    const percentage = (isSmall ? '1.8%' : '2%');
+    const percentage = (isSmall ? '1.8%' : '2.3%');
     return theme.metrics.getHeightFromDP(percentage);
   }};
   fontFamily: CircularStd-Book;

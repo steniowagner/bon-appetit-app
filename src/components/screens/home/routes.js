@@ -3,8 +3,8 @@ import { Platform, StatusBar } from 'react-native';
 
 import RestaurantAddressMap from 'components/common/restaurant-detail/components/RestaurantAddressMap';
 import RestaurantDetail from 'components/common/restaurant-detail';
-import FoodDetail from 'components/common/food-detail';
-import FoodDetailReview from 'components/common/restaurant-detail/components/food-detail-review';
+import DisheDetail from 'components/common/dishe-detail';
+import DisheDetailReview from 'components/common/restaurant-detail/components/DisheDetailReview';
 import PopularSeeAll from 'components/screens/home/components/popular/popular-see-all';
 import YMLSeeAll from 'components/screens/home/components/you-might-like/yml-see-all';
 
@@ -78,7 +78,7 @@ const ROUTES = createStackNavigator({
   },
 
   [ROUTE_NAMES.FOOD_DETAIL]: {
-    screen: FoodDetail,
+    screen: DisheDetail,
     navigationOptions: () => ({
       headerBackTitle: null,
       ...Platform.select({
@@ -92,7 +92,7 @@ const ROUTES = createStackNavigator({
   },
 
   [ROUTE_NAMES.FOOD_DETAIL_REVIEW]: {
-    screen: FoodDetailReview,
+    screen: DisheDetailReview,
     navigationOptions: () => ({
       headerBackTitle: null,
       ...Platform.select({

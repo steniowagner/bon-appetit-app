@@ -100,8 +100,8 @@ const FlagStarsContent = styled(View)`
 `;
 
 type Props = {
-  dishDescription: string,
-  dishTitle: string,
+  description: string,
+  title: string,
   imageURL: string,
   id: string,
   reviews: number,
@@ -127,9 +127,9 @@ class MenuListItem extends Component<Props, State> {
 
   onPressItem = (): void => {
     const {
-      dishDescription,
+      description,
       navigation,
-      dishTitle,
+      title,
       imageURL,
       reviews,
       price,
@@ -138,8 +138,8 @@ class MenuListItem extends Component<Props, State> {
     } = this.props;
 
     const payload = {
-      dishDescription,
-      dishTitle,
+      description,
+      title,
       imageURL,
       reviews,
       price,
@@ -150,13 +150,13 @@ class MenuListItem extends Component<Props, State> {
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL_REVIEW, { payload });
   };
 
-  renderTextContent = (dishTitle: string, dishDescription: string): Object => (
+  renderTextContent = (title: string, description: string): Object => (
     <TextContent>
       <DishTitle>
-        {dishTitle}
+        {title}
       </DishTitle>
       <DishDescription>
-        {dishDescription}
+        {description}
       </DishDescription>
     </TextContent>
   );
@@ -177,8 +177,8 @@ class MenuListItem extends Component<Props, State> {
 
   render() {
     const {
-      dishDescription,
-      dishTitle,
+      description,
+      title,
       imageURL,
       price,
       stars,
@@ -197,7 +197,7 @@ class MenuListItem extends Component<Props, State> {
               onLoad={() => this.onLoadFoodImage()}
               imageURL={imageURL}
             />
-            {this.renderTextContent(dishTitle, dishDescription)}
+            {this.renderTextContent(title, description)}
             {this.renderFlagContent(stars, price)}
           </ContentWrapper>
         </TouchableWithoutFeedback>

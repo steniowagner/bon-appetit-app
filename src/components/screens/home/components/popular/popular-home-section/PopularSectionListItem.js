@@ -2,15 +2,15 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  View,
-  Text,
-  Image,
   TouchableWithoutFeedback,
+  Image,
+  Text,
+  View,
 } from 'react-native';
 import styled from 'styled-components';
 
-import { withNavigation } from 'react-navigation';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
+import { withNavigation } from 'react-navigation';
 
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import ReviewStars from 'components/common/ReviewStars';
@@ -41,7 +41,7 @@ const DisheImage = styled(Image).attrs({
 
 const DisheImageShimmer = styled(ShimmerPlaceholder).attrs({
   autoRun: true,
-  visible: true,
+  visible: false,
 })`
   width: 100%;
   height: 70%;
@@ -62,9 +62,9 @@ const DisheTitle = styled(Text).attrs({
 })`
   margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
   fontFamily: CircularStd-Bold;
-  color: ${({ theme }) => theme.colors.darkText};
 `;
 
 const FlagPriceWrapper = styled(View)`
@@ -74,8 +74,8 @@ const FlagPriceWrapper = styled(View)`
 `;
 
 type Props = {
-  disheTitle: string,
   imageURL: string,
+  title: string,
   id: string,
   stars: number,
   price: number,
@@ -93,11 +93,11 @@ class PopularSectionListItem extends Component<Props, State> {
   };
 
   onPressItem = () => {
-    const { navigation, id } = this.props;
+    const { navigation, id, imageURL } = this.props;
 
     navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
       payload: {
-        mode: 'detail',
+        imageURL,
         id,
       },
     });
@@ -126,7 +126,7 @@ class PopularSectionListItem extends Component<Props, State> {
 
   renderBottomContent = () => {
     const {
-      disheTitle,
+      title,
       stars,
       price,
     } = this.props;
@@ -142,7 +142,7 @@ class PopularSectionListItem extends Component<Props, State> {
         </DarkLayer>
         <BottomWrapper>
           <DisheTitle>
-            {disheTitle}
+            {title}
           </DisheTitle>
           <ReviewStars
             stars={stars}

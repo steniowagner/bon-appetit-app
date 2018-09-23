@@ -2,7 +2,6 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  ActivityIndicator,
   StatusBar,
   FlatList,
   Platform,
@@ -20,6 +19,7 @@ import styled from 'styled-components';
 import appStyles from 'styles';
 
 import RestaurantItemList from 'components/common/RestaurantItemList';
+import Loading from 'components/common/Loading';
 import Messages from 'components/utils/Messages';
 
 const getTextSize = (type: string): number => {
@@ -40,12 +40,6 @@ const Container = styled(View)`
 const ListWrapper = styled(View)`
   flex: 1;
   padding: ${({ theme }) => theme.metrics.extraSmallSize}px;
-`;
-
-const LoadingWrapper = styled(View)`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
 `;
 
 const HeaderCotainer = styled(View)`
@@ -152,15 +146,6 @@ class EventInfo extends Component<Props, State> {
     };
   }
 
-  renderLoading = (): Object => (
-    <LoadingWrapper>
-      <ActivityIndicator
-        size={Platform.OS === 'ios' ? 'small' : 'large'}
-        color={appStyles.colors.green}
-      />
-    </LoadingWrapper>
-  )
-
   renderEventInfo = (): Object => {
     const {
       restaurantsParticipating,
@@ -220,7 +205,7 @@ class EventInfo extends Component<Props, State> {
     return (
       <Fragment>
         {this.renderEventInfo()}
-        {loadingRestaurants ? this.renderLoading() : this.renderRestaurantList(restaurants)}
+        {loadingRestaurants ? <Loading /> : this.renderRestaurantList(restaurants)}
       </Fragment>
     );
   }

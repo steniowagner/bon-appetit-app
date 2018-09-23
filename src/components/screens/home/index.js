@@ -21,6 +21,7 @@ import { ROUTE_NAMES } from 'components/screens/home/routes';
 
 import ItemNotFound from 'components/common/ItemNotFound';
 import Messages from 'components/utils/Messages';
+import Loading from 'components/common/Loading';
 import AppKeys from 'components/utils/Keys';
 
 import YouMightLikeSection from './components/you-might-like/yml-home-section';
@@ -31,12 +32,6 @@ import Section from './components/Section';
 const Container = styled(View)`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.white};
-`;
-
-const LoadingWrapper = styled(View)`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
 `;
 
 type Props = {
@@ -194,16 +189,7 @@ class HomeMainContent extends Component<Props, State> {
     );
   }
 
-  renderLoading = (): Object => (
-    <LoadingWrapper>
-      <ActivityIndicator
-        size={Platform.OS === 'ios' ? 'small' : 'large'}
-        color={appStyles.colors.green}
-      />
-    </LoadingWrapper>
-  )
-
-  renderMainContent = (isLoading: boolean): Object => (isLoading ? this.renderLoading() : this.renderContent());
+  renderMainContent = (isLoading: boolean): Object => (isLoading ? <Loading /> : this.renderContent());
 
   render() {
     const { homeRequest } = this.props;
