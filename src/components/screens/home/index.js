@@ -2,7 +2,6 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  ActivityIndicator,
   RefreshControl,
   ScrollView,
   Platform,

@@ -3,9 +3,9 @@
 import React, { Component, Fragment } from 'react';
 import { View } from 'react-native';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { Creators as NearbyRestaurantsActions } from 'store/ducks/nearby-restaurants';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import { getItemFromStorage } from 'components/utils/AsyncStoarageManager';
 import AppKeys from 'components/utils/Keys';
@@ -15,8 +15,8 @@ import styled from 'styled-components';
 import appStyle from 'styles';
 
 import CustomTab from 'components/common/CustomTab';
-import Map from './Map';
 import RestaurantsList from './restaurants-list';
+import Map from './Map';
 
 const Container = styled(View)`
   flex: 1;
@@ -73,10 +73,10 @@ type Props = {
 };
 
 type State = {
-  userLocation: Object,
   indexDishesTypeSelected: number,
   indexRestaurantSelected: number,
   restaurantsCached: Array<any>,
+  userLocation: Object,
 };
 
 class NearYou extends Component<Props, State> {

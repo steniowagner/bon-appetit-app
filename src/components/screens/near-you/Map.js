@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,6 +19,7 @@ const CustomMarker = styled(Icon).attrs({
 `;
 
 type Props = {
+  firstTimeRenderingMap: boolean,
   indexLocationSelected: number,
   restaurants: Array<Object>,
   onSelectMarker: Function,
@@ -26,19 +27,14 @@ type Props = {
 };
 
 class Map extends Component<Props, {}> {
-  componentDidMount() {
-    this.animateToLocation();
-  }
-
   componentDidUpdate() {
-    this.animateToLocation();
+    const { indexLocationSelected, restaurants } = this.props;
+
+    this.animateToLocation(indexLocationSelected, restaurants);
   }
 
-  animateToLocation = (): void => {
-    const { indexLocationSelected, restaurants } = this.props;
-    const hasRestaurants = restaurants.length > 0;
-
-    if (!hasRestaurants) {
+  animateToLocation = (indexLocationSelected: number, restaurants: Array<Object>): void => {
+    if (restaurants.length === 0) {
       return;
     }
 
@@ -49,17 +45,54 @@ class Map extends Component<Props, {}> {
       longitude,
     }, 500);
 
-    const isMarkerLoaded = !!this._markersRefs[indexLocationSelected].props;
+    setTimeout(() => {
+      this._markersRefs[indexLocationSelected].showCallout();
+    }, 1000);
+  };
 
-    if (isMarkerLoaded) {
-      setTimeout(() => {
-        this._markersRefs[indexLocationSelected].showCallout();
-      }, 1000);
-    }
-  }
+  renderMarkers = (markers: Array<Object>, onSelectMarker: Function): Object => (
+    <Fragment>
+      {
+        markers.map((marker, index) => {
+          const {
+            description,
+            location,
+            name,
+            id,
+          } = marker;
+
+          const iconName = (id === 'user-location' ? 'account-location' : 'map-marker-radius');
+
+          return (
+            <Marker
+              ref={(markerRef) => { this._markersRefs[index] = markerRef; }}
+              onPress={() => {
+                if (id !== 'user-location') {
+                  onSelectMarker(index);
+                }
+              }}
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              description={description}
+              title={name}
+              key={id}
+            >
+              <CustomMarker
+                name={iconName}
+              />
+            </Marker>
+          );
+        })
+      }
+    </Fragment>
+  );
 
   render() {
     const {
+      indexLocationSelected,
+      firstTimeRenderingMap,
       onSelectMarker,
       userLocation,
       restaurants,
@@ -89,42 +122,10 @@ class Map extends Component<Props, {}> {
       <MapContainer
         innerRef={(ref) => { this._mapRef = ref; }}
         initialRegion={initialRegion}
+        onMapReady={() => this.animateToLocation(indexLocationSelected, restaurants)}
         rotateEnabled={false}
       >
-        {
-          markers.map((marker, index) => {
-            const {
-              name,
-              description,
-              location,
-              id,
-            } = marker;
-
-            const iconName = (id === 'user-location' ? 'account-location' : 'map-marker-radius');
-
-            return (
-              <Marker
-                ref={(markerRef) => { this._markersRefs[index] = markerRef; }}
-                onPress={() => {
-                  if (id !== 'user-location') {
-                    onSelectMarker(index);
-                  }
-                }}
-                key={id}
-                title={name}
-                description={description}
-                coordinate={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                }}
-              >
-                <CustomMarker
-                  name={iconName}
-                />
-              </Marker>
-            );
-          })
-        }
+        {this.renderMarkers(markers, onSelectMarker)}
       </MapContainer>
     );
   }

@@ -1,7 +1,12 @@
 // @flow
 
-import React, { Component } from 'react';
-import { View, Text, Platform } from 'react-native';
+import React from 'react';
+import {
+  StatusBar,
+  Platform,
+  Text,
+  View,
+} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,7 +36,7 @@ const FooterContainer = styled(View)`
   width: 100%;
   height: 100%;
   padding-left: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-top: ${({ theme }) => (Platform.OS === 'ios' ? theme.metrics.largeSize : theme.metrics.mediumSize)}px;
+  padding-top: ${({ theme }) => (Platform.OS === 'ios' ? theme.metrics.largeSize : theme.metrics.smallSize)}px;
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -41,13 +46,16 @@ const ResturantName = styled(Text).attrs({
 })`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('75%')}px;
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
+  font-size: ${({ theme }) => {
+    const percentage = Platform.OS === 'android' ? '3%' : '2.7%';
+    return theme.metrics.getHeightFromDP(percentage);
+  }}px;
   fontFamily: CircularStd-Black;
 `;
 
 const EstablishmentStatus = styled(Text)`
   color: ${({ theme, isOpen }) => (isOpen ? theme.colors.green : theme.colors.red)};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.2%')}px;
   padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   fontFamily: CircularStd-Medium;
 `;
@@ -65,10 +73,6 @@ type Props = {
   navigation: Function,
 };
 
-type State = {
-  markers: Array<Object>,
-};
-
 const ASPECT_RATIO = appStyle.metrics.width / appStyle.metrics.height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -77,144 +81,121 @@ const INITIAL_REGION = {
   longitude: -38.6590335,
 };
 
-class RestaurantAddressMap extends Component<Props, State> {
-  static navigationOptions = () => ({
-    title: '',
-    headerStyle: {
-      backgroundColor: appStyle.colors.primaryColor,
-    },
-    headerTintColor: appStyle.colors.defaultWhite,
-    headerTitleStyle: {
-      color: appStyle.colors.defaultWhite,
-      fontFamily: 'CircularStd-Black',
-    },
+const edgePadding = {
+  top: 50,
+  right: 50,
+  bottom: 50,
+  left: 50,
+};
+
+let _mapRef;
+
+const onFitMapCoordinates = (markers: Array<Object>): void => {
+  _mapRef.fitToCoordinates(markers, {
+    animated: true,
+    edgePadding,
   });
+};
 
-  state = {
-    markers: [],
-  };
-
-  componentDidMount() {
-    const { userLocation, restaurantLocation } = this.getPropsFromNavigation();
-
-    this.setState({
-      markers: [userLocation, restaurantLocation],
-    });
-  }
-
-  getStatusText = (distance: string, isOpen: boolean): string => {
-    const statusText = (isOpen ? 'Open' : 'Closed');
-
-    return `${statusText} now. ${distance} km from you`;
-  }
-
-  getPropsFromNavigation = (): Object => {
-    const { navigation } = this.props;
-    const payload = navigation.getParam('payload', '');
-
-    return {
-      ...payload,
-    };
-  }
-
-  fitMarkersOnScreen = (): void => {
-    const edgePadding = {
-      top: 50,
-      right: 50,
-      bottom: 50,
-      left: 50,
-    };
-
-    const { markers } = this.state;
-
-    this.mapRef.fitToCoordinates(markers, {
-      animated: true,
-      edgePadding,
-    });
-  }
-
-  renderMap = (): Object => {
-    const { restaurantName } = this.getPropsFromNavigation();
-    const { markers } = this.state;
-
-    return (
-      <MapContainer>
-        <MapView
-          ref={(ref) => { this.mapRef = ref; }}
-          onLayout={() => this.fitMarkersOnScreen()}
-          initialRegion={{
-            latitude: INITIAL_REGION.latitude,
-            longitude: INITIAL_REGION.longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
-          style={{ width: '100%', height: '100%' }}
-          showsPointsOfInterest={false}
-          rotateEnabled={false}
-          scrollEnabled={false}
-          showBuildings={false}
-          zoomEnabled={false}
+const renderMap = (restaurantName: string, markers: Array<Object>): Object => (
+  <MapContainer>
+    <MapView
+      ref={(ref) => { _mapRef = ref; }}
+      initialRegion={{
+        latitude: INITIAL_REGION.latitude,
+        longitude: INITIAL_REGION.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      }}
+      style={{ width: '100%', height: '100%' }}
+      onMapReady={() => onFitMapCoordinates(markers)}
+      showsPointsOfInterest={false}
+      rotateEnabled={false}
+      scrollEnabled={false}
+      showBuildings={false}
+      zoomEnabled={false}
+    >
+      {markers.map(marker => (
+        <Marker
+          title={marker.id === 'user_location' ? 'You\'re here' : restaurantName}
+          key={marker.id}
+          coordinate={marker}
         >
-          {markers.map(marker => (
-            <Marker
-              title={marker.id === 'user_location' ? 'You\'re here' : restaurantName}
-              key={marker.id}
-              coordinate={marker}
-            >
-              <MarkerIcon
-                name={marker.id === 'user_location' ? 'account-location' : 'map-marker-radius'}
-              />
-            </Marker>
-          ))}
-        </MapView>
-      </MapContainer>
-    );
-  }
+          <MarkerIcon
+            name={marker.id === 'user_location' ? 'account-location' : 'map-marker-radius'}
+          />
+        </Marker>
+      ))}
+    </MapView>
+  </MapContainer>
+);
 
-  renderFooter = (): Object => {
-    const {
-      restaurantName,
-      distance,
-      isOpen,
-      stars,
-    } = this.getPropsFromNavigation();
+const renderFooter = (restaurantName: string, distance: number, isOpen: boolean, stars: number): Object => {
+  const status = (isOpen ? 'Open' : 'Closed');
 
-    return (
-      <FooterContainer>
-        <ResturantName>
-          {restaurantName}
-        </ResturantName>
-        <ReviewStars
-          stars={stars}
-        />
-        <EstablishmentStatus
-          isOpen={isOpen}
-        >
-          {this.getStatusText(distance, isOpen)}
-        </EstablishmentStatus>
-      </FooterContainer>
-    );
-  }
-
-  renderFloatingActionButton = (): Object => (
-    <FloatingActionButtonWrapper>
-      <FloatinActionButton
-        name="directions"
-        color="blue"
-        action={() => this.fitMarkersOnScreen()}
+  return (
+    <FooterContainer>
+      <ResturantName>
+        {restaurantName}
+      </ResturantName>
+      <ReviewStars
+        stars={stars}
       />
-    </FloatingActionButtonWrapper>
-  )
+      <EstablishmentStatus
+        isOpen={isOpen}
+      >
+        {`${status} now - ${distance} km from you`}
+      </EstablishmentStatus>
+    </FooterContainer>
+  );
+};
 
-  render() {
-    return (
-      <Container>
-        {this.renderMap()}
-        {this.renderFooter()}
-        {this.renderFloatingActionButton()}
-      </Container>
-    );
-  }
-}
+const renderFloatingActionButton = (markers: Array<Object>): Object => (
+  <FloatingActionButtonWrapper>
+    <FloatinActionButton
+      name="directions"
+      color="blue"
+      action={() => onFitMapCoordinates(markers)}
+    />
+  </FloatingActionButtonWrapper>
+);
+
+const RestaurantAddressMap = ({ navigation }: Props): Object => {
+  const {
+    restaurantLocation,
+    userLocation,
+    restaurantName,
+    distance,
+    isOpen,
+    stars,
+  } = navigation.getParam('payload', {});
+
+  const markers = [restaurantLocation, userLocation];
+
+  return (
+    <Container>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="#009730"
+        translucent={false}
+      />
+      {renderMap(restaurantName, markers)}
+      {renderFooter(restaurantName, distance, isOpen, stars)}
+      {renderFloatingActionButton(markers)}
+    </Container>
+  );
+};
+
+RestaurantAddressMap.navigationOptions = () => ({
+  title: '',
+  headerStyle: {
+    backgroundColor: appStyle.colors.primaryColor,
+  },
+  headerTintColor: appStyle.colors.defaultWhite,
+  headerTitleStyle: {
+    color: appStyle.colors.defaultWhite,
+    fontFamily: 'CircularStd-Black',
+  },
+});
 
 export default RestaurantAddressMap;
