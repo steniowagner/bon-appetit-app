@@ -86,22 +86,13 @@ const AddressIcon = styled(Icon).attrs({
 `;
 
 const onItemPress = (props: Object): void => {
-  const {
-    navigation,
-    imageURL,
-    address,
-    stars,
-    name,
-    id,
-  } = props;
+  const { navigation } = props;
 
   const payload = {
-    imageURL,
-    address,
-    stars,
-    name,
-    id,
+    ...props,
   };
+
+  delete payload.navigation;
 
   navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, { payload });
 };

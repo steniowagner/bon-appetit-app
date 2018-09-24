@@ -283,6 +283,7 @@ class DisheDetailReview extends Component<Props, {}> {
   }
 
   render() {
+    console.tron.log('render')
     const { imageURL } = this.getPropsFromNavigation();
 
     const { dishInfo } = this.props;

@@ -126,8 +126,7 @@ const ROUTES = createStackNavigator({
 });
 
 ROUTES.navigationOptions = ({ navigation }) => {
-  const isTabView = navigation.state.index <= 0;
-  const tabBarVisible = isTabView;
+  const tabBarVisible = navigation.state.index <= 0;
 
   return {
     tabBarVisible,

@@ -2,6 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import {
+  StatusBar,
   FlatList,
   Animated,
   View,
@@ -336,6 +337,12 @@ class RestaurantDetail extends Component<Props, State> {
 
     return (
       <Container>
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle="light-content"
+          animated
+          translucent
+        />
         {this.renderHeaderSection()}
         {loading ? <Loading /> : Content}
       </Container>

@@ -1,10 +1,10 @@
 // @flow
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
+  Slider,
   Text,
   View,
-  Slider,
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -13,18 +13,18 @@ const Container = styled(View)`
 `;
 
 const DistanceSlider = styled(Slider).attrs({
+  minimumTrackTintColor: ({ theme }) => theme.colors.primaryColor,
+  thumbTintColor: ({ theme }) => theme.colors.primaryColor,
   maximumValue: 15,
   minimumValue: 1,
   step: 0.5,
-  minimumTrackTintColor: ({ theme }) => theme.colors.primaryColor,
-  thumbTintColor: ({ theme }) => theme.colors.primaryColor,
 })``;
 
 const CurrentDistanceText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
+  text-align: center;
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.2%')}px;
   fontFamily: CircularStd-Black;
-  text-align: center;
 `;
 
 const CurrentDistanceWrapper = styled(View)`
@@ -46,68 +46,40 @@ const DistanceBoundsText = styled(Text)`
 `;
 
 type Props = {
-  onChangeMaxDistance: Function,
-  lastDistanceChosen: Function,
-};
-
-type State = {
+  onChangeDistance: Function,
   currentDistance: number,
 };
 
-class MaxDistanceFilter extends Component<Props, State> {
-  state = {
-    currentDistance: 1,
-  };
+let sliderRef;
 
-  componentDidMount() {
-    const { lastDistanceChosen } = this.props;
+const renderDistanceBounds = (): Object => (
+  <DistanceBoundsWrapper>
+    <DistanceBoundsText>
+      1 km
+    </DistanceBoundsText>
+    <DistanceBoundsText>
+      15 km
+    </DistanceBoundsText>
+  </DistanceBoundsWrapper>
+);
 
-    this.setState({
-      currentDistance: lastDistanceChosen,
-    });
-
-    this.sliderRef.setNativeProps({ value: lastDistanceChosen });
-  }
-
-  onSlideSlider = (value: number): void => {
-    const { onChangeMaxDistance } = this.props;
-
-    onChangeMaxDistance(value);
-
-    this.setState({
-      currentDistance: value,
-    });
-  }
-
-  renderDistanceBounds = () => (
-    <DistanceBoundsWrapper>
-      <DistanceBoundsText>
-        1 km
-      </DistanceBoundsText>
-      <DistanceBoundsText>
-        15 km
-      </DistanceBoundsText>
-    </DistanceBoundsWrapper>
-  )
-
-  render() {
-    const { currentDistance } = this.state;
-
-    return (
-      <Container>
-        <CurrentDistanceWrapper>
-          <CurrentDistanceText>
-            {`${currentDistance} km`}
-          </CurrentDistanceText>
-        </CurrentDistanceWrapper>
-        <DistanceSlider
-          innerRef={(ref) => { this.sliderRef = ref; }}
-          onValueChange={this.onSlideSlider}
-        />
-        {this.renderDistanceBounds()}
-      </Container>
-    );
-  }
-}
+const MaxDistanceFilter = ({
+  onChangeDistance,
+  currentDistance,
+}: Props): Object => (
+  <Container>
+    <CurrentDistanceWrapper>
+      <CurrentDistanceText>
+        {`${currentDistance} km`}
+      </CurrentDistanceText>
+    </CurrentDistanceWrapper>
+    <DistanceSlider
+      onLayout={() => sliderRef.setNativeProps({ value: currentDistance })}
+      onValueChange={distance => onChangeDistance(distance)}
+      innerRef={(ref) => { sliderRef = ref; }}
+    />
+    {renderDistanceBounds()}
+  </Container>
+);
 
 export default MaxDistanceFilter;

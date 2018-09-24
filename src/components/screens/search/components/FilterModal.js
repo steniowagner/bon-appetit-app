@@ -29,9 +29,9 @@ const ModalContainer = styled(View)`
 
 const Header = styled(View)`
   flex-direction: row;
-  margin: ${({ theme }) => theme.metrics.largeSize}px;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  margin: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const ArrowIcon = styled(Icon).attrs({
@@ -50,17 +50,17 @@ const GapView = styled(View)`
 
 const FilterText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
+  text-align: center;
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.8%')}px;
   fontFamily: CircularStd-Black;
-  text-align: center;
 `;
 
 const QuestionText = styled(Text)`
+  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-left: ${({ theme }) => theme.metrics.extraLargeSize}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
   fontFamily: CircularStd-Medium;
-  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-  margin-left: ${({ theme }) => theme.metrics.extraLargeSize}px;
 `;
 
 const DishesTypesSectionContainer = styled(View)`
@@ -134,34 +134,32 @@ type Props = {
 
 type State = {
   pressedBackButton: boolean,
-  maxDistance: number,
+  currentDistance: number,
 };
 
 class FilterModal extends Component<Props, State> {
   state = {
-    maxDistance: 1,
+    currentDistance: 1,
     dishesTypes: [],
   };
 
   componentDidMount() {
-    const {
-      lastDishesTypesChosen,
-      lastDistanceChosen,
-    } = this.props;
+    const { lastDishesTypesChosen, lastDistanceChosen } = this.props;
 
     this.setState({
+      currentDistance: lastDistanceChosen,
       dishesTypes: lastDishesTypesChosen,
-      maxDistance: lastDistanceChosen,
     });
   }
 
-  onChangeMaxDistance = (maxDistance: number): void => {
+  onChangeDistance = (currentDistance: number): void => {
     this.setState({
-      maxDistance,
+      currentDistance,
     });
   }
 
   onAddDishesTypeFilter = (disheType: string): void => {
+    console.tron.log('onAddDishesTypeFilter', disheType)
     const { dishesTypes } = this.state;
 
     this.setState({
@@ -179,11 +177,11 @@ class FilterModal extends Component<Props, State> {
 
   onPressApplyFiltersButton = () => {
     const { onApplyFilterParams, onToggleModal } = this.props;
-    const { maxDistance, dishesTypes } = this.state;
+    const { currentDistance, dishesTypes } = this.state;
 
     onToggleModal();
 
-    onApplyFilterParams({ maxDistance, dishesTypes });
+    onApplyFilterParams({ maxDistance: currentDistance, dishesTypes });
   }
 
   checkDisheTypeAlreadySelected = (item: string): boolean => {
@@ -218,38 +216,38 @@ class FilterModal extends Component<Props, State> {
         {'Which kind of dish you\'re looking for?'}
       </QuestionText>
       <FlatList
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        data={dataset}
-        keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
           <FilterDishesTypeListItem
             onRemoverDisheTypeFilter={disheType => this.onRemoverDishesTypeFilter(disheType)}
-            isItemAlreadySelected={this.checkDisheTypeAlreadySelected(item.id)}
             onAddDisheTypeFilter={disheType => this.onAddDishesTypeFilter(disheType)}
+            isItemAlreadySelected={this.checkDisheTypeAlreadySelected(item.id)}
             imageURI={item.imageURI}
             isFirst={index === 0}
             title={item.title}
             id={item.id}
           />
         )}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={item => item.id}
+        data={dataset}
+        horizontal
       />
     </DishesTypesSectionContainer>
   );
 
   renderMaxDistanceSection = () => {
-    const { lastDistanceChosen } = this.props;
+    const { currentDistance } = this.state;
 
     return (
       <MaxDistanceSectionContainer
-        lastDistanceChoiced={lastDistanceChosen}
+        lastDistanceChoiced={currentDistance}
       >
         <QuestionText>
           {'Maximum distance you can travel?'}
         </QuestionText>
         <MaxDistance
-          lastDistanceChosen={lastDistanceChosen}
-          onChangeMaxDistance={this.onChangeMaxDistance}
+          onChangeDistance={this.onChangeDistance}
+          currentDistance={currentDistance}
         />
       </MaxDistanceSectionContainer>
     );

@@ -18,7 +18,7 @@ import appStyles from 'styles';
 import { persistItemInStorage } from 'components/utils/AsyncStoarageManager';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 
-import ItemNotFound from 'components/common/ItemNotFound';
+import FunnyMessage from 'components/common/FunnyMessage';
 import Messages from 'components/utils/Messages';
 import Loading from 'components/common/Loading';
 import AppKeys from 'components/utils/Keys';
@@ -175,7 +175,7 @@ class HomeMainContent extends Component<Props, State> {
     );
 
     const HomeEmpty = (
-      <ItemNotFound
+      <FunnyMessage
         description={'This is weird...\n\nSeems like that we don\'t have nothing to offer you today.'}
         iconName="alert-decagram"
         funnyText="I am empty :("

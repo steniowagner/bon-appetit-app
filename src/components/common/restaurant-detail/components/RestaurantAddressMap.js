@@ -22,11 +22,11 @@ const Container = styled(View)`
 
 const MapContainer = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('74%')};
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('72%')};
 `;
 
 const FloatingActionButtonWrapper = styled(View)`
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('74%') - 28}px;
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('72%') - 28}px;
   align-self: flex-end;
   position: absolute;
   padding-right: ${({ theme }) => theme.metrics.largeSize}px;
@@ -36,7 +36,7 @@ const FooterContainer = styled(View)`
   width: 100%;
   height: 100%;
   padding-left: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-top: ${({ theme }) => (Platform.OS === 'ios' ? theme.metrics.largeSize : theme.metrics.smallSize)}px;
+  padding-top: ${({ theme }) => (Platform.OS === 'ios' ? theme.metrics.largeSize : theme.metrics.mediumSize)}px;
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -187,7 +187,7 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
 };
 
 RestaurantAddressMap.navigationOptions = () => ({
-  title: '',
+  title: 'Location',
   headerStyle: {
     backgroundColor: appStyle.colors.primaryColor,
   },

@@ -115,7 +115,7 @@ const onPressItem = (props: Props): void => {
     ...props,
   };
 
-  delete payload['navigation'];
+  delete payload.navigation;
 
   navigation.navigate(ROUTE_NAMES.FOOD_DETAIL_REVIEW, { payload });
 };

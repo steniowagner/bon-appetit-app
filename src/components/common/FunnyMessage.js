@@ -57,7 +57,7 @@ type Props = {
   tipText: string,
 };
 
-const NotFound = ({
+const FunnyMessage = ({
   description,
   funnyText,
   iconName,
@@ -81,4 +81,4 @@ const NotFound = ({
   </Container>
 );
 
-export default NotFound;
+export default FunnyMessage;

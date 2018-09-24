@@ -35,9 +35,9 @@ const RestaurantImage = styled(FastImage).attrs({
 const ContentWrapper = styled(View)`
   width: 100%;
   height: 100%;
+  justify-content: flex-end;
   padding-left: ${({ theme }) => theme.metrics.largeSize}px;
   padding-bottom: ${({ theme }) => theme.metrics.largeSize}px;
-  justify-content: flex-end;
 `;
 
 const RestaurantName = styled(Text)`

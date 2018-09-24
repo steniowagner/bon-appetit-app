@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
-import ItemNotFound from 'components/common/ItemNotFound';
+import FunnyMessage from 'components/common/FunnyMessage';
 import Loading from 'components/common/Loading';
 import Messages from 'components/utils/Messages';
 
@@ -91,7 +91,7 @@ class AllEvents extends Component<Props, {}> {
     const shouldShowEventList = !isEmpty && !isLoading;
 
     const BoringCity = (
-      <ItemNotFound
+      <FunnyMessage
         description={'Unfortunately, there\'s nothing happening in your City today.'}
         tipText="More luck tomorrow!"
         funnyText="So Boring..."

@@ -2,11 +2,10 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  View,
-  FlatList,
-  ActivityIndicator,
-  Platform,
+  StatusBar,
   Animated,
+  FlatList,
+  View,
 } from 'react-native';
 
 import { Creators as SearchRestaurantsActions } from 'store/ducks/search-restaurants';
@@ -22,7 +21,7 @@ import AppKeys from 'components/utils/Keys';
 
 import FloatingActionButton from 'components/common/FloatingActionButton';
 import RestaurantItemList from 'components/common/RestaurantItemList';
-import ItemNotFound from 'components/common/ItemNotFound';
+import FunnyMessage from 'components/common/FunnyMessage';
 import Loading from 'components/common/Loading';
 
 import FilterModal from './components/FilterModal';
@@ -35,9 +34,15 @@ const Container = styled(View)`
 `;
 
 const ListWrapper = styled(View)`
-  flex: 1;
+  width: 100%;
+  height: 100%;
   padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   padding-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;
+`;
+
+const LoadingWrapper = styled(View)`
+  width: 100%;
+  height: 100%;
 `;
 
 const FloatingActionButtonWrapper = styled(View)`
@@ -55,7 +60,7 @@ type Props = {
 };
 
 type State = {
-  dishesTypes: Array<any>,
+  dishesTypes: Array<Object>,
   isModalVisible: boolean,
   maxDistance: number,
 };
@@ -78,6 +83,7 @@ class Search extends Component<Props, State> {
 
   _restaurantListMarginTop = new Animated.Value(0);
   _restaurantListHeight = 0;
+  _isFirstRender = true;
 
   state = {
     isModalVisible: false,
@@ -99,7 +105,11 @@ class Search extends Component<Props, State> {
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
       },
-    }, () => this.onSearchRestaurants());
+    });
+  }
+
+  componentWillReceiveProps() {
+    this._isFirstRender = false;
   }
 
   componentDidUpdate() {
@@ -166,7 +176,7 @@ class Search extends Component<Props, State> {
 
     const { restaurants, loading, error } = data;
 
-    if (loading || error) {
+    if (loading || error || data.length === 0) {
       return null;
     }
 
@@ -231,7 +241,7 @@ class Search extends Component<Props, State> {
     const { isModalVisible } = this.state;
 
     const RestaurantsNotFound = (
-      <ItemNotFound
+      <FunnyMessage
         description={'There\'s no Restaurants that matches with your Search.'}
         tipText="How about looking for something else?"
         iconName="food-off"
@@ -239,10 +249,28 @@ class Search extends Component<Props, State> {
       />
     );
 
+    const InitialMessage = (
+      <FunnyMessage
+        description="Start to search for Restaurants near to you!"
+        funnyText="Are you hungry?!"
+        iconName="room-service"
+        tipText=""
+      />
+    );
+
+    const LoadingContent = (
+      <LoadingWrapper>
+        <Loading />
+      </LoadingWrapper>
+    );
+
+    const foundRestaurants = (!loading && notFound);
+
     return (
       <Fragment>
-        {(notFound && !loading) ? RestaurantsNotFound : this.renderRestaurantList()}
-        {loading ? <Loading /> : this.renderFloatingActionButton()}
+        {this._isFirstRender && InitialMessage}
+        {foundRestaurants ? RestaurantsNotFound : this.renderRestaurantList()}
+        {loading ? LoadingContent : this.renderFloatingActionButton()}
         {isModalVisible && this.renderModal()}
       </Fragment>
     );

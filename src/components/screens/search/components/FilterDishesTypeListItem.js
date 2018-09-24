@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   TouchableWithoutFeedback,
   Animated,
@@ -14,18 +14,18 @@ import appStyles from 'styles';
 const Container = styled(Animated.View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('35%')}px;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
+  justify-content: center;
+  margin-left: ${({ theme, isFirst }) => (isFirst ? `${theme.metrics.mediumSize}px` : 0)};
   padding-vertical: ${({ theme }) => theme.metrics.getHeightFromDP('1%')}px;
   padding-horizontal: ${({ theme }) => theme.metrics.getWidthFromDP('1.5%')}px;
-  margin-left: ${({ theme, isFirst }) => (isFirst ? `${theme.metrics.mediumSize}px` : 0)};
   borderRadius: 10px;
-  justify-content: center;
 `;
 
 const SelectionMarker = styled(Animated.View)`
-  padding-vertical: ${({ theme }) => theme.metrics.getHeightFromDP('0.5%')}px;
-  padding-horizontal: ${({ theme }) => theme.metrics.getWidthFromDP('1%')}px;
   justify-content: center;
   align-items: center;
+  padding-vertical: ${({ theme }) => theme.metrics.getHeightFromDP('0.5%')}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.getWidthFromDP('1%')}px;
   borderRadius: 10px;
 `;
 
@@ -47,22 +47,22 @@ const DisheImage = styled(Image).attrs({
 const DisheTypeSelectButtonWrapper = styled(Animated.View)`
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.darkLayer};
-  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
   justify-content: center;
   align-items: center;
+  background-color: ${({ theme }) => theme.colors.darkLayer};
+  borderRadius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
 const DisheTypeText = styled(Animated.Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
+  text-align: center;
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
   fontFamily: CircularStd-Bold;
-  text-align: center;
 `;
 
 type Props = {
-  onAddDisheTypeFilter: Function,
   onRemoverDisheTypeFilter: Function,
+  onAddDisheTypeFilter: Function,
   imageURI: string,
   title: string,
   id: string,
@@ -72,16 +72,15 @@ type Props = {
 
 type State = {
   isSelected: boolean,
-  pressTimestamp: number,
 };
 
-class FilterDishesListItem extends Component<Props, State> {
+class FilterDishesListItem extends PureComponent<Props, State> {
   _selectorColor = new Animated.Value(0);
   _cardScale = new Animated.Value(0);
+  _pressTimestamp = 0;
 
   state = {
     isSelected: false,
-    pressTimestamp: 0,
   };
 
   componentDidMount() {
@@ -110,24 +109,24 @@ class FilterDishesListItem extends Component<Props, State> {
 
     const properCallback = (isSelected ? onRemoverDisheTypeFilter : onAddDisheTypeFilter);
 
+    this._pressTimestamp = Date.now();
+
     this.setState({
       isSelected: !isSelected,
-      pressTimestamp: Date.now(),
     });
 
     properCallback(id);
   }
 
-  shouldAllowPress = () => {
-    const { pressTimestamp } = this.state;
+  shouldAllowPress = (): void => {
     const now = Date.now();
 
-    const passedTimeEnough = (now - pressTimestamp) >= 1200;
+    const passedTimeEnough = (now - this._pressTimestamp) >= 1200;
 
     return passedTimeEnough;
   }
 
-  handleItemAnimations = () => {
+  handleItemAnimations = (): void => {
     const { isSelected } = this.state;
 
     const colorValue = (isSelected ? 0 : 1);
@@ -152,7 +151,7 @@ class FilterDishesListItem extends Component<Props, State> {
     ]).start();
   }
 
-  handleItemAlreadySelected = () => {
+  handleItemAlreadySelected = (): void => {
     const animateItemColor = Animated.timing(this._selectorColor, {
       toValue: 1,
       duration: 300,
@@ -165,7 +164,7 @@ class FilterDishesListItem extends Component<Props, State> {
     });
   }
 
-  renderCardContent = () => {
+  renderCardContent = (): Object => {
     const { title } = this.props;
 
     return (
