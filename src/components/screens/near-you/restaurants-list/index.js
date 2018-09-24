@@ -14,8 +14,8 @@ const ListWrapper = styled(View)`
 
 type Props = {
   indexRestaurantSelected: number,
+  restaurants: Array<Object>,
   onSelectMarker: Function,
-  restaurants: Array<any>,
 };
 
 class RestaurantList extends Component<Props, {}> {

@@ -1,17 +1,17 @@
 // @flow
 
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import {
-  View,
-  Text,
-  Image,
   TouchableOpacity,
   Platform,
+  Image,
+  View,
+  Text,
 } from 'react-native';
 
-import styled from 'styled-components';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import FastImage from 'react-native-fast-image';
+import styled from 'styled-components';
 
 import ReviewStars from 'components/common/ReviewStars';
 import appStyles from 'styles';
@@ -37,30 +37,12 @@ const RestaurantImageWrapper = styled(View)`
   overflow: hidden;
 `;
 
-const RestaurantImageShimmer = styled(ShimmerPlaceholder).attrs({
-  visible: false,
-  autoRun: true,
-})`
-  width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('12.5%')}px;
-  border-radius: 4px;
-`;
-
-const RestaurantImage = styled(Image).attrs({
+const RestaurantImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
 })`
   width: 100%;
   height: 100%;
   border-radius: 4px;
-`;
-
-const TextShimmer = styled(ShimmerPlaceholder).attrs({
-  visible: false,
-  autoRun: true,
-})`
-  width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
-  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const TopRowContentWrapper = styled(View)`
@@ -125,164 +107,141 @@ const Icon = styled(Icons).attrs({
 
 type Props = {
   navigation: Function,
-  isOpen: boolean,
   imageURL: string,
   name: string,
-  id: string,
   distance: number,
   stars: number,
+  isOpen: boolean,
 };
 
-type State = {
-  isImageLoaded: boolean,
+const onPressArrowButton = (props: Object): void => {
+  const { navigation } = props;
+
+  const payload = {
+    ...props,
+  };
+
+  delete payload.navigation;
+
+  navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, { payload });
 };
 
-class RestaurantItemList extends Component<Props, State> {
-  state = {
-    isImageLoaded: false,
+const renderRestaurantImage = (imageURL: string): Object => (
+  <RestaurantImageWrapper>
+    <RestaurantImage
+      imageURL={imageURL}
+    />
+  </RestaurantImageWrapper>
+);
+
+const renderRestaurantStatus = (isOpen: boolean): Object => {
+  const restaurantStatus = {
+    open: {
+      color: appStyles.colors.green,
+      text: 'Open now',
+    },
+    closed: {
+      color: appStyles.colors.red,
+      text: 'Closed now',
+    },
   };
 
-  onImageLoaded = () => {
-    this.setState({
-      isImageLoaded: true,
-    });
-  }
+  const status = (isOpen ? 'open' : 'closed');
 
-  onPressArrowButton = (): void => {
-    const { id, navigation } = this.props;
-
-    navigation.navigate(ROUTE_NAMES.RESTAURANT_DETAIL, { payload: { id } });
-  };
-
-  renderRestaurantImage = (): Object => {
-    const { isImageLoaded } = this.state;
-    const { imageURL } = this.props;
-
-    return (
-      <RestaurantImageWrapper>
-        {!isImageLoaded && <RestaurantImageShimmer />}
-        <RestaurantImage
-          onLoad={() => this.onImageLoaded()}
-          imageURL={imageURL}
-        />
-      </RestaurantImageWrapper>
-    );
-  }
-
-  renderRestaurantStatus = (): Object => {
-    const { isOpen } = this.props;
-
-    const restaurantStatus = {
-      open: {
-        color: appStyles.colors.green,
-        text: 'Open now',
-      },
-      closed: {
-        color: appStyles.colors.red,
-        text: 'Closed now',
-      },
-    };
-
-    const status = (isOpen ? 'open' : 'closed');
-
-    return (
-      <RestaurantStatus
-        color={restaurantStatus[status].color}
-      >
-        {restaurantStatus[status].text}
-      </RestaurantStatus>
-    );
-  }
-
-  renderDistanceContent = (): Object => {
-    const { distance } = this.props;
-
-    return (
-      <DistanceWrapper>
-        <Icon
-          color="green"
-          name="directions"
-          size={22}
-        />
-        <DistanceText>
-          {`${distance} km`}
-        </DistanceText>
-      </DistanceWrapper>
-    );
-  }
-
-  renderTopRowContent = (): Object => {
-    const { name, stars } = this.props;
-
-    return (
-      <Fragment>
-        <TopRowContentWrapper>
-          <RestaurantName>
-            {name}
-          </RestaurantName>
-          {this.renderDistanceContent()}
-        </TopRowContentWrapper>
-        <ReviewStars
-          textColor="darkText"
-          stars={stars}
-        />
-      </Fragment>
-    );
-  }
-
-  renderBottomRowContent = (): Object => (
-    <BottomRowContentWrapper>
-      {this.renderRestaurantStatus()}
-      <TouchableOpacity
-        onPress={() => this.onPressArrowButton()}
-      >
-        <Icon
-          color="#1F1F21"
-          name="arrow-right"
-          size={28}
-        />
-      </TouchableOpacity>
-    </BottomRowContentWrapper>
+  return (
+    <RestaurantStatus
+      color={restaurantStatus[status].color}
+    >
+      {restaurantStatus[status].text}
+    </RestaurantStatus>
   );
+};
 
-  render() {
-    const { isImageLoaded } = this.state;
+const renderDistanceContent = (distance: number): Object => (
+  <DistanceWrapper>
+    <Icon
+      color="green"
+      name="directions"
+      size={22}
+    />
+    <DistanceText>
+      {`${distance} km`}
+    </DistanceText>
+  </DistanceWrapper>
+);
 
-    return (
-      <Container>
-        <Card
-          style={{
-            ...Platform.select({
-              ios: {
-                elevation: 1,
-                shadowOffset: {
-                  width: 0,
-                  height: 0,
-                },
-                shadowRadius: 3,
-                shadowOpacity: 0.35,
+const renderTopRowContent = (name: string, stars: number, distance: number): Object => (
+  <Fragment>
+    <TopRowContentWrapper>
+      <RestaurantName>
+        {name}
+      </RestaurantName>
+      {renderDistanceContent(distance)}
+    </TopRowContentWrapper>
+    <ReviewStars
+      textColor="darkText"
+      stars={stars}
+    />
+  </Fragment>
+);
+
+const renderBottomRowContent = (props: Object): Object => (
+  <BottomRowContentWrapper>
+    {renderRestaurantStatus()}
+    <TouchableOpacity
+      onPress={() => onPressArrowButton(props)}
+    >
+      <Icon
+        color="#1F1F21"
+        name="arrow-right"
+        size={28}
+      />
+    </TouchableOpacity>
+  </BottomRowContentWrapper>
+);
+
+const RestaurantItemList = (props: Props): Object => {
+  const {
+    imageURL,
+    distance,
+    stars,
+    name,
+  } = props;
+
+  return (
+    <Container>
+      <Card
+        style={{
+          ...Platform.select({
+            ios: {
+              elevation: 1,
+              shadowOffset: {
+                width: 0,
+                height: 0,
               },
-              android: {
-                elevation: 4,
-                shadowOffset: {
-                  width: 1,
-                  height: -3,
-                },
-                shadowRadius: 2,
-                shadowOpacity: 5.0,
+              shadowRadius: 3,
+              shadowOpacity: 0.35,
+            },
+            android: {
+              elevation: 4,
+              shadowOffset: {
+                width: 1,
+                height: -3,
               },
-            }),
-          }}
-        >
-          <Fragment>
-            {this.renderRestaurantImage()}
-            {isImageLoaded ? this.renderTopRowContent() : <TextShimmer />}
-            {isImageLoaded ? this.renderBottomRowContent() : <TextShimmer />}
-          </Fragment>
-        </Card>
-      </Container>
-    );
-  }
-}
+              shadowRadius: 2,
+              shadowOpacity: 5.0,
+            },
+          }),
+        }}
+      >
+        <Fragment>
+          {renderRestaurantImage(imageURL)}
+          {renderTopRowContent(name, stars, distance)}
+          {renderBottomRowContent(props)}
+        </Fragment>
+      </Card>
+    </Container>
+  );
+};
 
 export default withNavigation(RestaurantItemList);

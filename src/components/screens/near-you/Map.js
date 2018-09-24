@@ -19,7 +19,6 @@ const CustomMarker = styled(Icon).attrs({
 `;
 
 type Props = {
-  firstTimeRenderingMap: boolean,
   indexLocationSelected: number,
   restaurants: Array<Object>,
   onSelectMarker: Function,
@@ -46,7 +45,10 @@ class Map extends Component<Props, {}> {
     }, 500);
 
     setTimeout(() => {
-      this._markersRefs[indexLocationSelected].showCallout();
+      const isMarkerSet = this._markersRefs[indexLocationSelected];
+      if (isMarkerSet) {
+        this._markersRefs[indexLocationSelected].showCallout();
+      }
     }, 1000);
   };
 
@@ -92,7 +94,6 @@ class Map extends Component<Props, {}> {
   render() {
     const {
       indexLocationSelected,
-      firstTimeRenderingMap,
       onSelectMarker,
       userLocation,
       restaurants,
@@ -120,12 +121,12 @@ class Map extends Component<Props, {}> {
 
     return (
       <MapContainer
+        onMapReady={() => this.animateToLocation(indexLocationSelected, restaurants)}
         innerRef={(ref) => { this._mapRef = ref; }}
         initialRegion={initialRegion}
-        onMapReady={() => this.animateToLocation(indexLocationSelected, restaurants)}
         rotateEnabled={false}
       >
-        {this.renderMarkers(markers, onSelectMarker)}
+        {(markers.length > 1) && this.renderMarkers(markers, onSelectMarker)}
       </MapContainer>
     );
   }

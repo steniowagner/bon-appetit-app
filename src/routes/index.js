@@ -56,7 +56,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
     },
   },
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: 'NearYou',
   tabBarPosition: 'bottom',
   optimizationsEnabled: true,
   animationEnabled: true,
