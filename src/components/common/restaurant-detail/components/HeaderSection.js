@@ -1,11 +1,7 @@
 // @flow
 
 import React from 'react';
-import {
-  Platform,
-  Text,
-  View,
-} from 'react-native';
+import { Text, View } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
@@ -20,8 +16,8 @@ const Container = styled(View)`
 const DarkLayer = styled(View)`
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.darkLayer};
   position: absolute;
+  background-color: ${({ theme }) => theme.colors.darkLayer};
 `;
 
 const RestaurantImage = styled(FastImage).attrs({
@@ -40,13 +36,13 @@ const ContentWrapper = styled(View)`
   padding-bottom: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
-const RestaurantName = styled(Text)`
-  color: ${({ theme }) => theme.colors.defaultWhite};
+const RestaurantName = styled(Text).attrs({
+  ellipsizeMode: 'tail',
+  numberOfLines: 1,
+})`
   margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '3.8%' : '3.4%');
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
+  color: ${({ theme }) => theme.colors.defaultWhite};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('6%')};
   fontFamily: CircularStd-Bold;
 `;
 

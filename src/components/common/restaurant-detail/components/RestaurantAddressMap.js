@@ -11,10 +11,14 @@ import MapView, { Marker } from 'react-native-maps';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
-import appStyle from 'styles';
+import appStyles from 'styles';
 
 import FloatinActionButton from 'components/common/FloatingActionButton';
 import ReviewStars from 'components/common/ReviewStars';
+
+const mapHeight = (Platform.OS === 'android'
+  ? appStyles.metrics.getHeightFromDP('70%')
+  : appStyles.metrics.getHeightFromDP('75%'));
 
 const Container = styled(View)`
   flex: 1;
@@ -22,13 +26,13 @@ const Container = styled(View)`
 
 const MapContainer = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('72%')};
+  height: ${mapHeight};
 `;
 
 const FloatingActionButtonWrapper = styled(View)`
-  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('72%') - 28}px;
   align-self: flex-end;
   position: absolute;
+  margin-top: ${mapHeight - 28}px;
   padding-right: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
@@ -41,22 +45,22 @@ const FooterContainer = styled(View)`
 `;
 
 const ResturantName = styled(Text).attrs({
-  numberOfLines: 1,
   ellipsizeMode: 'tail',
+  numberOfLines: 2,
 })`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('75%')}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '3%' : '2.7%';
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = Platform.OS === 'android' ? '5%' : '4.5%';
+    return theme.metrics.getWidthFromDP(percentage);
   }}px;
   fontFamily: CircularStd-Black;
 `;
 
 const EstablishmentStatus = styled(Text)`
   color: ${({ theme, isOpen }) => (isOpen ? theme.colors.green : theme.colors.red)};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.2%')}px;
   padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   fontFamily: CircularStd-Medium;
 `;
 
@@ -73,7 +77,7 @@ type Props = {
   navigation: Function,
 };
 
-const ASPECT_RATIO = appStyle.metrics.width / appStyle.metrics.height;
+const ASPECT_RATIO = appStyles.metrics.width / appStyles.metrics.height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const INITIAL_REGION = {
@@ -100,15 +104,15 @@ const onFitMapCoordinates = (markers: Array<Object>): void => {
 const renderMap = (restaurantName: string, markers: Array<Object>): Object => (
   <MapContainer>
     <MapView
-      ref={(ref) => { _mapRef = ref; }}
+      onMapReady={() => onFitMapCoordinates(markers)}
+      style={{ width: '100%', height: '100%' }}
       initialRegion={{
         latitude: INITIAL_REGION.latitude,
         longitude: INITIAL_REGION.longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       }}
-      style={{ width: '100%', height: '100%' }}
-      onMapReady={() => onFitMapCoordinates(markers)}
+      ref={(ref) => { _mapRef = ref; }}
       showsPointsOfInterest={false}
       rotateEnabled={false}
       scrollEnabled={false}
@@ -175,9 +179,10 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
   return (
     <Container>
       <StatusBar
+        backgroundColor={appStyles.colors.androidToolbarColor}
         barStyle="light-content"
-        backgroundColor="#009730"
         translucent={false}
+        animated
       />
       {renderMap(restaurantName, markers)}
       {renderFooter(restaurantName, distance, isOpen, stars)}
@@ -189,11 +194,12 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
 RestaurantAddressMap.navigationOptions = () => ({
   title: 'Location',
   headerStyle: {
-    backgroundColor: appStyle.colors.primaryColor,
+    backgroundColor: appStyles.colors.primaryColor,
+    borderBottomWidth: 0,
   },
-  headerTintColor: appStyle.colors.defaultWhite,
+  headerTintColor: appStyles.colors.defaultWhite,
   headerTitleStyle: {
-    color: appStyle.colors.defaultWhite,
+    color: appStyles.colors.defaultWhite,
     fontFamily: 'CircularStd-Black',
   },
 });

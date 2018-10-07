@@ -2,12 +2,11 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  StatusBar,
   Animated,
   FlatList,
   Platform,
-  View,
   Text,
+  View,
 } from 'react-native';
 
 import { Creators as DishCreators } from 'store/ducks/dish';
@@ -226,7 +225,7 @@ class DisheDetailReview extends Component<Props, {}> {
           data={[{ id: '1', title: 'Ingredients' }, { id: '2', title: 'Reviews' }]}
           onChangeMenuIndex={this.onChangeMenuIndex}
           contentWidth={tabContentWidth}
-          theme="light"
+          theme="white"
         />
         <AnimatedFlatList
           style={[{
@@ -283,7 +282,6 @@ class DisheDetailReview extends Component<Props, {}> {
   }
 
   render() {
-    console.tron.log('render')
     const { imageURL } = this.getPropsFromNavigation();
 
     const { dishInfo } = this.props;
@@ -293,12 +291,6 @@ class DisheDetailReview extends Component<Props, {}> {
 
     return (
       <Fragment>
-        <StatusBar
-          backgroundColor="transparent"
-          barStyle="light-content"
-          animated
-          translucent
-        />
         {this.renderFoodImage(imageURL)}
         <ContentContainer>
           <CardContainer>

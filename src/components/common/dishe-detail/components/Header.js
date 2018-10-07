@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { View, Text, Platform } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components';
 
 import ReviewStars from 'components/common/ReviewStars';
@@ -31,8 +31,8 @@ const DisheTitle = styled(Text).attrs({
   padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '3.5%' : '3%');
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = (Platform.OS === 'android' ? '6.5%' : '6%');
+    return theme.metrics.getWidthFromDP(percentage);
   }};
   font-family: CircularStd-Black;
 `;
@@ -63,9 +63,9 @@ const DisheInfo = ({
     </TitleAndPriceWrapper>
     <ReviewStars
       shouldShowReviewsText
-      stars={stars}
-      reviews={reviews}
       textColor="darkText"
+      reviews={reviews}
+      stars={stars}
     />
   </ContentWrapper>
 );

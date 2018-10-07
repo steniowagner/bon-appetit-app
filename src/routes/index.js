@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -17,14 +18,18 @@ type Props = {
 };
 
 const getTabIcon = (icon: string): Object => ({ tintColor }: Props) => (
-  <Icon name={icon} size={28} color={tintColor} />
+  <Icon
+    color={tintColor}
+    name={icon}
+    size={26}
+  />
 );
 
 const ApplicationTabs = () => createMaterialTopTabNavigator({
   Home: {
     screen: HomeRoutes,
     navigationOptions: {
-      tabBarIcon: getTabIcon('home-outline'),
+      tabBarIcon: getTabIcon('home'),
     },
   },
 
@@ -38,21 +43,21 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
   NearYou: {
     screen: NearYouRoutes,
     navigationOptions: {
-      tabBarIcon: getTabIcon('map-outline'),
+      tabBarIcon: getTabIcon('map'),
     },
   },
 
   UserProfile: {
     screen: UserProfileRoutes,
     navigationOptions: {
-      tabBarIcon: getTabIcon('account-outline'),
+      tabBarIcon: getTabIcon('account'),
     },
   },
 
   Settings: {
     screen: SettingsRoutes,
     navigationOptions: {
-      tabBarIcon: getTabIcon('settings-outline'),
+      tabBarIcon: getTabIcon('settings'),
     },
   },
 }, {
@@ -61,7 +66,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
   optimizationsEnabled: true,
   animationEnabled: true,
   swipeEnabled: false,
-  lazy: true,
+  lazy: false,
   tabBarOptions: {
     showLabel: false,
     showIcon: true,
@@ -74,7 +79,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
     indicatorStyle: {
       backgroundColor: 'transparent',
     },
-    inactiveTintColor: appStyles.colors.lightGray,
+    inactiveTintColor: appStyles.colors.gray,
     activeTintColor: appStyles.colors.primaryColor,
   },
 });

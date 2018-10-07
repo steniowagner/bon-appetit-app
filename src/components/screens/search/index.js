@@ -2,7 +2,6 @@
 
 import React, { Component, Fragment } from 'react';
 import {
-  StatusBar,
   Animated,
   FlatList,
   View,
@@ -242,7 +241,7 @@ class Search extends Component<Props, State> {
 
     const RestaurantsNotFound = (
       <FunnyMessage
-        description={'There\'s no Restaurants that matches with your Search.'}
+        description={'There\'s no Restaurants that matches with your search.'}
         tipText="How about looking for something else?"
         iconName="food-off"
         funnyText="Oops!"
@@ -251,7 +250,7 @@ class Search extends Component<Props, State> {
 
     const InitialMessage = (
       <FunnyMessage
-        description="Start to search for Restaurants near to you!"
+        description="Search for Restaurants that fits with what you're looking for!"
         funnyText="Are you hungry?!"
         iconName="room-service"
         tipText=""

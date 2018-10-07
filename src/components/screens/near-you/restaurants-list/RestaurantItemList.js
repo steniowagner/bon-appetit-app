@@ -4,7 +4,6 @@ import React, { Fragment } from 'react';
 import {
   TouchableOpacity,
   Platform,
-  Image,
   View,
   Text,
 } from 'react-native';
@@ -106,12 +105,10 @@ const Icon = styled(Icons).attrs({
 `;
 
 type Props = {
-  navigation: Function,
   imageURL: string,
   name: string,
   distance: number,
   stars: number,
-  isOpen: boolean,
 };
 
 const onPressArrowButton = (props: Object): void => {
@@ -160,7 +157,7 @@ const renderRestaurantStatus = (isOpen: boolean): Object => {
 const renderDistanceContent = (distance: number): Object => (
   <DistanceWrapper>
     <Icon
-      color="green"
+      color={appStyles.colors.primaryColor}
       name="directions"
       size={22}
     />
@@ -192,7 +189,7 @@ const renderBottomRowContent = (props: Object): Object => (
       onPress={() => onPressArrowButton(props)}
     >
       <Icon
-        color="#1F1F21"
+        color={appStyles.colors.darkText}
         name="arrow-right"
         size={28}
       />

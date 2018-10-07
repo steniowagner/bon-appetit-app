@@ -24,12 +24,12 @@ import Messages from 'components/utils/Messages';
 
 const getTextSize = (type: string): number => {
   const types = {
-    restaurantsParticipating: Platform.OS === 'android' ? '2.6%' : '2.2%',
-    description: Platform.OS === 'android' ? '2.8%' : '2.4%',
-    title: Platform.OS === 'android' ? '3.8%' : '3.5%',
+    restaurantsParticipating: Platform.OS === 'android' ? '5.2%' : '4.2%',
+    description: Platform.OS === 'android' ? '4.8%' : '4%',
+    title: Platform.OS === 'android' ? '6.5%' : '6%',
   };
 
-  return appStyles.metrics.getHeightFromDP(types[type]);
+  return appStyles.metrics.getWidthFromDP(types[type]);
 };
 
 const Container = styled(View)`
@@ -219,8 +219,8 @@ class EventInfo extends Component<Props, State> {
         <StatusBar
           backgroundColor="transparent"
           barStyle="light-content"
-          animated
           translucent
+          animated
         />
         {error ? alert(Messages.ERROR_MESSAGE) : this.renderMainContent()}
       </Container>

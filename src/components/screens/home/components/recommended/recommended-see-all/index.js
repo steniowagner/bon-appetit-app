@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import appStyles from 'styles';
 
 import Loading from 'components/common/Loading';
-import YMLSeeAllItemList from './YMLSeeAllItemList';
+import YMLSeeAllItemList from './RecommendedSeeAllItemList';
 
 const List = styled(FlatList)`
   flex: 1;
@@ -20,7 +20,7 @@ type Props = {
   dishInfo: Object,
 };
 
-class PopularSeeAll extends Component<Props, {}> {
+class RecommendedSeeAll extends Component<Props, {}> {
   static navigationOptions = () => ({
     title: 'You Might Like',
     headerStyle: {
@@ -84,4 +84,4 @@ const mapStateToProps = state => ({
   dishInfo: state.dish,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PopularSeeAll);
+export default connect(mapStateToProps, mapDispatchToProps)(RecommendedSeeAll);

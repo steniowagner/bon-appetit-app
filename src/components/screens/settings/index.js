@@ -2,12 +2,12 @@
 
 import React, { Component } from 'react';
 import {
-  View,
-  Text,
-  Switch,
   TouchableOpacity,
   ScrollView,
   Platform,
+  Switch,
+  Text,
+  View,
 } from 'react-native';
 
 import styled from 'styled-components';
@@ -24,8 +24,8 @@ const SectionTitleText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-family: CircularStd-Bold;
   font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '2.6%' : '3%');
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = (Platform.OS === 'ios' ? '4%' : '5.5%');
+    return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
 
@@ -35,12 +35,13 @@ const ItemWrapper = styled(View)`
 
 const LineSeparator = styled(View)`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.lightGray};
-  height: 0.5px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('0.1%')};
+  background-color: ${({ theme }) => theme.colors.gray};
 `;
 
 const LanguageSectionWrapper = styled(View)`
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
 `;
 
@@ -48,8 +49,8 @@ const SelectedLanguageText = styled(Text)`
   color: ${({ theme }) => theme.colors.red};
   font-family: CircularStd-Medium;
   font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '2.6%' : '3%');
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = (Platform.OS === 'ios' ? '4%' : '5.5%');
+    return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
 
@@ -58,8 +59,8 @@ const SmallText = styled(Text)`
   margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px 0`}
   font-family: CircularStd-Book;
   font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '2%' : '2.4%');
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = (Platform.OS === 'ios' ? '3%' : '4.5%');
+    return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
 
@@ -78,8 +79,8 @@ const MediumText = styled(Text)`
   margin-top: ${({ theme }) => theme.metrics.extraSmallSize}
   font-family: CircularStd-Bold;
   font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '2.4%' : '2.8%');
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = (Platform.OS === 'ios' ? '3.5%' : '5%');
+    return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
 
@@ -199,6 +200,7 @@ class Settings extends Component {
       <Container>
         <ScrollView>
           {this.renderSelectLanguageSection()}
+
           <LineSeparator />
 
           <ItemWrapper>
@@ -207,6 +209,7 @@ class Settings extends Component {
               {this.renderSwitch('receiveNearMe')}
             </OptionWrapper>
           </ItemWrapper>
+
           <LineSeparator />
 
           <ItemWrapper>
@@ -215,6 +218,7 @@ class Settings extends Component {
               {this.renderSwitch('notificationsSound')}
             </OptionWrapper>
           </ItemWrapper>
+
           <LineSeparator />
 
           <MultipleOptionsTitleWrapper>
@@ -224,10 +228,8 @@ class Settings extends Component {
           </MultipleOptionsTitleWrapper>
 
           {this.renderOptionWithoutDescription('Receive all notifications', 'receiveAllNotifications')}
-          <LineSeparator />
 
           {this.renderOptionWithoutDescription('When is about my past searches', 'whenPastSearch')}
-          <LineSeparator />
 
           {this.renderOptionWithoutDescription('When is about promotions', 'whenAboutPromotions')}
         </ScrollView>

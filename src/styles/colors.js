@@ -1,5 +1,5 @@
 export default {
-  primaryColor: '#1DB954',
+  primaryColor: '#DE3C4B',
   dark: '#303030',
   darkText: 'rgba(0, 0, 0, 0.8)',
   darkLayer: 'rgba(0, 0, 0, 0.5)',
@@ -10,8 +10,10 @@ export default {
   defaultWhite: '#FFFFFF',
   green: '#1DB954',
   yellow: '#F8C330',
-  lightGray: '#adadad',
+  gray: '#909090',
+  lightGray: '#F2F2F2',
   linkedin: '#0077B5',
   github: '#333333',
   subText: 'rgba(0, 0, 0, 0.6)',
+  androidToolbarColor: '#a60023',
 };

@@ -51,7 +51,7 @@ const GapView = styled(View)`
 const FilterText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   text-align: center;
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.8%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('6.5%')}px;
   fontFamily: CircularStd-Black;
 `;
 
@@ -59,7 +59,7 @@ const QuestionText = styled(Text)`
   margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
   margin-left: ${({ theme }) => theme.metrics.extraLargeSize}px;
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
   fontFamily: CircularStd-Medium;
 `;
 
@@ -83,7 +83,7 @@ const ApplyButton = styled(TouchableOpacity)`
 
 const ApplyButtonText = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5.5%')}px;
   fontFamily: CircularStd-Black;
 `;
 

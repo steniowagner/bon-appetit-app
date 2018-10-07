@@ -163,7 +163,7 @@ const renderBottomRowContent = (distance: number, imageURL: string, id: string, 
   </BottomRowContent>
 );
 
-const YMLSeeAllItemList = ({
+const RecommendedSeeAllItemList = ({
   description,
   navigation,
   imageURL,
@@ -210,4 +210,4 @@ const YMLSeeAllItemList = ({
   </Container>
 );
 
-export default withNavigation(YMLSeeAllItemList);
+export default withNavigation(RecommendedSeeAllItemList);

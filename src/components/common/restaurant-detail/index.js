@@ -29,19 +29,18 @@ import MenuListItem from './components/MenuListItem';
 
 const Container = styled(View)`
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const Menu = styled(View)`
   flex: 1;
   padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-  background-color: ${({ theme }) => theme.colors.dark};
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const AboutRestaurantWrapper = styled(View)`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.dark};
   padding: ${({ theme }) => theme.metrics.largeSize}px;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const FloatingActionButtonWrapper = styled(View)`
@@ -284,8 +283,8 @@ class RestaurantDetail extends Component<Props, State> {
         <CustomTab
           onChangeMenuIndex={this.onChangeMenuIndex}
           contentWidth={appStyles.metrics.width}
-          theme="light"
           data={customTabMenu}
+          theme="gray"
         />
         <AnimatedFlatList
           style={{
@@ -340,8 +339,8 @@ class RestaurantDetail extends Component<Props, State> {
         <StatusBar
           backgroundColor="transparent"
           barStyle="light-content"
-          animated
           translucent
+          animated
         />
         {this.renderHeaderSection()}
         {loading ? <Loading /> : Content}

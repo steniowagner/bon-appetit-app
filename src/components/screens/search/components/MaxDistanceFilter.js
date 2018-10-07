@@ -23,13 +23,13 @@ const DistanceSlider = styled(Slider).attrs({
 const CurrentDistanceText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   text-align: center;
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.2%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('6%')}px;
   fontFamily: CircularStd-Black;
 `;
 
 const CurrentDistanceWrapper = styled(View)`
   width: 100%;
-  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const DistanceBoundsWrapper = styled(View)`
@@ -40,7 +40,7 @@ const DistanceBoundsWrapper = styled(View)`
 
 const DistanceBoundsText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.5%')}px;
   fontFamily: CircularStd-Bold;
   text-align: center;
 `;

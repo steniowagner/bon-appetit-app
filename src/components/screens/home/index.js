@@ -4,6 +4,7 @@ import React, { Component, Fragment } from 'react';
 import {
   RefreshControl,
   ScrollView,
+  StatusBar,
   Platform,
   View,
 } from 'react-native';
@@ -23,10 +24,11 @@ import Messages from 'components/utils/Messages';
 import Loading from 'components/common/Loading';
 import AppKeys from 'components/utils/Keys';
 
-import YouMightLikeSection from './components/you-might-like/yml-home-section';
+import RecommendedSection from './components/recommended/recommended-home-section';
 import InYourCitySection from './components/in-your-city/iyc-home-section';
 import Popular from './components/popular/popular-home-section';
 import Section from './components/Section';
+
 
 const Container = styled(View)`
   flex: 1;
@@ -46,7 +48,7 @@ class HomeMainContent extends Component<Props, State> {
   static navigationOptions = {
     title: 'Bon Appetit',
     headerStyle: {
-      backgroundColor: appStyles.colors.primaryColor,
+      backgroundColor: appStyles.colors.red,
       borderBottomWidth: 0,
     },
     headerTintColor: appStyles.colors.defaultWhite,
@@ -55,8 +57,8 @@ class HomeMainContent extends Component<Props, State> {
       fontFamily: 'Modesta-Script',
       fontWeight: '200',
       fontSize: (Platform.OS === 'ios'
-        ? appStyles.metrics.getHeightFromDP('4.5%')
-        : appStyles.metrics.getHeightFromDP('6%')),
+        ? appStyles.metrics.getWidthFromDP('8%')
+        : appStyles.metrics.getWidthFromDP('10%')),
     },
   };
 
@@ -130,9 +132,9 @@ class HomeMainContent extends Component<Props, State> {
         showsVerticalScrollIndicator={false}
         refreshControl={(
           <RefreshControl
-            progressBackgroundColor={appStyles.colors.green}
+            progressBackgroundColor={appStyles.colors.primaryColor}
             onRefresh={() => this.requestData()}
-            tintColor={appStyles.colors.green}
+            tintColor={appStyles.colors.primaryColor}
             colors={[appStyles.colors.white]}
             refreshing={isRefresing}
           />
@@ -151,10 +153,10 @@ class HomeMainContent extends Component<Props, State> {
         )}
         {hasYouMightLikeDishes && (
           <Section
-            title="You Might Like"
+            title="Recommended"
             nextRoute={ROUTE_NAMES.ALL_YOU_MIGHT_LIKE}
             render={() => (
-              <YouMightLikeSection
+              <RecommendedSection
                 dishes={youMightLikeDishes}
               />
             )}

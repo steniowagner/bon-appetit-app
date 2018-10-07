@@ -52,8 +52,8 @@ const DishTitle = styled(Text).attrs({
   width: ${({ theme }) => theme.metrics.getWidthFromDP('38%')}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '3%' : '2.6%';
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = Platform.OS === 'android' ? '4%' : '3.5%';
+    return theme.metrics.getWidthFromDP(percentage);
   }};
   font-family: CircularStd-Black;
 `;

@@ -17,7 +17,7 @@ const Wrapper = styled(View)`
 `;
 
 const FoodNotFoundIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.green,
+  color: ({ theme }) => theme.colors.primaryColor,
   name: ({ iconName }) => iconName,
   size: 120,
 })`
@@ -28,7 +28,7 @@ const FoodNotFoundIcon = styled(Icon).attrs({
 
 const FunnyText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('4.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('7%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
   fontFamily: CircularStd-Black;
   text-align: center;
@@ -36,7 +36,7 @@ const FunnyText = styled(Text)`
 
 const TipText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3.2%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5.5%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
   fontFamily: CircularStd-Bold;
   text-align: center;
@@ -44,7 +44,7 @@ const TipText = styled(Text)`
 
 const Description = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('6%')}px;
   margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
   fontFamily: CircularStd-Medium;
   text-align: center;

@@ -2,10 +2,11 @@
 
 import React, { Component, Fragment } from 'react';
 import {
+  TouchableWithoutFeedback,
+  Platform,
   Image,
   Text,
   View,
-  TouchableWithoutFeedback,
 } from 'react-native';
 
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
@@ -42,14 +43,17 @@ const DarkLayer = styled(View)`
 
 const EventTitle = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3%')};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.5%')};
   padding-bottom: ${({ theme }) => theme.metrics.getWidthFromDP('1%')};
   font-family: CircularStd-Black;
 `;
 
 const EventDescription = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.4%')};
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '4.5%' : '4%');
+    return theme.metrics.getWidthFromDP(percentage);
+  }};
   font-family: CircularStd-Medium;
   text-align: center;
 `;

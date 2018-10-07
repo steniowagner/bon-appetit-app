@@ -56,7 +56,7 @@ const DisheTypeSelectButtonWrapper = styled(Animated.View)`
 const DisheTypeText = styled(Animated.Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   text-align: center;
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.8%')}px;
   fontFamily: CircularStd-Bold;
 `;
 

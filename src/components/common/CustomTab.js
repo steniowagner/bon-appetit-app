@@ -2,11 +2,12 @@
 
 import React, { Component } from 'react';
 import {
-  View,
-  Text,
   TouchableOpacity,
   Animated,
   FlatList,
+  Platform,
+  Text,
+  View,
 } from 'react-native';
 
 import styled from 'styled-components';
@@ -14,9 +15,20 @@ import appStyles from 'styles';
 
 const Container = styled(View)`
   width: 100%;
+  height: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '8%' : '7%');
+    return theme.metrics.getHeightFromDP(percentage);
+  }};
   flex-direction: row;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('7%')};
+  justify-content: center;
+  align-items: center;
   background-color: ${({ color }) => color};
+`;
+
+const ListWrapper = styled(View)`
+  width: 100%;
+  height: 100%;
+  align-items: center;
 `;
 
 const Cell = styled(TouchableOpacity)`
@@ -38,19 +50,22 @@ const MarkerWrapper = styled(Animated.View)`
 const Marker = styled(View)`
   height: 100%;
   width: ${({ width }) => width};
-  background-color: ${({ theme }) => theme.colors.red};
+  background-color: ${({ color }) => color};
 `;
 
 const OptionText = styled(Text)`
   color: ${({ color }) => color}
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.4%')}px;
+  font-size: ${({ theme }) => {
+    const percentage = (Platform.OS === 'android' ? '4.5%' : '4%');
+    return theme.metrics.getWidthFromDP(percentage);
+  }}px;
   fontFamily: CircularStd-Medium;
 `;
 
 type Props = {
-  data: Array<Object>,
-  contentWidth: number,
   onChangeMenuIndex: Function,
+  contentWidth: number,
+  data: Array<Object>,
   theme: string,
 };
 
@@ -159,15 +174,30 @@ class CustomTab extends Component<Props, State> {
     }).start();
   }
 
-  getCellTextColor = (itemSelectedIndex: number, cellIndex: number): string => {
-    const { red } = appStyles.colors;
-    const { theme } = this.props;
+  getThemeColors = (themeSelected: string): Object => {
+    const themes = {
+      white: {
+        markerColor: appStyles.colors.red,
+        cellColor: appStyles.colors.defaultWhite,
+        activeTextColor: appStyles.colors.red,
+        inactiveTextoColor: appStyles.colors.subText,
+      },
+      gray: {
+        markerColor: appStyles.colors.red,
+        cellColor: appStyles.colors.lightGray,
+        activeTextColor: appStyles.colors.red,
+        inactiveTextoColor: appStyles.colors.subText,
+      },
+      red: {
+        markerColor: appStyles.colors.defaultWhite,
+        cellColor: appStyles.colors.red,
+        activeTextColor: appStyles.colors.defaultWhite,
+        inactiveTextoColor: appStyles.colors.subText,
+      },
+    };
 
-    const inactiveCellTextColor = (theme === 'light' ? appStyles.colors.subText : appStyles.colors.defaultWhite);
-    const cellTextColor = (itemSelectedIndex === cellIndex ? red : inactiveCellTextColor);
-
-    return cellTextColor;
-  }
+    return themes[themeSelected];
+  };
 
   shouldAllowPress = () => {
     const { clickTimestamp } = this.state;
@@ -178,40 +208,41 @@ class CustomTab extends Component<Props, State> {
     return passedTimeEnough;
   }
 
-  renderList = (themeColor: string): Object => {
+  renderList = (cellColor: string, activeTextColor: string, inactiveTextoColor: string): Object => {
     const { itemSelectedIndex, cellWidth } = this.state;
     const { data } = this.props;
 
     return (
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        ref={(ref) => { this.flatListRef = ref; }}
-        data={data}
-        keyExtractor={item => item.id}
-        extraData={this.state}
-        renderItem={({ item, index }) => (
-          <Cell
-            color={themeColor}
-            width={cellWidth}
-            onPress={() => {
-              this.onCellPress(index);
-            }}
-          >
-            <OptionText
-              color={this.getCellTextColor(itemSelectedIndex, index)}
+      <ListWrapper>
+        <FlatList
+          ref={(ref) => { this.flatListRef = ref; }}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.id}
+          extraData={this.state}
+          data={data}
+          horizontal
+          renderItem={({ item, index }) => (
+            <Cell
+              onPress={() => {
+                this.onCellPress(index);
+              }}
+              color={cellColor}
+              width={cellWidth}
             >
-              {item.title}
-            </OptionText>
-          </Cell>
-        )}
-      />
+              <OptionText
+                color={(itemSelectedIndex === index ? activeTextColor : inactiveTextoColor)}
+              >
+                {item.title}
+              </OptionText>
+            </Cell>
+          )}
+        />
+      </ListWrapper>
     );
   }
 
-  renderMarker = () => {
+  renderMarker = (markerColor: string) => {
     const { itemSelectedIndex, cellWidth } = this.state;
-
     const { contentWidth } = this.props;
 
     return (
@@ -230,8 +261,9 @@ class CustomTab extends Component<Props, State> {
         }}
       >
         <Marker
-          width={cellWidth}
           currentIndex={itemSelectedIndex}
+          color={markerColor}
+          width={cellWidth}
         />
       </MarkerWrapper>
     );
@@ -239,14 +271,20 @@ class CustomTab extends Component<Props, State> {
 
   render() {
     const { theme } = this.props;
-    const themeColor = (theme === 'light' ? appStyles.colors.defaultWhite : appStyles.colors.subText);
+
+    const {
+      inactiveTextoColor,
+      activeTextColor,
+      markerColor,
+      cellColor,
+    } = this.getThemeColors(theme);
 
     return (
       <Container
-        color={themeColor}
+        color={cellColor}
       >
-        {this.renderList(themeColor)}
-        {this.renderMarker()}
+        {this.renderList(cellColor, activeTextColor, inactiveTextoColor)}
+        {this.renderMarker(markerColor)}
       </Container>
     );
   }

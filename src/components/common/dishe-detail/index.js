@@ -68,8 +68,8 @@ const VisitRestaurantContentWrapper = styled(View)`
 const VisitRestaurantText = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '3%' : '2.5%');
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = (Platform.OS === 'android' ? '5%' : '4.5%');
+    return theme.metrics.getWidthFromDP(percentage);
   }};
   font-family: CircularStd-Black;
 `;
@@ -119,8 +119,8 @@ const DisheDescription = styled(Text).attrs({
   margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
   color: ${({ theme }) => theme.colors.subText};
   font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '2.7%' : '2.4%');
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = (Platform.OS === 'android' ? '4.5%' : '4.2%');
+    return theme.metrics.getWidthFromDP(percentage);
   }};
   font-family: CircularStd-Book;
 `;
@@ -208,10 +208,10 @@ class DisheDetail extends Component<Props, State> {
     return (
       <CustomTabWrapper>
         <CustomTab
-          theme="light"
-          contentWidth={tabContentWidth}
-          data={[{ id: '1', title: 'Ingredients' }, { id: '2', title: 'Reviews' }]}
           onChangeMenuIndex={this.onChangeMenuIndex}
+          data={[{ id: '1', title: 'Ingredients' }, { id: '2', title: 'Reviews' }]}
+          contentWidth={tabContentWidth}
+          theme="white"
         />
         <AnimatedFlatList
           style={[{
@@ -366,8 +366,8 @@ class DisheDetail extends Component<Props, State> {
         <StatusBar
           backgroundColor="transparent"
           barStyle="light-content"
-          animated
           translucent
+          animated
         />
         {this.renderDisheImage()}
         <Container>

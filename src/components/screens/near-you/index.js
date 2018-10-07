@@ -231,7 +231,7 @@ class NearYou extends Component<Props, State> {
             onChangeMenuIndex={index => this.onDishesTypeChange(index)}
             contentWidth={appStyle.metrics.width}
             data={customTabData}
-            theme="dark"
+            theme="red"
           />
         </CustomTabWrapper>
       </Fragment>

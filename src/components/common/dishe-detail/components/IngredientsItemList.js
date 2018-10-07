@@ -12,7 +12,7 @@ const IngredientsText = styled(Text).attrs({
   padding-top:  ${({ theme, isFirst }) => (isFirst ? theme.metrics.largeSize : 0)}px;
   padding-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.3%')};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')};
   font-family: CircularStd-Book;
 `;
 

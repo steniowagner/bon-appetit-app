@@ -3,8 +3,8 @@ import {
   TouchableWithoutFeedback,
   Platform,
   Image,
-  View,
   Text,
+  View,
 } from 'react-native';
 
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
@@ -14,8 +14,8 @@ import styled from 'styled-components';
 import { withNavigation } from 'react-navigation';
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 
-import FlagPrice from 'components/common/FlagPrice';
 import ReviewStars from 'components/common/ReviewStars';
+import FlagPrice from 'components/common/FlagPrice';
 
 const Container = styled(View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('50%')};
@@ -59,30 +59,29 @@ const BottomContentWrapper = styled(View)`
 `;
 
 const DisheTitle = styled(Text).attrs({
-  numberOfLines: 1,
   ellipsizeMode: 'tail',
+  numberOfLines: 1,
 })`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.5%')}px;
   fontFamily: CircularStd-Black;
-  margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const DistanceWrapper = styled(View)`
   width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('3%')};
   flex-direction: row;
-  align-content: center;
-  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  align-items: center;
 `;
 
 const DistanceText = styled(Text)`
+  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '2.5%' : '2%';
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = Platform.OS === 'android' ? '4.5%' : '4%';
+    return theme.metrics.getWidthFromDP(percentage);
   }};
   font-family: CircularStd-Bold;
-  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const DistanceIcon = styled(Icon).attrs({
@@ -109,7 +108,7 @@ type State = {
   isDisheImageLoaded: boolean,
 };
 
-class YMLSectionList extends Component<Props, State> {
+class RecommendedSectionListItem extends Component<Props, State> {
   state = {
     isDisheImageLoaded: false,
   };
@@ -208,4 +207,4 @@ class YMLSectionList extends Component<Props, State> {
   }
 }
 
-export default withNavigation(YMLSectionList);
+export default withNavigation(RecommendedSectionListItem);

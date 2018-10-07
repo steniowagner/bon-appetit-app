@@ -3,8 +3,8 @@
 import React, { Fragment } from 'react';
 import {
   TouchableWithoutFeedback,
-  View,
   Text,
+  View,
 } from 'react-native';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
@@ -34,7 +34,7 @@ const DarkLayer = styled(View)`
 `;
 
 const Content = styled(View)`
-  padding: ${({ theme }) => `${theme.metrics.extraLargeSize}px ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px ${theme.metrics.largeSize}px`};
+  padding: ${({ theme }) => `${theme.metrics.largeSize}px`};
 `;
 
 const RestaurantImageWrapper = styled(View)`
@@ -66,12 +66,12 @@ const AddressWrapper = styled(View)`
   flex-direction: row;
   align-items: center;
   margin-top: ${({ theme }) => theme.metrics.mediumSize}
+  padding-right: ${({ theme }) => `${theme.metrics.largeSize}px`};
 `;
-
 
 const Address = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   fontFamily: CircularStd-Medium;
 `;

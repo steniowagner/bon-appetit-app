@@ -3,6 +3,7 @@
 import React from 'react';
 import {
   TouchableWithoutFeedback,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -145,6 +146,29 @@ const renderFlagContent = (stars: number, price: number): Object => (
   </FlagsContent>
 );
 
+const shadowStyle = {
+  ...Platform.select({
+    ios: {
+      elevation: 1,
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowRadius: 3,
+      shadowOpacity: 0.35,
+    },
+    android: {
+      elevation: 5,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowRadius: 5,
+      shadowOpacity: 1.0,
+    },
+  }),
+};
+
 const MenuListItem = (props: Props): Object => {
   const {
     description,
@@ -159,7 +183,9 @@ const MenuListItem = (props: Props): Object => {
       <TouchableWithoutFeedback
         onPress={() => onPressItem(props)}
       >
-        <ContentWrapper>
+        <ContentWrapper
+          style={{ ...shadowStyle }}
+        >
           <DishImage
             imageURL={imageURL}
           />

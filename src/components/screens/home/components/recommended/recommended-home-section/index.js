@@ -2,7 +2,7 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 import styled from 'styled-components';
 
-import YMLSectionListItem from './YMLSectionListItem';
+import RecommendedSectionListItem from './RecommendedSectionListItem';
 
 const Container = styled(View)`
   justify-content: space-between;
@@ -27,7 +27,7 @@ const YMLHomeSection = ({ dishes }: Props) => (
         data={dishes}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
-          <YMLSectionListItem
+          <RecommendedSectionListItem
             isFirst={index === 0}
             distance={parseFloat(item.reviews / item.stars).toFixed(1)}
             imageURL={item.imageURL}

@@ -63,7 +63,7 @@ const DisheTitle = styled(Text).attrs({
   margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   fontFamily: CircularStd-Bold;
 `;
 

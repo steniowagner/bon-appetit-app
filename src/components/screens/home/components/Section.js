@@ -14,6 +14,7 @@ const ContentContainer = styled(View)`
 const HeaderWrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   padding: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.smallSize}px ${theme.metrics.extraSmallSize}px  ${theme.metrics.largeSize}px`}
 `;
 
@@ -23,20 +24,14 @@ const SeeAllButtonWrapper = styled(TouchableOpacity)`
   justify-content: center;
 `;
 
-const SeeAllTitle = styled(Text)`
-  color: ${({ theme }) => theme.colors.red};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')};
-  font-family: CircularStd-Black;
-`;
-
-const SectionTitle = styled(Text)`
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('3%')};
+const SectionText = styled(Text)`
+  color: ${({ color, theme }) => theme.colors[color]};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')};
   font-family: CircularStd-Black;
 `;
 
 const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.red,
+  color: ({ theme }) => theme.colors.primaryColor,
   name: 'chevron-right',
   size: 28,
 })`
@@ -58,13 +53,17 @@ const handleButtonPress = (nextRoute: string, navigation: Function, title: strin
 
 const renderSectionHeader = (title: string, nextRoute: string, navigation: Function): Object => (
   <HeaderWrapper>
-    <SectionTitle>
+    <SectionText
+      color="darkText"
+    >
       {title}
-    </SectionTitle>
+    </SectionText>
     <SeeAllButtonWrapper onPress={() => handleButtonPress(nextRoute, navigation, title)}>
-      <SeeAllTitle>
+      <SectionText
+        color="primaryColor"
+      >
         See All
-      </SeeAllTitle>
+      </SectionText>
       <ArrowIcon />
     </SeeAllButtonWrapper>
   </HeaderWrapper>

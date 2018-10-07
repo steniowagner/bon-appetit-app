@@ -1,49 +1,56 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Platform, Text, View } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
+import appStyles from 'styles';
 
-const EstablishmentInfoWrapper = styled(View)`
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
-`;
+const getFontSize = (type: string): number => {
+  const types = {
+    sectionTitle: (Platform.OS === 'android' ? '5.5%' : '4.2%'),
+    defaultText: (Platform.OS === 'android' ? '4.5%' : '4%'),
+  };
 
-const EstablishmentInfoText = styled(Text).attrs({
+  return appStyles.metrics.getWidthFromDP(types[type]);
+};
+
+const DefaultText = styled(Text).attrs({
   ellipsizeMode: 'tail',
-  numberOfLines: 2,
+  numberOfLines: 3,
 })`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('65%')};
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
-  color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '2.6%' : '2.3%');
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
+  color: ${({ theme }) => theme.colors.gray};
+  font-size: ${getFontSize('defaultText')};
   fontFamily: CircularStd-Book;
 `;
 
-const RestaurantAboutText = styled(Text)`
-  padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  padding-top: ${({ theme }) => theme.metrics.smallSize}px;
-  color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '2.7%' : '2.4%');
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
-  fontFamily: CircularStd-Medium;
+const AddressText = styled(Text).attrs({
+  ellipsizeMode: 'tail',
+  numberOfLines: 2,
+})`
+  width: 100%;
+  color: ${({ theme }) => theme.colors.gray};
+  font-size: ${getFontSize('defaultText')};
+  fontFamily: CircularStd-Book;
 `;
 
-const InfoIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.defaultWhite,
-  name: ({ iconTitle }) => iconTitle,
-  size: 18,
+const SectionRow = styled(View)`
+  width: 80%;
+  flex-direction: row;
+  align-content: center;
+  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+`;
+
+const Icon = styled(Icons).attrs({
+  color: ({ theme }) => theme.colors.gray,
+  name: ({ name }) => name,
+  size: 20,
 })`
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
+  margin-right: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  align-self: center;
 `;
 
 type Props = {
@@ -67,27 +74,27 @@ const AboutRestaurantSection = ({
   isOpen,
   about,
 }: Props) => (
-  <React.Fragment>
-    <EstablishmentInfoWrapper>
-      <InfoIcon
-        iconTitle="map-marker-outline"
+  <Fragment>
+    <SectionRow>
+      <Icon
+        name="map-marker"
       />
-      <EstablishmentInfoText>
+      <AddressText>
         {address}
-      </EstablishmentInfoText>
-    </EstablishmentInfoWrapper>
-    <EstablishmentInfoWrapper>
-      <InfoIcon
-        iconTitle="clock-outline"
+      </AddressText>
+    </SectionRow>
+    <SectionRow>
+      <Icon
+        name="clock"
       />
-      <EstablishmentInfoText>
+      <DefaultText>
         {getRestaurantStatus(isOpen, operatingHours)}
-      </EstablishmentInfoText>
-    </EstablishmentInfoWrapper>
-    <RestaurantAboutText>
+      </DefaultText>
+    </SectionRow>
+    <DefaultText>
       {about}
-    </RestaurantAboutText>
-  </React.Fragment>
+    </DefaultText>
+  </Fragment>
 );
 
 export default AboutRestaurantSection;

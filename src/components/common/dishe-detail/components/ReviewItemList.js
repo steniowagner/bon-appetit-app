@@ -12,14 +12,8 @@ const Container = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('10%')}px;
   flex-direction: row;
-  margin-top: ${({ theme, isFirst }) => {
-    const marginTop = (Platform.OS === 'android' ? theme.metrics.mediumSize : theme.metrics.largeSize);
-    return (isFirst ? marginTop : 0);
-  }}px;
-  margin-bottom: ${({ theme }) => {
-    const marginBottom = (Platform.OS === 'android' ? theme.metrics.mediumSize : theme.metrics.largeSize);
-    return marginBottom;
-  }}px;
+  margin-top: ${({ theme, isFirst }) => (isFirst ? theme.metrics.mediumSize : 0)}px;
+  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
 `;
 
 const MainContent = styled(View)`
@@ -34,10 +28,7 @@ const ReviewerName = styled(Text).attrs({
   ellipsizeMode: 'tail',
 })`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '2.8%' : '2.4%');
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
   font-family: CircularStd-Bold;
 `;
 
@@ -49,6 +40,7 @@ const ProfileAvatarWrapper = styled(View)`
 
 const ProfileAvatar = styled(FastImage).attrs({
   source: ({ uri }) => ({ uri }),
+  priority: FastImage.priority.high,
 })`
   margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
   width: 48px;
@@ -60,22 +52,20 @@ const ReviewText = styled(Text).attrs({
   numberOfLines: 3,
   ellipsizeMode: 'tail',
 })`
-  color: ${({ theme }) => theme.colors.subText};
   margin-top: ${({ theme }) => {
     const marginTop = (Platform.OS === 'android' ? theme.metrics.extraSmallSize / 2 : theme.metrics.extraSmallSize);
     return marginTop;
   }}px;
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '2.4%' : '2%');
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
-  font-family: CircularStd-Medium;
+  color: ${({ theme }) => theme.colors.subText};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('3.8%')}px;
+  font-family: CircularStd-Book;
 `;
 
 const TopContetWrapper = styled(View)`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-end;
 `;
 
 type Props = {

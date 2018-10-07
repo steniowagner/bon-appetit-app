@@ -40,17 +40,17 @@ const EventImage = styled(FastImage).attrs({
 
 const getTextSize = (type: string): number => {
   const types = {
-    restaurantsParticipating: Platform.OS === 'android' ? '2.6%' : '2.2%',
-    description: Platform.OS === 'android' ? '2.8%' : '2.4%',
-    title: Platform.OS === 'android' ? '3.8%' : '3.5%',
+    restaurantsParticipating: Platform.OS === 'android' ? '5.2%' : '4.2%',
+    description: Platform.OS === 'android' ? '4.8%' : '4%',
+    title: Platform.OS === 'android' ? '6.5%' : '6%',
   };
 
-  return appStyles.metrics.getHeightFromDP(types[type]);
+  return appStyles.metrics.getWidthFromDP(types[type]);
 };
 
 const EventTitle = styled(Text).attrs({
-  numberOfLines: 1,
   ellipsizeMode: 'tail',
+  numberOfLines: 1,
 })`
   font-size: ${() => getTextSize('title')}px;
   font-family: CircularStd-Black;
@@ -58,8 +58,8 @@ const EventTitle = styled(Text).attrs({
 `;
 
 const EventDescription = styled(Text).attrs({
-  numberOfLines: 3,
   ellipsizeMode: 'tail',
+  numberOfLines: 3,
 })`
   margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
