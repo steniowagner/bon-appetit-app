@@ -42,7 +42,7 @@ const RestaurantName = styled(Text).attrs({
 })`
   margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('6%')};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('6.5%')};
   fontFamily: CircularStd-Bold;
 `;
 

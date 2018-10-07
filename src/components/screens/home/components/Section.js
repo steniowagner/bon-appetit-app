@@ -25,19 +25,25 @@ const SeeAllButtonWrapper = styled(TouchableOpacity)`
 `;
 
 const SectionText = styled(Text)`
-  color: ${({ color, theme }) => theme.colors[color]};
+  color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')};
   font-family: CircularStd-Black;
+`;
+
+const SeeAllText = styled(Text)`
+  color: ${({ theme }) => theme.colors.primaryColor};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.5%')};
+  font-family: CircularStd-Bold;
 `;
 
 const ArrowIcon = styled(Icon).attrs({
   color: ({ theme }) => theme.colors.primaryColor,
   name: 'chevron-right',
-  size: 28,
+  size: 25,
 })`
   margin-left: -5px;
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
 `;
 
 type Props = {
@@ -53,17 +59,13 @@ const handleButtonPress = (nextRoute: string, navigation: Function, title: strin
 
 const renderSectionHeader = (title: string, nextRoute: string, navigation: Function): Object => (
   <HeaderWrapper>
-    <SectionText
-      color="darkText"
-    >
+    <SectionText>
       {title}
     </SectionText>
     <SeeAllButtonWrapper onPress={() => handleButtonPress(nextRoute, navigation, title)}>
-      <SectionText
-        color="primaryColor"
-      >
+      <SeeAllText>
         See All
-      </SectionText>
+      </SeeAllText>
       <ArrowIcon />
     </SeeAllButtonWrapper>
   </HeaderWrapper>

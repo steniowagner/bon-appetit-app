@@ -49,7 +49,7 @@ const TopRowContentWrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  padding-top: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const BottomRowContentWrapper = styled(View)`
@@ -66,7 +66,7 @@ const RestaurantName = styled(Text).attrs({
 })`
   width: 70%;
   color: ${({ theme }) => theme.colors.darkText}
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
   fontFamily: CircularStd-Black;
 `;
 

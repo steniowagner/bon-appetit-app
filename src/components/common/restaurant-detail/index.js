@@ -288,7 +288,7 @@ class RestaurantDetail extends Component<Props, State> {
         />
         <AnimatedFlatList
           style={{
-            padding: appStyles.metrics.smallSize,
+            paddingVertical: appStyles.metrics.smallSize,
             opacity: this._animatedFlatlistOpacity,
             marginLeft: this._animatedFlatlistPosition._value,
             transform: [
@@ -335,6 +335,7 @@ class RestaurantDetail extends Component<Props, State> {
     );
 
     return (
+
       <Container>
         <StatusBar
           backgroundColor="transparent"

@@ -1,24 +1,39 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import { Platform, Text, View } from 'react-native';
+import {
+  Platform,
+  Text,
+  View,
+} from 'react-native';
 
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
 import appStyles from 'styles';
 
 const getFontSize = (type: string): number => {
   const types = {
-    sectionTitle: (Platform.OS === 'android' ? '5.5%' : '4.2%'),
+    sectionTitle: (Platform.OS === 'android' ? '5.5%' : '4.5%'),
     defaultText: (Platform.OS === 'android' ? '4.5%' : '4%'),
   };
 
   return appStyles.metrics.getWidthFromDP(types[type]);
 };
 
+const SectionWrapper = styled(View)`
+  width: 100%;
+  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
+`;
+
+const SectionTitle = styled(Text)`
+  color: ${({ theme }) => theme.colors.darkText};
+  margin-bottom: ${({ theme }) => (theme.metrics.extraSmallSize / 2)}px;
+  font-size: ${getFontSize('sectionTitle')};
+  fontFamily: CircularStd-Bold;
+`;
+
 const DefaultText = styled(Text).attrs({
   ellipsizeMode: 'tail',
-  numberOfLines: 3,
+  numberOfLines: 2,
 })`
   color: ${({ theme }) => theme.colors.gray};
   font-size: ${getFontSize('defaultText')};
@@ -27,7 +42,7 @@ const DefaultText = styled(Text).attrs({
 
 const AddressText = styled(Text).attrs({
   ellipsizeMode: 'tail',
-  numberOfLines: 2,
+  numberOfLines: 3,
 })`
   width: 100%;
   color: ${({ theme }) => theme.colors.gray};
@@ -36,21 +51,18 @@ const AddressText = styled(Text).attrs({
 `;
 
 const SectionRow = styled(View)`
-  width: 80%;
+  width: 100%;
   flex-direction: row;
-  align-content: center;
-  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+  justify-content: space-between;
+  margin-top: ${({ theme }) => theme.metrics.extraSmallSize + 2}px;
 `;
 
-const Icon = styled(Icons).attrs({
-  color: ({ theme }) => theme.colors.gray,
-  name: ({ name }) => name,
-  size: 20,
-})`
-  width: 20px;
-  height: 20px;
-  margin-right: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  align-self: center;
+const AddressWrapper = styled(View)`
+  flex: 0.7;
+`;
+
+const OperatingHoursWrapper = styled(View)`
+  flex: 1;
 `;
 
 type Props = {
@@ -60,40 +72,51 @@ type Props = {
   isOpen: boolean,
 };
 
-const getRestaurantStatus = (isOpen: boolean, operatingHours: Object): string => {
+const getOperatingHoursText = (operatingHours: Object): string => {
   const { open, close } = operatingHours;
 
-  const restaurantStatus = (isOpen ? `Open now (until ${close})` : `Closed now (open ${open})`);
-
-  return restaurantStatus;
+  return `${open} - ${close}`;
 };
 
 const AboutRestaurantSection = ({
   operatingHours,
   address,
-  isOpen,
   about,
 }: Props) => (
   <Fragment>
-    <SectionRow>
-      <Icon
-        name="map-marker"
-      />
-      <AddressText>
-        {address}
-      </AddressText>
-    </SectionRow>
-    <SectionRow>
-      <Icon
-        name="clock"
-      />
+    <SectionWrapper>
+      <SectionTitle>
+        About
+      </SectionTitle>
       <DefaultText>
-        {getRestaurantStatus(isOpen, operatingHours)}
+        {about}
       </DefaultText>
+    </SectionWrapper>
+
+    <SectionRow>
+      <OperatingHoursWrapper>
+        <SectionWrapper>
+          <SectionTitle>
+            Address
+          </SectionTitle>
+          <AddressText>
+            {address}
+          </AddressText>
+        </SectionWrapper>
+      </OperatingHoursWrapper>
+
+      <AddressWrapper>
+        <SectionWrapper>
+          <SectionTitle>
+            Operating Hours
+          </SectionTitle>
+          <DefaultText>
+            {getOperatingHoursText(operatingHours)}
+          </DefaultText>
+        </SectionWrapper>
+      </AddressWrapper>
     </SectionRow>
-    <DefaultText>
-      {about}
-    </DefaultText>
+
   </Fragment>
 );
 

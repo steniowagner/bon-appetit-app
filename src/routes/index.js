@@ -21,7 +21,7 @@ const getTabIcon = (icon: string): Object => ({ tintColor }: Props) => (
   <Icon
     color={tintColor}
     name={icon}
-    size={26}
+    size={25}
   />
 );
 
@@ -61,7 +61,7 @@ const ApplicationTabs = () => createMaterialTopTabNavigator({
     },
   },
 }, {
-  initialRouteName: 'NearYou',
+  initialRouteName: 'Home',
   tabBarPosition: 'bottom',
   optimizationsEnabled: true,
   animationEnabled: true,

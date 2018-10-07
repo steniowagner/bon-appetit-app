@@ -4,6 +4,7 @@ import React, { Component, Fragment } from 'react';
 import {
   Animated,
   FlatList,
+  Text,
   View,
 } from 'react-native';
 
@@ -51,6 +52,14 @@ const FloatingActionButtonWrapper = styled(View)`
   position: absolute;
   margin-right: ${({ theme }) => theme.metrics.extraLargeSize}px;
   margin-top: ${({ listHeight }) => listHeight}px;
+`;
+
+const NumberRestaurantsFound = styled(Text)`
+  margin-vertical: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  color: ${({ theme }) => theme.colors.darkText};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5.5%')}px;
+  fontFamily: CircularStd-Bold;
 `;
 
 type Props = {
@@ -169,6 +178,12 @@ class Search extends Component<Props, State> {
     }).start();
   }
 
+  renderListHeaderComponent = (datasetLength: number): Object => {
+    const text = (datasetLength > 1 ? 'Restaurants found' : 'Restaurant found');
+
+    return `${datasetLength} ${text}`;
+  }
+
   renderRestaurantList = (): Object => {
     const { restaurantsFromRequest } = this.props;
     const { data } = restaurantsFromRequest;
@@ -193,6 +208,11 @@ class Search extends Component<Props, State> {
               },
             ],
           }}
+          ListHeaderComponent={() => (
+            <NumberRestaurantsFound>
+              {this.renderListHeaderComponent(restaurants.length)}
+            </NumberRestaurantsFound>
+          )}
           onLayout={this.onLayoutRestaurantList}
           showsVerticalScrollIndicator={false}
           data={restaurants}
