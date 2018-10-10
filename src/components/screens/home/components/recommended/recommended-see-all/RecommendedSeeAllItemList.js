@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import {
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Platform,
   Text,
   View,
@@ -9,6 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
+import appStyles from 'styles';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 import { withNavigation } from 'react-navigation';
@@ -16,39 +17,44 @@ import { withNavigation } from 'react-navigation';
 import ReviewStars from 'components/common/ReviewStars';
 import FlagPrice from 'components/common/FlagPrice';
 
+const getTextSize = (type: string): number => {
+  const sizes = {
+    title: (Platform.OS === 'android' ? '5%' : '4.5%'),
+    default: (Platform.OS === 'android' ? '4%' : '3.5%'),
+  };
+
+  return appStyles.metrics.getWidthFromDP(sizes[type]);
+};
+
 const Container = styled(View)`
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('30%')};
-  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
-  margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
-  padding: ${({ theme }) => theme.metrics.smallSize}px;
-  padding-right: ${({ theme }) => theme.metrics.mediumSize}px;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
-  background-color: ${({ theme }) => theme.colors.defaultWhite};
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('18%')}px;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
 `;
 
 const DisheImageWrapper = styled(View)`
-  width: 30%;
+  width: 100px;
   height: 100%;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   overflow: hidden;
-  position: absolute;
 `;
 
 const DisheImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
   resizeMode: 'cover',
 })`
-  width: 100%;
+  width: 100px;
   height: 100%;
-  position: absolute;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const TextContentContainer = styled(View)`
-  height: 100%;
-  justify-content: space-between;
-  margin-left: ${({ theme }) => theme.metrics.getWidthFromDP('28%')}px;
-  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  width: ${({ theme }) => theme.metrics.width - (theme.metrics.extraLargeSize + 100)}px;
+  justify-content: center;
+  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  padding-right: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const TopRowContent = styled(View)`
@@ -61,47 +67,42 @@ const DisheTitle = styled(Text).attrs({
   numberOfLines: 1,
 })`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.8%')}px;
+  font-size: ${getTextSize('title')}px;
   fontFamily: CircularStd-Black;
-  width: 75%;
+  width: 70%;
 `;
 
 const DisheDescription = styled(Text).attrs({
   ellipsizeMode: 'tail',
-  numberOfLines: 4,
+  numberOfLines: 3,
 })`
-  margin-vertical: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.5%')}px;
+  font-size: ${getTextSize('default')}px;
   fontFamily: CircularStd-Book;
 `;
 
-const BottomRowContent = styled(View)`
+const DistanceWrapper = styled(View)`
+  width: 100%;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('1%')}px;
 `;
 
 const RestaurantDistance = styled(Text)`
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.6%')}px;
-  fontFamily: CircularStd-Bold;
+  color: ${({ theme }) => theme.colors.subText};
+  font-size: ${getTextSize('default')}px;
+  fontFamily: CircularStd-Medium;
 `;
 
-const ArrowIconWrapper = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.darkText,
-  name: 'arrow-right',
-  size: 25,
+const MapIcon = styled(Icon).attrs({
+  color: ({ theme }) => theme.colors.subText,
+  name: 'map-marker',
+  size: 18,
 })`
-  width: 25px;
-  height: 25px;
+  margin-left: -4px;
+  width: 18px;
+  height: 18px;
 `;
 
 type Props = {
@@ -135,32 +136,16 @@ const renderTopRowContent = (title: string, reviews: string, price: number, star
       <DisheTitle>
         {title}
       </DisheTitle>
-      <FlagPrice
-        price={price}
-      />
+      <View>
+        <FlagPrice
+          price={price}
+        />
+      </View>
     </TopRowContent>
     <ReviewStars
-      shouldShowReviewsText
-      textColor="darkText"
-      reviews={reviews}
       stars={stars}
     />
   </View>
-);
-
-const renderBottomRowContent = (distance: number, imageURL: string, id: string, navigation: Function): Object => (
-  <BottomRowContent>
-    <RestaurantDistance>
-      {`${distance} km from you`}
-    </RestaurantDistance>
-    <ArrowIconWrapper>
-      <TouchableOpacity
-        onPress={() => onPressItem(navigation, imageURL, id)}
-      >
-        <ArrowIcon />
-      </TouchableOpacity>
-    </ArrowIconWrapper>
-  </BottomRowContent>
 );
 
 const RecommendedSeeAllItemList = ({
@@ -173,41 +158,25 @@ const RecommendedSeeAllItemList = ({
   stars,
   id,
 }: Props): Object => (
-  <Container
-    style={{
-      ...Platform.select({
-        ios: {
-          elevation: 1,
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowRadius: 3,
-          shadowOpacity: 0.35,
-        },
-        android: {
-          elevation: 4,
-          shadowOffset: {
-            width: 1,
-            height: -3,
-          },
-          shadowRadius: 2,
-          shadowOpacity: 5.0,
-        },
-      }),
-    }}
+  <TouchableWithoutFeedback
+    onPress={() => onPressItem(navigation, imageURL, id)}
   >
-    <View>
+    <Container>
       {renderDisheImage(imageURL)}
       <TextContentContainer>
         {renderTopRowContent(title, reviews, price, stars)}
         <DisheDescription>
           {description}
         </DisheDescription>
-        {renderBottomRowContent(parseFloat(reviews / stars).toFixed(1), imageURL, id, navigation)}
+        <DistanceWrapper>
+          <MapIcon />
+          <RestaurantDistance>
+            {`${parseFloat(reviews / stars).toFixed(1)} km from you`}
+          </RestaurantDistance>
+        </DistanceWrapper>
       </TextContentContainer>
-    </View>
-  </Container>
+    </Container>
+  </TouchableWithoutFeedback>
 );
 
 export default withNavigation(RecommendedSeeAllItemList);

@@ -26,7 +26,7 @@ const Container = styled(View)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('8%')}px;
   flex-direction: row;
   align-items: center;
-  margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-vertical: ${({ theme }) => theme.metrics.mediumSize}px;
   padding-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 

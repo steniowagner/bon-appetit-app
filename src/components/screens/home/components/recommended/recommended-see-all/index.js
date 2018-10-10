@@ -22,7 +22,7 @@ type Props = {
 
 class RecommendedSeeAll extends Component<Props, {}> {
   static navigationOptions = () => ({
-    title: 'You Might Like',
+    title: 'Recommended',
     headerStyle: {
       backgroundColor: appStyles.colors.primaryColor,
       borderBottomWidth: 0,
