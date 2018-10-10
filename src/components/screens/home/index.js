@@ -26,7 +26,7 @@ import AppKeys from 'components/utils/Keys';
 import RecommendedSection from './components/recommended/recommended-home-section';
 import InYourCitySection from './components/in-your-city/iyc-home-section';
 import Popular from './components/popular/popular-home-section';
-import HeaderWelcome from './components/HeaderWelcome';
+import HeaderCurrentCity from './components/HeaderCurrentCity';
 import Section from './components/Section';
 
 const Container = styled(View)`
@@ -139,7 +139,7 @@ class HomeMainContent extends Component<Props, State> {
           />
         )}
       >
-        <HeaderWelcome />
+        <HeaderCurrentCity />
         {hasInYourCityEvents && (
           <Section
             title="In Your City"
