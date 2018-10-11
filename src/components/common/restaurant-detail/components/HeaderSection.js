@@ -67,8 +67,6 @@ const HeaderSection = ({
         {restaurantName}
       </RestaurantName>
       <ReviewStars
-        shouldShowReviewsText={false}
-        textColor="defaultWhite"
         stars={stars}
       />
     </ContentWrapper>

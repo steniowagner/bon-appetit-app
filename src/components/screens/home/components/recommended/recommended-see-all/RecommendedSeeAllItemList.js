@@ -19,67 +19,62 @@ import FlagPrice from 'components/common/FlagPrice';
 
 const getTextSize = (type: string): number => {
   const sizes = {
-    title: (Platform.OS === 'android' ? '5%' : '4.5%'),
-    default: (Platform.OS === 'android' ? '4%' : '3.5%'),
+    title: (Platform.OS === 'android' ? '6.5%' : '6%'),
+    default: (Platform.OS === 'android' ? '5%' : '4.5%'),
   };
 
   return appStyles.metrics.getWidthFromDP(sizes[type]);
 };
 
 const Container = styled(View)`
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
+  margin-top: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-horizontal: ${({ theme }) => theme.metrics.smallSize}px;
+  border-radius: 4px;
+`;
+
+const DarkLayer = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('18%')}px;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
+  height: 100%;
+  position: absolute;
+  padding: ${({ theme }) => theme.metrics.mediumSize}px;
+  background-color: ${({ theme }) => theme.colors.darkLayer};
+  border-radius: 4px;
+`;
+
+const FlagPriceWrapper = styled(View)`
+  align-self: flex-end;
 `;
 
 const DisheImageWrapper = styled(View)`
-  width: 100px;
+  width: 100%;
   height: 100%;
-  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
   overflow: hidden;
+  border-radius: 4px;
 `;
 
 const DisheImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
   resizeMode: 'cover',
 })`
-  width: 100px;
+  width: 100%;
   height: 100%;
 `;
 
-const TextContentContainer = styled(View)`
-  width: ${({ theme }) => theme.metrics.width - (theme.metrics.extraLargeSize + 100)}px;
-  justify-content: center;
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
-  padding-right: ${({ theme }) => theme.metrics.smallSize}px;
-`;
-
-const TopRowContent = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
+const TextContentWrapper = styled(View)`
+  width: 100%;
+  height: 80%;
+  justify-content: flex-end;
 `;
 
 const DisheTitle = styled(Text).attrs({
   ellipsizeMode: 'tail',
   numberOfLines: 1,
 })`
-  color: ${({ theme }) => theme.colors.darkText};
+  width: 100%;
+  color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${getTextSize('title')}px;
   fontFamily: CircularStd-Black;
-  width: 70%;
-`;
-
-const DisheDescription = styled(Text).attrs({
-  ellipsizeMode: 'tail',
-  numberOfLines: 3,
-})`
-  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${getTextSize('default')}px;
-  fontFamily: CircularStd-Book;
 `;
 
 const DistanceWrapper = styled(View)`
@@ -90,23 +85,22 @@ const DistanceWrapper = styled(View)`
 `;
 
 const RestaurantDistance = styled(Text)`
-  color: ${({ theme }) => theme.colors.subText};
+  color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${getTextSize('default')}px;
   fontFamily: CircularStd-Medium;
 `;
 
 const MapIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.subText,
+  color: ({ theme }) => theme.colors.defaultWhite,
   name: 'map-marker',
   size: 18,
 })`
-  margin-left: -4px;
   width: 18px;
   height: 18px;
+  margin-right: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 type Props = {
-  description: string,
   imageURL: string,
   title: string,
   id: string,
@@ -122,7 +116,38 @@ const onPressItem = (navigation: Function, imageURL: string, id: string): void =
   });
 };
 
-const renderDisheImage = (imageURL: string): Object => (
+const renderTextContent = (title: string, stars: number, reviews: number): Object => (
+  <TextContentWrapper>
+    <DisheTitle>
+      {title}
+    </DisheTitle>
+    <ReviewStars
+      textColor="defaultWhite"
+      shouldShowReviewsText
+      reviews={reviews}
+      stars={stars}
+    />
+    <DistanceWrapper>
+      <MapIcon />
+      <RestaurantDistance>
+        {`${parseFloat(reviews / stars).toFixed(1)} km from you`}
+      </RestaurantDistance>
+    </DistanceWrapper>
+  </TextContentWrapper>
+);
+
+const renderDarkLayerContent = (title: string, stars: number, reviews: number, price: number): Object => (
+  <DarkLayer>
+    <FlagPriceWrapper>
+      <FlagPrice
+        price={price}
+      />
+    </FlagPriceWrapper>
+    {renderTextContent(title, stars, reviews)}
+  </DarkLayer>
+);
+
+const renderImage = (imageURL: string): Object => (
   <DisheImageWrapper>
     <DisheImage
       imageURL={imageURL}
@@ -130,26 +155,7 @@ const renderDisheImage = (imageURL: string): Object => (
   </DisheImageWrapper>
 );
 
-const renderTopRowContent = (title: string, reviews: string, price: number, stars: number): Object => (
-  <View>
-    <TopRowContent>
-      <DisheTitle>
-        {title}
-      </DisheTitle>
-      <View>
-        <FlagPrice
-          price={price}
-        />
-      </View>
-    </TopRowContent>
-    <ReviewStars
-      stars={stars}
-    />
-  </View>
-);
-
 const RecommendedSeeAllItemList = ({
-  description,
   navigation,
   imageURL,
   reviews,
@@ -162,19 +168,8 @@ const RecommendedSeeAllItemList = ({
     onPress={() => onPressItem(navigation, imageURL, id)}
   >
     <Container>
-      {renderDisheImage(imageURL)}
-      <TextContentContainer>
-        {renderTopRowContent(title, reviews, price, stars)}
-        <DisheDescription>
-          {description}
-        </DisheDescription>
-        <DistanceWrapper>
-          <MapIcon />
-          <RestaurantDistance>
-            {`${parseFloat(reviews / stars).toFixed(1)} km from you`}
-          </RestaurantDistance>
-        </DistanceWrapper>
-      </TextContentContainer>
+      {renderImage(imageURL)}
+      {renderDarkLayerContent(title, stars, reviews, price)}
     </Container>
   </TouchableWithoutFeedback>
 );

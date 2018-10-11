@@ -91,7 +91,6 @@ const renderMainContent = (name: string, review: string, stars: number): Object 
         {name}
       </ReviewerName>
       <ReviewStars
-        shouldShowReviewsText={false}
         stars={stars}
       />
     </TopContetWrapper>

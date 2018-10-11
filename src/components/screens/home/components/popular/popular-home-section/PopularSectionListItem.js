@@ -146,7 +146,6 @@ class PopularSectionListItem extends Component<Props, State> {
           </DisheTitle>
           <ReviewStars
             stars={stars}
-            shouldShowReviewsText={false}
           />
         </BottomWrapper>
       </Fragment>

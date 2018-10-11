@@ -1,14 +1,14 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import {
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Platform,
-  View,
   Text,
+  View,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
+import appStyles from 'styles';
 
 import { ROUTE_NAMES } from 'components/screens/home/routes';
 import { withNavigation } from 'react-navigation';
@@ -16,178 +16,138 @@ import { withNavigation } from 'react-navigation';
 import ReviewStars from 'components/common/ReviewStars';
 import FlagPrice from 'components/common/FlagPrice';
 
+const getTextSize = (type: string): number => {
+  const sizes = {
+    title: (Platform.OS === 'android' ? '5%' : '4.5%'),
+    default: (Platform.OS === 'android' ? '4%' : '3.5%'),
+  };
+
+  return appStyles.metrics.getWidthFromDP(sizes[type]);
+};
+
 const Container = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('30%')}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('18%')}px;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px
-  padding-horizontal: ${({ theme }) => theme.metrics.smallSize}px
+  margin-top: ${({ theme }) => theme.metrics.largeSize}px;
+  margin-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
 `;
 
-const CardContainer = styled(View)`
-  width: 65%;
-  height: 80%;
-  padding: ${({ theme }) => theme.metrics.mediumSize}px;
-  background-color: ${({ theme }) => theme.colors.white};
+const DisheImageWrapper = styled(View)`
+  width: ${({ theme }) => theme.metrics.getHeightFromDP('18%')}px;
+  height: 100%;
+  border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
+  overflow: hidden;
 `;
 
 const DisheImage = styled(FastImage).attrs({
   source: ({ imageURL }) => ({ uri: imageURL }),
+  resizeMode: 'cover',
 })`
-  width: 25%;
+  width: ${({ theme }) => theme.metrics.getHeightFromDP('18%')}px;
   height: 100%;
 `;
 
-const TopRowWrapper = styled(View)`
+const TextContentContainer = styled(View)`
+  width: ${({ theme }) => theme.metrics.width - (theme.metrics.extraLargeSize + theme.metrics.getHeightFromDP('18%'))}px;
+  justify-content: center;
+  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  padding-right: ${({ theme }) => theme.metrics.smallSize}px;
+`;
+
+const TopRowContent = styled(View)`
   flex-direction: row;
   justify-content: space-between;
 `;
 
-const DishTitle = styled(Text).attrs({
+const DisheTitle = styled(Text).attrs({
   ellipsizeMode: 'tail',
   numberOfLines: 1,
 })`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('38%')}px;
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '4%' : '3.5%';
-    return theme.metrics.getWidthFromDP(percentage);
-  }};
-  font-family: CircularStd-Black;
+  font-size: ${getTextSize('title')}px;
+  fontFamily: CircularStd-Black;
+  width: 70%;
 `;
 
 const DisheDescription = styled(Text).attrs({
   ellipsizeMode: 'tail',
   numberOfLines: 3,
 })`
-  width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '2.5%' : '2%';
-    return theme.metrics.getHeightFromDP(percentage);
-  }};
-  font-family: CircularStd-Book;
+  font-size: ${getTextSize('default')}px;
+  fontFamily: CircularStd-Book;
 `;
 
-const ArrowButton = styled(TouchableOpacity)`
-  width: 48px;
-  height: 48px;
-  justify-content: center;
-  align-self: flex-end;
-  align-items: center;
-  margin-left: -24px;
-  background-color: ${({ theme }) => theme.colors.red};
-`;
-
-const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.defaultWhite,
-  name: 'arrow-right',
-  size: 28,
-})`
-  width: 28px;
-  height: 28px;
-`;
-
-const shadowStyle = {
-  ...Platform.select({
-    ios: {
-      elevation: 1,
-      shadowOffset: {
-        width: 0,
-        height: 0,
-      },
-      shadowRadius: 3,
-      shadowOpacity: 0.35,
-    },
-    android: {
-      elevation: 4,
-      shadowOffset: {
-        width: 1,
-        height: -3,
-      },
-      shadowRadius: 2,
-      shadowOpacity: 5.0,
-    },
-  }),
+type Props = {
+  description: string,
+  imageURL: string,
+  title: string,
+  id: string,
+  reviews: number,
+  price: number,
+  stars: number,
+  navigation: Function,
 };
 
-const onPressArrowButton = (navigation: Object, imageURL: string, id: string) => {
+const onPressItem = (navigation: Function, imageURL: string, id: string): void => {
   navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
     payload: { imageURL, id },
   });
 };
 
-const renderDisheImage = (imageURL: string) => (
-  <DisheImage
-    imageURL={imageURL}
-  />
+const renderDisheImage = (imageURL: string): Object => (
+  <DisheImageWrapper>
+    <DisheImage
+      imageURL={imageURL}
+    />
+  </DisheImageWrapper>
 );
 
-const renderAboutDishe = (disheInfo: Object) => {
-  const {
-    title,
-    stars,
-    description,
-    price,
-  } = disheInfo;
-
-  return (
-    <Fragment>
-      <TopRowWrapper>
-        <DishTitle>
-          {title}
-        </DishTitle>
-        <View>
-          <FlagPrice
-            price={price}
-          />
-        </View>
-      </TopRowWrapper>
-      <ReviewStars
-        stars={stars}
-      />
-      <DisheDescription>
-        {description}
-      </DisheDescription>
-    </Fragment>
-  );
-};
-
-const renderArrowButton = (navigation: Object, imageURL: string, id: string): Object => (
-  <ArrowButton
-    onPress={() => onPressArrowButton(navigation, imageURL, id)}
-    style={{ ...shadowStyle }}
-  >
-    <ArrowIcon />
-  </ArrowButton>
+const renderTopRowContent = (title: string, reviews: string, price: number, stars: number): Object => (
+  <View>
+    <TopRowContent>
+      <DisheTitle>
+        {title}
+      </DisheTitle>
+      <View>
+        <FlagPrice
+          price={price}
+        />
+      </View>
+    </TopRowContent>
+    <ReviewStars
+      stars={stars}
+    />
+  </View>
 );
 
-const PopularSeeAllItemList = ({
+const RecommendedSeeAllItemList = ({
   description,
   navigation,
   imageURL,
+  reviews,
+  price,
   title,
   stars,
-  price,
   id,
-}: Object): Object => (
-  <Container>
-    {renderDisheImage(imageURL)}
-    <CardContainer
-      style={{ ...shadowStyle }}
-    >
-      {renderAboutDishe({
-        title,
-        stars,
-        description,
-        price,
-      })}
-    </CardContainer>
-    {renderArrowButton(navigation, imageURL, id)}
-  </Container>
+}: Props): Object => (
+  <TouchableWithoutFeedback
+    onPress={() => onPressItem(navigation, imageURL, id)}
+  >
+    <Container>
+      {renderDisheImage(imageURL)}
+      <TextContentContainer>
+        {renderTopRowContent(title, reviews, price, stars)}
+        <DisheDescription>
+          {description}
+        </DisheDescription>
+      </TextContentContainer>
+    </Container>
+  </TouchableWithoutFeedback>
 );
 
-export default withNavigation(PopularSeeAllItemList);
+export default withNavigation(RecommendedSeeAllItemList);
