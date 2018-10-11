@@ -37,12 +37,6 @@ const Menu = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const AboutRestaurantWrapper = styled(View)`
-  width: 100%;
-  padding: ${({ theme }) => theme.metrics.largeSize}px;
-  background-color: ${({ theme }) => theme.colors.white};
-`;
-
 const FloatingActionButtonWrapper = styled(View)`
   width: 100%;
   align-items: flex-end;
@@ -204,17 +198,19 @@ class RestaurantDetail extends Component<Props, State> {
       description,
       location,
       isOpen,
+      stars,
+      name,
     } = restaurant;
 
     return (
-      <AboutRestaurantWrapper>
-        <AboutRestaurantSection
-          operatingHours={operatingHours}
-          address={location.address}
-          about={description}
-          isOpen={isOpen}
-        />
-      </AboutRestaurantWrapper>
+      <AboutRestaurantSection
+        operatingHours={operatingHours}
+        address={location.address}
+        about={description}
+        isOpen={isOpen}
+        stars={stars}
+        name={name}
+      />
     );
   }
 
@@ -256,7 +252,7 @@ class RestaurantDetail extends Component<Props, State> {
       <FloatingActionButtonWrapper>
         <FloatinActionButton
           action={() => navigation.navigate(ROUTE_NAMES.RESTAURANT_ADDRESS_MAP, { payload })}
-          name="map-marker-multiple"
+          name="map-outline"
           color="yellow"
         />
       </FloatingActionButtonWrapper>
@@ -277,12 +273,13 @@ class RestaurantDetail extends Component<Props, State> {
     }));
 
     const menuData = menu.map(item => item.dishes);
+    const contentWidth = appStyles.metrics.width - (2 * appStyles.metrics.largeSize);
 
     return (
       <Menu>
         <CustomTab
           onChangeMenuIndex={this.onChangeMenuIndex}
-          contentWidth={appStyles.metrics.width}
+          contentWidth={contentWidth}
           data={customTabMenu}
           theme="gray"
         />
@@ -300,11 +297,11 @@ class RestaurantDetail extends Component<Props, State> {
               },
             ],
           }}
-          showsVerticalScrollIndicator={false}
-          scrollEventThrottle={16}
-          onLayout={this.onFlatlistLayout}
+          showsHorizontalScrollIndicator={false}
           data={menuData[indexMenuSelected]}
+          onLayout={this.onFlatlistLayout}
           keyExtractor={item => item.id}
+          horizontal
           renderItem={({ item }) => (
             <MenuListItem
               description={item.description}
