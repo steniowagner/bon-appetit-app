@@ -44,23 +44,6 @@ type State = {
 };
 
 class HomeMainContent extends Component<Props, State> {
-  static navigationOptions = {
-    title: 'Bon Appetit',
-    headerStyle: {
-      backgroundColor: appStyles.colors.red,
-      borderBottomWidth: 0,
-    },
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTitleStyle: {
-      color: appStyles.colors.defaultWhite,
-      fontFamily: 'Modesta-Script',
-      fontWeight: '200',
-      fontSize: (Platform.OS === 'ios'
-        ? appStyles.metrics.getWidthFromDP('8%')
-        : appStyles.metrics.getWidthFromDP('10%')),
-    },
-  };
-
   state = {
     isRefresing: false,
   };

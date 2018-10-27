@@ -9,18 +9,8 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
-import appStyles from 'styles';
 
 import ReviewStars from 'components/common/ReviewStars';
-
-const getFontSize = (type: string): number => {
-  const types = {
-    description: (Platform.OS === 'android' ? '5%' : '4.5%'),
-    defaultText: (Platform.OS === 'android' ? '4.5%' : '4%'),
-  };
-
-  return appStyles.metrics.getWidthFromDP(types[type]);
-};
 
 const Container = styled(View)`
   width: 100%;
@@ -30,18 +20,14 @@ const Container = styled(View)`
   background-color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-const SectionWrapper = styled(View)`
-  width: 100%;
-  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
-`;
-
 const DescriptionText = styled(Text).attrs({
   ellipsizeMode: 'tail',
   numberOfLines: 4,
 })`
   margin-bottom: ${({ theme }) => theme.metrics.largeSize}px;
-  color: ${({ theme }) => theme.colors.gray};
-  font-size: ${getFontSize('description')};
+  margin-top: ${({ theme }) => theme.metrics.largeSize}px;
+  color: ${({ theme }) => theme.colors.subText};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.5%')};
   fontFamily: CircularStd-Book;
 `;
 
@@ -50,7 +36,7 @@ const DefaultText = styled(Text).attrs({
   numberOfLines: 2,
 })`
   color: ${({ theme }) => theme.colors.gray};
-  font-size: ${getFontSize('defaultText')};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')};
   fontFamily: CircularStd-Book;
 `;
 
@@ -58,7 +44,7 @@ const SectionRow = styled(View)`
   width: 100%;
   flex-direction: row;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-top: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const RestaurantName = styled(Text).attrs({
@@ -72,7 +58,7 @@ const RestaurantName = styled(Text).attrs({
 `;
 
 const CustomIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.darkText,
+  color: ({ theme }) => theme.colors.primaryColor,
   name: ({ name }) => name,
   size: 18,
 })`
@@ -135,12 +121,10 @@ const AboutRestaurantSection = ({
     <ReviewStars
       stars={stars}
     />
-    <SectionWrapper>
-      <DescriptionText>
-        {about}
-      </DescriptionText>
-    </SectionWrapper>
     {renderAddressAndOperatingHours(address, isOpen, operatingHours)}
+    <DescriptionText>
+      {about}
+    </DescriptionText>
   </Container>
 );
 

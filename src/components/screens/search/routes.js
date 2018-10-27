@@ -1,6 +1,8 @@
 import { createStackNavigator } from 'react-navigation';
 import { Platform, StatusBar } from 'react-native';
 
+import appStyles from 'styles';
+
 import RestaurantAddressMap from 'components/common/restaurant-detail/components/RestaurantAddressMap';
 import DisheDetailReview from 'components/common/restaurant-detail/components/DisheDetailReview';
 import RestaurantDetail from 'components/common/restaurant-detail';
@@ -19,6 +21,16 @@ const ROUTES = createStackNavigator({
     screen: Search,
     navigationOptions: () => ({
       headerBackTitle: null,
+      title: 'Search Restaurants',
+      headerStyle: {
+        backgroundColor: appStyles.colors.primaryColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTitleStyle: {
+        color: appStyles.colors.defaultWhite,
+        fontFamily: 'CircularStd-Medium',
+      },
     }),
   },
 

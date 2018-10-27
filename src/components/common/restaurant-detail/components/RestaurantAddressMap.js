@@ -16,9 +16,7 @@ import appStyles from 'styles';
 import FloatinActionButton from 'components/common/FloatingActionButton';
 import ReviewStars from 'components/common/ReviewStars';
 
-const mapHeight = (Platform.OS === 'android'
-  ? appStyles.metrics.getHeightFromDP('70%')
-  : appStyles.metrics.getHeightFromDP('75%'));
+const mapHeight = appStyles.metrics.getHeightFromDP('75%');
 
 const Container = styled(View)`
   flex: 1;

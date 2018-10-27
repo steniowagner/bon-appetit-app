@@ -8,6 +8,8 @@ import DisheDetailReview from 'components/common/restaurant-detail/components/Di
 import PopularSeeAll from 'components/screens/home/components/popular/popular-see-all';
 import YMLSeeAll from 'components/screens/home/components/recommended/recommended-see-all';
 
+import appStyles from 'styles';
+
 import EventDetails from './components/EventDetails';
 import AllEvents from './components/in-your-city/iyc-see-all';
 
@@ -29,6 +31,18 @@ const ROUTES = createStackNavigator({
   [ROUTE_NAMES.HOME]: {
     screen: Home,
     navigationOptions: () => ({
+      title: 'Bon Appetit',
+      headerStyle: {
+        backgroundColor: appStyles.colors.red,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTitleStyle: {
+        color: appStyles.colors.defaultWhite,
+        fontFamily: 'Modesta-Script',
+        fontWeight: '200',
+        fontSize: 28,
+      },
       headerBackTitle: null,
       borderBottomWidth: 0,
     }),

@@ -27,10 +27,8 @@ const getTextSize = (type: string): number => {
 };
 
 const Container = styled(View)`
+  width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
-  margin-top: ${({ theme }) => theme.metrics.smallSize}px;
-  margin-horizontal: ${({ theme }) => theme.metrics.smallSize}px;
-  border-radius: 4px;
 `;
 
 const DarkLayer = styled(View)`
@@ -39,7 +37,6 @@ const DarkLayer = styled(View)`
   position: absolute;
   padding: ${({ theme }) => theme.metrics.mediumSize}px;
   background-color: ${({ theme }) => theme.colors.darkLayer};
-  border-radius: 4px;
 `;
 
 const FlagPriceWrapper = styled(View)`
@@ -50,7 +47,6 @@ const DisheImageWrapper = styled(View)`
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 4px;
 `;
 
 const DisheImage = styled(FastImage).attrs({
@@ -73,7 +69,7 @@ const DisheTitle = styled(Text).attrs({
 })`
   width: 100%;
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${getTextSize('title')}px;
+  font-size: 20px;
   fontFamily: CircularStd-Black;
 `;
 
@@ -101,13 +97,13 @@ const MapIcon = styled(Icon).attrs({
 `;
 
 type Props = {
+  navigation: Function,
   imageURL: string,
   title: string,
   id: string,
   reviews: number,
   price: number,
   stars: number,
-  navigation: Function,
 };
 
 const onPressItem = (navigation: Function, imageURL: string, id: string): void => {

@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import appStyles from 'styles';
 
 import Loading from 'components/common/Loading';
-import YMLSeeAllItemList from './RecommendedSeeAllItemList';
+import RecommendedSeeAllItemList from './RecommendedSeeAllItemList';
 
 const List = styled(FlatList)`
   flex: 1;
@@ -50,7 +50,7 @@ class RecommendedSeeAll extends Component<Props, {}> {
         data={dishes}
         keyExtractor={item => item._id}
         renderItem={({ item }) => (
-          <YMLSeeAllItemList
+          <RecommendedSeeAllItemList
             price={parseFloat(item.price).toFixed(2)}
             description={item.description}
             imageURL={item.imageURL}

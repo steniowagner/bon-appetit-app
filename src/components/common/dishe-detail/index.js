@@ -118,10 +118,7 @@ const DisheDescription = styled(Text).attrs({
 })`
   margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '4.5%' : '4.2%');
-    return theme.metrics.getWidthFromDP(percentage);
-  }};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.2%')}px;
   font-family: CircularStd-Book;
 `;
 

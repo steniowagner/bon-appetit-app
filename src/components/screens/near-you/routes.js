@@ -1,6 +1,8 @@
 import { createStackNavigator } from 'react-navigation';
 import { Platform, StatusBar } from 'react-native';
 
+import appStyle from 'styles';
+
 import RestaurantAddressMap from 'components/common/restaurant-detail/components/RestaurantAddressMap';
 import DisheDetailReview from 'components/common/restaurant-detail/components/DisheDetailReview';
 import RestaurantDetail from 'components/common/restaurant-detail';
@@ -17,6 +19,20 @@ export const ROUTE_NAMES = {
 const ROUTES = createStackNavigator({
   [ROUTE_NAMES.NEAR_YOU]: {
     screen: NearYou,
+    navigationOptions: () => ({
+      title: 'Near You',
+      headerStyle: {
+        backgroundColor: appStyle.colors.primaryColor,
+        borderBottomWidth: 0,
+        elevation: 0,
+      },
+      headerBackTitle: null,
+      headerTintColor: appStyle.colors.defaultWhite,
+      headerTitleStyle: {
+        color: appStyle.colors.defaultWhite,
+        fontFamily: 'CircularStd-Medium',
+      },
+    }),
   },
 
   [ROUTE_NAMES.RESTAURANT_DETAIL]: {

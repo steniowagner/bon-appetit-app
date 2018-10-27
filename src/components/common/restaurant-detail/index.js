@@ -253,7 +253,7 @@ class RestaurantDetail extends Component<Props, State> {
         <FloatinActionButton
           action={() => navigation.navigate(ROUTE_NAMES.RESTAURANT_ADDRESS_MAP, { payload })}
           name="map-outline"
-          color="yellow"
+          color="primaryColor"
         />
       </FloatingActionButtonWrapper>
     );

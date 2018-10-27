@@ -98,18 +98,6 @@ const receivePromotionsOptionDescription = 'By enabling this option, the app wil
 const notificationsSoundOptionDescription = 'Enable the sound of the Notifications';
 
 class Settings extends Component {
-  static navigationOptions = {
-    title: 'Settings',
-    headerStyle: {
-      backgroundColor: appStyle.colors.primaryColor,
-    },
-    headerTintColor: appStyle.colors.defaultWhite,
-    headerTitleStyle: {
-      color: appStyle.colors.defaultWhite,
-      fontFamily: 'CircularStd-Bold',
-    },
-  };
-
   state = {
     receiveNearMe: false,
     notificationsSound: false,

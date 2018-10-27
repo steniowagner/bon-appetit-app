@@ -18,6 +18,8 @@ import CustomTab from 'components/common/CustomTab';
 import RestaurantsList from './restaurants-list';
 import Map from './Map';
 
+import { FORTALEZA_CITY_LOCATION, menuItems } from './constants';
+
 const Container = styled(View)`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.white};
@@ -33,40 +35,6 @@ const CustomTabWrapper = styled(View)`
   position: absolute;
 `;
 
-const customTabData = [{
-  title: 'Pizzas',
-  id: 'Pizza',
-}, {
-  title: 'Barbecue',
-  id: 'Barbecue',
-}, {
-  title: 'Desserts',
-  id: 'Dessert',
-}, {
-  title: 'Pasta',
-  id: 'Pasta',
-}, {
-  title: 'Fast-Food',
-  id: 'Fast-Food',
-}, {
-  title: 'Homemade',
-  id: 'Homemade',
-}, {
-  title: 'Japanese',
-  id: 'Japanese',
-}, {
-  title: 'Salads',
-  id: 'Salad',
-}, {
-  title: 'Seafood',
-  id: 'Seafood',
-}];
-
-const FORTALEZA_CITY_LOCATION = {
-  latitude: -3.7899266,
-  longitude: -38.588988,
-};
-
 type Props = {
   getNearbyRestaurantsRequest: Function,
   restaurantsFromRequest: Object,
@@ -80,21 +48,6 @@ type State = {
 };
 
 class NearYou extends Component<Props, State> {
-  static navigationOptions = {
-    title: 'Near You',
-    headerStyle: {
-      backgroundColor: appStyle.colors.primaryColor,
-      borderBottomWidth: 0,
-      elevation: 0,
-    },
-    headerBackTitle: null,
-    headerTintColor: appStyle.colors.defaultWhite,
-    headerTitleStyle: {
-      color: appStyle.colors.defaultWhite,
-      fontFamily: 'CircularStd-Bold',
-    },
-  };
-
   state = {
     userLocation: {
       latitude: FORTALEZA_CITY_LOCATION.latitude,
@@ -134,7 +87,7 @@ class NearYou extends Component<Props, State> {
     const { getNearbyRestaurantsRequest } = this.props;
 
     const { indexDishesTypeSelected } = this.state;
-    const dishesSelected = customTabData[indexDishesTypeSelected].id;
+    const dishesSelected = menuItems[indexDishesTypeSelected].id;
 
     const { userLocation } = this.state;
 
@@ -142,16 +95,18 @@ class NearYou extends Component<Props, State> {
   }
 
   onDishesTypeChange = (indexDishesTypeSelected: number): void => {
-    this.setState({
-      indexDishesTypeSelected,
-      indexRestaurantSelected: 0,
-    }, () => {
+    const handleRestaurantsSelection = () => {
       const isRestaurantsCached = this.isRestaurantsCached();
 
       if (!isRestaurantsCached) {
         this.onRequestNearbyRestaurants();
       }
-    });
+    };
+
+    this.setState({
+      indexDishesTypeSelected,
+      indexRestaurantSelected: 0,
+    }, () => handleRestaurantsSelection());
   }
 
   onSelectMarker = (indexRestaurantSelected: number): void => {
@@ -216,7 +171,7 @@ class NearYou extends Component<Props, State> {
 
   renderContent = (): Object => {
     const restaurants = this.getRestaurantsList();
-    const hasRetaurants = restaurants.length > 0;
+    const hasRetaurants = (restaurants.length > 0);
 
     const { indexRestaurantSelected } = this.state;
 
@@ -230,7 +185,7 @@ class NearYou extends Component<Props, State> {
           <CustomTab
             onChangeMenuIndex={index => this.onDishesTypeChange(index)}
             contentWidth={appStyle.metrics.width}
-            data={customTabData}
+            data={menuItems}
             theme="red"
           />
         </CustomTabWrapper>

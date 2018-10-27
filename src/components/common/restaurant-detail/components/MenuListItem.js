@@ -54,7 +54,6 @@ const DishTitle = styled(Text).attrs({
 `;
 
 type Props = {
-  description: string,
   imageURL: string,
   title: string,
   price: number,

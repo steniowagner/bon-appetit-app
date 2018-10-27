@@ -76,19 +76,6 @@ type State = {
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class Search extends Component<Props, State> {
-  static navigationOptions = {
-    title: 'Search Restaurants',
-    headerStyle: {
-      backgroundColor: appStyles.colors.primaryColor,
-      borderBottomWidth: 0,
-    },
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTitleStyle: {
-      color: appStyles.colors.defaultWhite,
-      fontFamily: 'CircularStd-Bold',
-    },
-  };
-
   _restaurantListMarginTop = new Animated.Value(0);
   _restaurantListHeight = 0;
   _isFirstRender = true;

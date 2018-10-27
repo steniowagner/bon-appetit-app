@@ -50,10 +50,7 @@ const EventTitle = styled(Text)`
 
 const EventDescription = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '4.5%' : '4%');
-    return theme.metrics.getWidthFromDP(percentage);
-  }};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   font-family: CircularStd-Medium;
   text-align: center;
 `;

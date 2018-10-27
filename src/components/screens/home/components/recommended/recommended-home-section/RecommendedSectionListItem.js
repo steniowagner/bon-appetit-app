@@ -77,10 +77,7 @@ const DistanceWrapper = styled(View)`
 const DistanceText = styled(Text)`
   padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.defaultWhite};
-  font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '4.5%' : '4%';
-    return theme.metrics.getWidthFromDP(percentage);
-  }};
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')};
   font-family: CircularStd-Bold;
 `;
 
@@ -153,11 +150,11 @@ class RecommendedSectionListItem extends Component<Props, State> {
           {title}
         </DisheTitle>
         <ReviewStars
-          shouldShowReviewsText
-          stars={stars}
-          reviews={reviews}
-          small
           textColor="defaultWhite"
+          shouldShowReviewsText
+          reviews={reviews}
+          stars={stars}
+          small
         />
         <DistanceWrapper>
           <DistanceIcon />

@@ -190,16 +190,4 @@ const Profile = () => (
   </Container>
 );
 
-Profile.navigationOptions = {
-  title: 'Profile',
-  headerStyle: {
-    backgroundColor: appStyle.colors.primaryColor,
-  },
-  headerTintColor: appStyle.colors.defaultWhite,
-  headerTitleStyle: {
-    color: appStyle.colors.defaultWhite,
-    fontFamily: 'CircularStd-Bold',
-  },
-};
-
 export default Profile;

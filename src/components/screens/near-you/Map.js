@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component, Fragment } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -32,6 +34,22 @@ class Map extends Component<Props, {}> {
     this.animateToLocation(indexLocationSelected, restaurants);
   }
 
+  getUserLocationMarker = (userLocation: Object): Object => ({
+    description: 'You\'re here',
+    name: 'Your Position',
+    id: 'user-location',
+    location: {
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude,
+    },
+  });
+
+  getInitialRegion = (userLocation: Object): Object => ({
+    ...userLocation,
+    latitudeDelta: 0.01152,
+    longitudeDelta: 0.0100,
+  })
+
   animateToLocation = (indexLocationSelected: number, restaurants: Array<Object>): void => {
     if (restaurants.length === 0) {
       return;
@@ -50,46 +68,40 @@ class Map extends Component<Props, {}> {
         this._markersRefs[indexLocationSelected].showCallout();
       }
     }, 1000);
-  };
+  }
 
   renderMarkers = (markers: Array<Object>, onSelectMarker: Function): Object => (
     <Fragment>
-      {
-        markers.map((marker, index) => {
-          const {
-            description,
-            location,
-            name,
-            id,
-          } = marker;
+      {markers.map((marker, index) => {
+        const {
+          description,
+          location,
+          name,
+          id,
+        } = marker;
 
-          const iconName = (id === 'user-location' ? 'account-location' : 'map-marker-radius');
+        const iconName = (id === 'user-location' ? 'account-location' : 'map-marker-radius');
 
-          return (
-            <Marker
-              ref={(markerRef) => { this._markersRefs[index] = markerRef; }}
-              onPress={() => {
-                if (id !== 'user-location') {
-                  onSelectMarker(index);
-                }
-              }}
-              coordinate={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-              }}
-              description={description}
-              title={name}
-              key={id}
-            >
-              <CustomMarker
-                name={iconName}
-              />
-            </Marker>
-          );
-        })
-      }
+        return (
+          <Marker
+            ref={(markerRef) => { this._markersRefs[index] = markerRef; }}
+            onPress={() => (id !== 'user-location') && onSelectMarker(index)}
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            description={description}
+            title={name}
+            key={id}
+          >
+            <CustomMarker
+              name={iconName}
+            />
+          </Marker>
+        );
+      })}
     </Fragment>
-  );
+  )
 
   render() {
     const {
@@ -99,25 +111,11 @@ class Map extends Component<Props, {}> {
       restaurants,
     } = this.props;
 
-    const userLocationMarker = {
-      description: 'You\'re here',
-      name: 'Your Position',
-      id: 'user-location',
-      location: {
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
-      },
-    };
+    const userLocationMarker = this.getUserLocationMarker(userLocation);
+    const initialRegion = this.getInitialRegion(userLocation);
 
     const markers = [...restaurants, userLocationMarker];
-
     this._markersRefs = [markers.length];
-
-    const initialRegion = {
-      ...userLocation,
-      latitudeDelta: 0.01152,
-      longitudeDelta: 0.0100,
-    };
 
     return (
       <MapContainer
