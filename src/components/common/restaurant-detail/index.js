@@ -64,12 +64,6 @@ const FORTALEZA_CITY_LOCATION = {
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class RestaurantDetail extends Component<Props, State> {
-  static navigationOptions = {
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTransparent: true,
-    headerBackTitle: null,
-  };
-
   _animatedFlatlistPosition = new Animated.Value(0);
   _animatedFlatlistOpacity = new Animated.Value(1);
   _flatListWidth = 0;

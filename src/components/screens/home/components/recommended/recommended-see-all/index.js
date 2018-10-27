@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import styled from 'styled-components';
-import appStyles from 'styles';
 
 import Loading from 'components/common/Loading';
 import RecommendedSeeAllItemList from './RecommendedSeeAllItemList';
@@ -15,25 +14,13 @@ const List = styled(FlatList)`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.white};
 `;
+
 type Props = {
   getAllDishesRequest: Function,
   dishInfo: Object,
 };
 
 class RecommendedSeeAll extends Component<Props, {}> {
-  static navigationOptions = () => ({
-    title: 'Recommended',
-    headerStyle: {
-      backgroundColor: appStyles.colors.primaryColor,
-      borderBottomWidth: 0,
-    },
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTitleStyle: {
-      color: appStyles.colors.defaultWhite,
-      fontFamily: 'CircularStd-Black',
-    },
-  });
-
   componentDidMount() {
     const { getAllDishesRequest } = this.props;
 
@@ -47,10 +34,11 @@ class RecommendedSeeAll extends Component<Props, {}> {
     return (
       <List
         showsVerticalScrollIndicator={false}
-        data={dishes}
         keyExtractor={item => item._id}
-        renderItem={({ item }) => (
+        data={dishes}
+        renderItem={({ item, index }) => (
           <RecommendedSeeAllItemList
+            hasBottomMargin={(index >= 0) && (index < dishes.length - 1)}
             price={parseFloat(item.price).toFixed(2)}
             description={item.description}
             imageURL={item.imageURL}

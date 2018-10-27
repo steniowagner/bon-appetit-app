@@ -29,6 +29,7 @@ const getTextSize = (type: string): number => {
 const Container = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
+  margin-bottom: ${({ hasBottomMargin, theme }) => (hasBottomMargin ? theme.metrics.extraSmallSize : 0)}px;
 `;
 
 const DarkLayer = styled(View)`
@@ -97,6 +98,7 @@ const MapIcon = styled(Icon).attrs({
 `;
 
 type Props = {
+  hasBottomMargin: boolean,
   navigation: Function,
   imageURL: string,
   title: string,
@@ -107,7 +109,7 @@ type Props = {
 };
 
 const onPressItem = (navigation: Function, imageURL: string, id: string): void => {
-  navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
+  navigation.navigate(ROUTE_NAMES.DISHE_DETAIL_REVIEW, {
     payload: { imageURL, id },
   });
 };
@@ -152,6 +154,7 @@ const renderImage = (imageURL: string): Object => (
 );
 
 const RecommendedSeeAllItemList = ({
+  hasBottomMargin,
   navigation,
   imageURL,
   reviews,
@@ -163,7 +166,9 @@ const RecommendedSeeAllItemList = ({
   <TouchableWithoutFeedback
     onPress={() => onPressItem(navigation, imageURL, id)}
   >
-    <Container>
+    <Container
+      hasBottomMargin={hasBottomMargin}
+    >
       {renderImage(imageURL)}
       {renderDarkLayerContent(title, stars, reviews, price)}
     </Container>

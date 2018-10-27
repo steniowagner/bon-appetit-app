@@ -94,7 +94,7 @@ type Props = {
 };
 
 const onPressItem = (navigation: Function, imageURL: string, id: string): void => {
-  navigation.navigate(ROUTE_NAMES.FOOD_DETAIL, {
+  navigation.navigate(ROUTE_NAMES.DISHE_DETAIL_REVIEW, {
     payload: { imageURL, id },
   });
 };

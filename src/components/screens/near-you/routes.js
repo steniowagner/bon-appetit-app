@@ -12,7 +12,7 @@ import NearYou from './index';
 export const ROUTE_NAMES = {
   RESTAURANT_ADDRESS_MAP: 'RESTAURANT_ADDRESS_MAP',
   RESTAURANT_DETAIL: 'RESTAURANT_DETAIL',
-  FOOD_DETAIL_REVIEW: 'FOOD_DETAIL_REVIEW',
+  DISHE_DETAIL_REVIEW: 'DISHE_DETAIL_REVIEW',
   NEAR_YOU: 'NEAR_YOU',
 };
 
@@ -49,7 +49,7 @@ const ROUTES = createStackNavigator({
     }),
   },
 
-  [ROUTE_NAMES.FOOD_DETAIL_REVIEW]: {
+  [ROUTE_NAMES.DISHE_DETAIL_REVIEW]: {
     screen: DisheDetailReview,
     navigationOptions: () => ({
       headerBackTitle: null,

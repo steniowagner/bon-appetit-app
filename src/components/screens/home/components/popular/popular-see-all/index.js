@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import styled from 'styled-components';
-import appStyles from 'styles';
 
 import Loading from 'components/common/Loading';
 import PopularSeeAllItemList from './PopularSeeAllItemList';
@@ -22,19 +21,6 @@ type Props = {
 };
 
 class PopularSeeAll extends Component<Props, {}> {
-  static navigationOptions = () => ({
-    title: 'Popular',
-    headerStyle: {
-      backgroundColor: appStyles.colors.primaryColor,
-      borderBottomWidth: 0,
-    },
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTitleStyle: {
-      color: appStyles.colors.defaultWhite,
-      fontFamily: 'CircularStd-Black',
-    },
-  });
-
   componentDidMount() {
     const { getAllDishesRequest } = this.props;
 

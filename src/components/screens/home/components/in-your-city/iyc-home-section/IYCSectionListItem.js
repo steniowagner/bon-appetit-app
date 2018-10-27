@@ -3,7 +3,6 @@
 import React, { Component, Fragment } from 'react';
 import {
   TouchableWithoutFeedback,
-  Platform,
   Image,
   Text,
   View,

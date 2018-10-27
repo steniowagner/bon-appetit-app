@@ -112,12 +112,6 @@ type State = {
 };
 
 class EventInfo extends Component<Props, State> {
-  static navigationOptions = {
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTransparent: true,
-    headerBackTitle: null,
-  };
-
   state = {
     isEventImageLoaded: false,
   };

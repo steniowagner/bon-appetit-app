@@ -21,10 +21,10 @@ export const ROUTE_NAMES = {
   ALL_EVENTS: 'ALL_EVENTS',
   RESTAURANT_DETAIL: 'RESTAURANT_DETAIL',
   RESTAURANT_ADDRESS_MAP: 'RESTAURANT_ADDRESS_MAP',
-  FOOD_DETAIL: 'FOOD_DETAIL',
+  DISHE_DETAIL: 'DISHE_DETAIL',
   ALL_POPULAR: 'ALL_POPULAR',
-  ALL_YOU_MIGHT_LIKE: 'ALL_YOU_MIGHT_LIKE',
-  FOOD_DETAIL_REVIEW: 'FOOD_DETAIL_REVIEW',
+  ALL_RECOMMENDED: 'ALL_RECOMMENDED',
+  DISHE_DETAIL_REVIEW: 'DISHE_DETAIL_REVIEW',
 };
 
 const ROUTES = createStackNavigator({
@@ -51,6 +51,10 @@ const ROUTES = createStackNavigator({
   [ROUTE_NAMES.EVENT_DETAILS]: {
     screen: EventDetails,
     navigationOptions: () => ({
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTransparent: true,
+      headerBackTitle: null,
+      borderBottomWidth: 0,
       ...Platform.select({
         android: {
           headerStyle: {
@@ -58,21 +62,32 @@ const ROUTES = createStackNavigator({
           },
         },
       }),
-      headerBackTitle: null,
-      borderBottomWidth: 0,
     }),
   },
 
   [ROUTE_NAMES.ALL_EVENTS]: {
     screen: AllEvents,
-    navigationOptions: () => ({
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.state.params.title || '',
       headerBackTitle: null,
+      headerStyle: {
+        backgroundColor: appStyles.colors.primaryColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTitleStyle: {
+        fontSize: appStyles.metrics.navigationHeaderFontSize,
+        fontFamily: 'CircularStd-Medium',
+        color: appStyles.colors.defaultWhite,
+      },
     }),
   },
 
   [ROUTE_NAMES.RESTAURANT_DETAIL]: {
     screen: RestaurantDetail,
     navigationOptions: () => ({
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTransparent: true,
       headerBackTitle: null,
       ...Platform.select({
         android: {
@@ -88,12 +103,24 @@ const ROUTES = createStackNavigator({
     screen: RestaurantAddressMap,
     navigationOptions: () => ({
       headerBackTitle: null,
+      title: 'Location',
+      headerStyle: {
+        backgroundColor: appStyles.colors.primaryColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTitleStyle: {
+        color: appStyles.colors.defaultWhite,
+        fontFamily: 'CircularStd-Medium',
+      },
     }),
   },
 
-  [ROUTE_NAMES.FOOD_DETAIL]: {
+  [ROUTE_NAMES.DISHE_DETAIL]: {
     screen: DisheDetail,
     navigationOptions: () => ({
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTransparent: true,
       headerBackTitle: null,
       ...Platform.select({
         android: {
@@ -105,7 +132,7 @@ const ROUTES = createStackNavigator({
     }),
   },
 
-  [ROUTE_NAMES.FOOD_DETAIL_REVIEW]: {
+  [ROUTE_NAMES.DISHE_DETAIL_REVIEW]: {
     screen: DisheDetailReview,
     navigationOptions: () => ({
       headerBackTitle: null,
@@ -123,13 +150,33 @@ const ROUTES = createStackNavigator({
     screen: PopularSeeAll,
     navigationOptions: () => ({
       headerBackTitle: null,
+      title: 'Popular',
+      headerStyle: {
+        backgroundColor: appStyles.colors.primaryColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTitleStyle: {
+        color: appStyles.colors.defaultWhite,
+        fontFamily: 'CircularStd-Medium',
+      },
     }),
   },
 
-  [ROUTE_NAMES.ALL_YOU_MIGHT_LIKE]: {
+  [ROUTE_NAMES.ALL_RECOMMENDED]: {
     screen: YMLSeeAll,
     navigationOptions: () => ({
       headerBackTitle: null,
+      title: 'Recommended',
+      headerStyle: {
+        backgroundColor: appStyles.colors.primaryColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: appStyles.colors.defaultWhite,
+      headerTitleStyle: {
+        color: appStyles.colors.defaultWhite,
+        fontFamily: 'CircularStd-Medium',
+      },
     }),
   },
 },

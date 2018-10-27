@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { View, FlatList } from 'react-native';
 import styled from 'styled-components';
@@ -18,7 +20,7 @@ type Props = {
   dishes: any,
 };
 
-const YMLHomeSection = ({ dishes }: Props) => (
+const YMLHomeSection = ({ dishes }: Props): Object => (
   <Container>
     <ListWrapper>
       <FlatList

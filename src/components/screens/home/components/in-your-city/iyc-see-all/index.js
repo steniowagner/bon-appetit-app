@@ -31,20 +31,6 @@ type Props = {
 };
 
 class AllEvents extends Component<Props, {}> {
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params.title || '',
-    headerStyle: {
-      backgroundColor: appStyles.colors.primaryColor,
-      borderBottomWidth: 0,
-    },
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTitleStyle: {
-      fontSize: appStyles.metrics.navigationHeaderFontSize,
-      fontFamily: 'CircularStd-Black',
-      color: appStyles.colors.defaultWhite,
-    },
-  });
-
   componentDidMount() {
     this.onRequestEvents();
   }

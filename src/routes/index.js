@@ -25,43 +25,51 @@ const getTabIcon = (icon: string): Object => ({ tintColor }: Props) => (
   />
 );
 
+export const ROUTE_NAMES = {
+  HOME: 'HOME',
+  SEARCH: 'SEARCH',
+  NEAR_YOU: 'NEAR_YOU',
+  USER_PROFILE: 'USER_PROFILE',
+  SETTINGS: 'SETTINGS',
+};
+
 const ApplicationTabs = () => createMaterialTopTabNavigator({
-  Home: {
+  [ROUTE_NAMES.HOME]: {
     screen: HomeRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('home'),
     },
   },
 
-  Search: {
+  [ROUTE_NAMES.SEARCH]: {
     screen: SearchRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('magnify'),
     },
   },
 
-  NearYou: {
+  [ROUTE_NAMES.NEAR_YOU]: {
     screen: NearYouRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('map'),
     },
   },
 
-  UserProfile: {
+  [ROUTE_NAMES.USER_PROFILE]: {
     screen: UserProfileRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('account'),
     },
   },
 
-  Settings: {
+  [ROUTE_NAMES.SETTINGS]: {
     screen: SettingsRoutes,
     navigationOptions: {
       tabBarIcon: getTabIcon('settings'),
     },
   },
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: ROUTE_NAMES.HOME,
   tabBarPosition: 'bottom',
   optimizationsEnabled: true,
   animationEnabled: true,

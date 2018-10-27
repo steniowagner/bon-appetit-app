@@ -189,17 +189,4 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
   );
 };
 
-RestaurantAddressMap.navigationOptions = () => ({
-  title: 'Location',
-  headerStyle: {
-    backgroundColor: appStyles.colors.primaryColor,
-    borderBottomWidth: 0,
-  },
-  headerTintColor: appStyles.colors.defaultWhite,
-  headerTitleStyle: {
-    color: appStyles.colors.defaultWhite,
-    fontFamily: 'CircularStd-Black',
-  },
-});
-
 export default RestaurantAddressMap;

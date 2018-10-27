@@ -140,12 +140,6 @@ type State = {
 };
 
 class DisheDetail extends Component<Props, State> {
-  static navigationOptions = {
-    headerTintColor: appStyles.colors.defaultWhite,
-    headerTransparent: true,
-    headerBackTitle: null,
-  };
-
   _animatedFlatlistPosition = new Animated.Value(0);
   _flatListHeight = 0;
 

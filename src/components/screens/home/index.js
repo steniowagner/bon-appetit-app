@@ -4,7 +4,6 @@ import React, { Component, Fragment } from 'react';
 import {
   RefreshControl,
   ScrollView,
-  Platform,
   View,
 } from 'react-native';
 
@@ -137,7 +136,7 @@ class HomeMainContent extends Component<Props, State> {
         {hasYouMightLikeDishes && (
           <Section
             title="Recommended"
-            nextRoute={ROUTE_NAMES.ALL_YOU_MIGHT_LIKE}
+            nextRoute={ROUTE_NAMES.ALL_RECOMMENDED}
             render={() => (
               <RecommendedSection
                 dishes={youMightLikeDishes}
