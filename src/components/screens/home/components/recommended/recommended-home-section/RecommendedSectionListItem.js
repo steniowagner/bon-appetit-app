@@ -119,7 +119,7 @@ class RecommendedSectionListItem extends Component<Props, State> {
   onPressItem = () => {
     const { navigation, id, imageURL } = this.props;
 
-    navigation.navigate(ROUTE_NAMES.DISHE_DETAIL_REVIEW, {
+    navigation.navigate(ROUTE_NAMES.DISHE_DETAIL, {
       payload: {
         imageURL,
         id,
