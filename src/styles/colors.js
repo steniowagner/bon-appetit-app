@@ -12,8 +12,6 @@ export default {
   yellow: '#F8C330',
   gray: '#909090',
   lightGray: '#F2F2F2',
-  linkedin: '#0077B5',
-  github: '#333333',
   subText: 'rgba(0, 0, 0, 0.6)',
   androidToolbarColor: '#a60023',
 };

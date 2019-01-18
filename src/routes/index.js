@@ -11,7 +11,7 @@ import {
 import SearchRestaurantsRoutes from '~/components/screens/search-restaurants/routes';
 import NearYouRoutes from '~/components/screens/near-you/routes';
 import Settings from '~/components/screens/settings/routes';
-import ProfileRoutes from '~/components/screens/profile';
+import ProfileRoutes from '~/components/screens/profile/routes';
 import HomeRoutes from '~/components/screens/home/routes';
 
 import appStyles from '~/styles';
@@ -70,7 +70,7 @@ const ApplicationTabs = createMaterialTopTabNavigator(
     },
   },
   {
-    initialRouteName: ROUTE_NAMES.HOME,
+    initialRouteName: ROUTE_NAMES.PROFILE,
     tabBarPosition: 'bottom',
     optimizationsEnabled: true,
     animationEnabled: true,
