@@ -1,71 +1,64 @@
 import Immutable from 'seamless-immutable';
 
 export const Types = {
-  GET_REQUEST: 'search-restaurants/GET_REQUEST',
-  GET_SUCCESS: 'search-restaurants/GET_SUCCESS',
-  GET_FAILURE: 'search-restaurants/GET_FAILURE',
+  SEARCH_RESTAURANTS_REQUEST: 'search-restaurants/SEARCH_RESTAURANTS_REQUEST',
+  SEARCH_RESTAURANTS_SUCCESS: 'search-restaurants/SEARCH_RESTAURANTS_SUCCESS',
+  SEARCH_RESTAURANTS_FAILURE: 'search-restaurants/SEARCH_RESTAURANTS_FAILURE',
 };
 
-const initialState = Immutable({
-  data: [],
-  loading: false,
+const INITIAL_STATE = Immutable({
   notFound: false,
-  error: null,
+  loading: false,
+  error: false,
+  data: [],
 });
 
-export default function searchRestaurants(state = initialState, action) {
-  switch (action.type) {
-    case Types.GET_REQUEST:
+export const Creators = {
+  requestSearchRestaurants: (dishesTypes, maxDistance, userLocation) => ({
+    type: Types.SEARCH_RESTAURANTS_REQUEST,
+    payload: {
+      userLocation,
+      dishesTypes,
+      maxDistance,
+    },
+  }),
+
+  requestSearchRestaurantsSuccess: data => ({
+    type: Types.SEARCH_RESTAURANTS_SUCCESS,
+    payload: { data },
+  }),
+
+  requestSearchRestaurantsFailure: () => ({
+    type: Types.SEARCH_RESTAURANTS_FAILURE,
+  }),
+};
+
+const searchRestaurants = (state = INITIAL_STATE, { payload, type }) => {
+  switch (type) {
+    case Types.SEARCH_RESTAURANTS_REQUEST:
       return {
-        ...state,
+        ...INITIAL_STATE,
         loading: true,
       };
 
-    case Types.GET_SUCCESS:
+    case Types.SEARCH_RESTAURANTS_SUCCESS:
       return {
-        data: action.payload.data,
-        notFound: action.payload.data.restaurants.length === 0,
+        notFound: payload.data.restaurants.length === 0,
+        data: payload.data,
         loading: false,
-        error: null,
+        error: false,
       };
 
     case Types.GET_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload.error,
+        error: true,
       };
 
     default:
       return state;
   }
-}
-
-export const Creators = {
-  searchRestaurantsRequest: (params) => {
-    const {
-      dishesTypes,
-      maxDistance,
-      userLocation,
-    } = params;
-
-    return ({
-      type: Types.GET_REQUEST,
-      payload: {
-        dishesTypes,
-        maxDistance,
-        userLocation,
-      },
-    });
-  },
-
-  searchRestaurantsSuccess: data => ({
-    type: Types.GET_SUCCESS,
-    payload: { data },
-  }),
-
-  searchRestaurantsFailure: error => ({
-    type: Types.GET_FAILURE,
-    payload: { error },
-  }),
 };
+
+export default searchRestaurants;

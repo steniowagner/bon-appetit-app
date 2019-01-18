@@ -141,7 +141,7 @@
 #define PACKAGE_NAME "glog"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "glog 0.3.4"
+#define PACKAGE_STRING "glog 0.3.5"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "glog"
@@ -150,17 +150,17 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.3.4"
+#define PACKAGE_VERSION "0.3.5"
 
 /* How to access the PC from a struct ucontext */
-/* #undef PC_FROM_UCONTEXT */
+#define PC_FROM_UCONTEXT uc_mcontext->__ss.__rip
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
 /* #undef PTHREAD_CREATE_JOINABLE */
 
 /* The size of `void *', as computed by sizeof. */
-#define SIZEOF_VOID_P 4
+#define SIZEOF_VOID_P 8
 
 /* Define to 1 if you have the ANSI C header files. */
 /* #undef STDC_HEADERS */
@@ -172,7 +172,7 @@
 #define TEST_SRC_DIR "."
 
 /* Version number of package */
-#define VERSION "0.3.4"
+#define VERSION "0.3.5"
 
 /* Stops putting the code inside the Google namespace */
 #define _END_GOOGLE_NAMESPACE_ }

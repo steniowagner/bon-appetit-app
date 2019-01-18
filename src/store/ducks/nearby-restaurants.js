@@ -1,60 +1,65 @@
 import Immutable from 'seamless-immutable';
 
 export const Types = {
-  GET_REQUEST: 'nearby-restaurants/GET_REQUEST',
-  GET_SUCCESS: 'nearby-restaurants/GET_SUCCESS',
-  GET_FAILURE: 'nearby-restaurants/GET_FAILURE',
+  GET_NEAR_BY_RESTAURANTS_REQUEST:
+    'nearby-restaurants/GET_NEAR_BY_RESTAURANTS_REQUEST',
+  GET_NEAR_BY_RESTAURANTS_SUCCESS:
+    'nearby-restaurants/GET_NEAR_BY_RESTAURANTS_SUCCESS',
+  GET_NEAR_BY_RESTAURANTS_FAILURE:
+    'nearby-restaurants/GET_NEAR_BY_RESTAURANTS_FAILURE',
 };
 
-const initialState = Immutable({
-  data: [],
+const INITIAL_STATE = Immutable({
   loading: false,
-  error: null,
+  error: false,
+  data: [],
 });
 
-export default function nearbyRestaurants(state = initialState, action) {
-  switch (action.type) {
-    case Types.GET_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-
-    case Types.GET_SUCCESS:
-      return {
-        data: action.payload.data,
-        loading: false,
-        error: null,
-      };
-
-    case Types.GET_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload.error,
-      };
-
-    default:
-      return state;
-  }
-}
-
 export const Creators = {
-  getNearbyRestaurantsRequest: (dishesType, userLocation) => ({
-    type: Types.GET_REQUEST,
+  requestNearbyRestaurants: (dishesType, userLocation) => ({
+    type: Types.GET_NEAR_BY_RESTAURANTS_REQUEST,
     payload: {
       dishesType,
       userLocation,
     },
   }),
 
-  getNearbyRestaurantsSuccess: data => ({
-    type: Types.GET_SUCCESS,
+  requestNearbyRestaurantsSuccess: data => ({
+    type: Types.GET_NEAR_BY_RESTAURANTS_SUCCESS,
     payload: { data },
   }),
 
-  getNearbyRestaurantsFailure: error => ({
-    type: Types.GET_FAILURE,
+  requestNearbyRestaurantsFailure: error => ({
+    type: Types.GET_NEAR_BY_RESTAURANTS_FAILURE,
     payload: { error },
   }),
 };
+
+const nearbyRestaurants = (state = INITIAL_STATE, { type, payload }) => {
+  switch (type) {
+    case Types.GET_NEAR_BY_RESTAURANTS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case Types.GET_NEAR_BY_RESTAURANTS_SUCCESS:
+      return {
+        data: payload.data,
+        loading: false,
+        error: true,
+      };
+
+    case Types.GET_NEAR_BY_RESTAURANTS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default nearbyRestaurants;

@@ -1,57 +1,37 @@
 // @flow
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
 
-import { Creators as NearbyRestaurantsActions } from 'store/ducks/nearby-restaurants';
+import styled from 'styled-components';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Creators as NearbyRestaurantsActions } from '~/store/ducks/nearby-restaurants';
 
-import { getItemFromStorage } from 'components/utils/AsyncStoarageManager';
-import AppKeys from 'components/utils/Keys';
-import Messages from 'components/utils/Messages';
+import { getItemFromStorage } from '~/utils/AsyncStoarageManager';
+import dishesTypesItems from './dishesTypesItems';
+import CONSTANTS from '~/utils/CONSTANTS';
 
-import styled from 'styled-components';
-import appStyle from 'styles';
-
-import CustomTab from 'components/common/CustomTab';
-import RestaurantsList from './restaurants-list';
-import Map from './Map';
-
-import { FORTALEZA_CITY_LOCATION, menuItems } from './constants';
-
-const Container = styled(View)`
-  flex: 1;
-  background-color: ${({ theme }) => theme.colors.white};
-`;
-
-const ContentContainer = styled(View)`
-  flex: 1;
-  justify-content: flex-end;
-  align-items: flex-end;
-`;
-
-const CustomTabWrapper = styled(View)`
-  position: absolute;
-`;
+import NearYouComponent from './components/NearYou';
 
 type Props = {
-  getNearbyRestaurantsRequest: Function,
-  restaurantsFromRequest: Object,
+  requestNearbyRestaurants: Function,
+  nearbyRestaurants: Object,
 };
 
 type State = {
+  restaurantsCached: Array<Object>,
   indexDishesTypeSelected: number,
   indexRestaurantSelected: number,
-  restaurantsCached: Array<any>,
   userLocation: Object,
 };
 
-class NearYou extends Component<Props, State> {
+class NearYouContainer extends Component<Props, State> {
   state = {
     userLocation: {
-      latitude: FORTALEZA_CITY_LOCATION.latitude,
-      longitude: FORTALEZA_CITY_LOCATION.longitude,
+      latitude: CONSTANTS.FORTALEZA_CITY_LOCATION.latitude,
+      longitude: CONSTANTS.FORTALEZA_CITY_LOCATION.longitude,
     },
     indexDishesTypeSelected: 0,
     indexRestaurantSelected: 0,
@@ -60,23 +40,33 @@ class NearYou extends Component<Props, State> {
 
   async componentDidMount() {
     const { userLocation } = this.state;
-    const persistedUserLocation = await getItemFromStorage(AppKeys.USER_LOCATION, [userLocation.latitude, userLocation.longitude]);
+
+    const persistedUserLocation = await getItemFromStorage(
+      CONSTANTS.USER_LOCATION,
+      [userLocation.latitude, userLocation.longitude],
+    );
+
     const { latitude, longitude } = JSON.parse(persistedUserLocation);
 
-    this.setState({
-      userLocation: {
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
+    this.setState(
+      {
+        userLocation: {
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
+        },
       },
-    }, () => this.onRequestNearbyRestaurants());
+      () => this.onRequestNearbyRestaurants(),
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     const { indexDishesTypeSelected, restaurantsCached } = this.state;
-    const { restaurantsFromRequest } = nextProps;
-    const { restaurants } = restaurantsFromRequest.data;
+    const { nearbyRestaurants } = nextProps;
+    const { restaurants } = nearbyRestaurants.data;
 
-    const cached = Object.assign([], restaurantsCached, { [indexDishesTypeSelected]: restaurants });
+    const cached = Object.assign([], restaurantsCached, {
+      [indexDishesTypeSelected]: restaurants,
+    });
 
     this.setState({
       restaurantsCached: cached,
@@ -84,15 +74,13 @@ class NearYou extends Component<Props, State> {
   }
 
   onRequestNearbyRestaurants = (): void => {
-    const { getNearbyRestaurantsRequest } = this.props;
+    const { indexDishesTypeSelected, userLocation } = this.state;
+    const { requestNearbyRestaurants } = this.props;
 
-    const { indexDishesTypeSelected } = this.state;
-    const dishesSelected = menuItems[indexDishesTypeSelected].id;
+    const dishSelected = dishesTypesItems[indexDishesTypeSelected].id;
 
-    const { userLocation } = this.state;
-
-    getNearbyRestaurantsRequest(dishesSelected, userLocation);
-  }
+    requestNearbyRestaurants(dishSelected, userLocation);
+  };
 
   onDishesTypeChange = (indexDishesTypeSelected: number): void => {
     const handleRestaurantsSelection = () => {
@@ -103,104 +91,70 @@ class NearYou extends Component<Props, State> {
       }
     };
 
-    this.setState({
-      indexDishesTypeSelected,
-      indexRestaurantSelected: 0,
-    }, () => handleRestaurantsSelection());
-  }
+    this.setState(
+      {
+        indexDishesTypeSelected,
+        indexRestaurantSelected: 0,
+      },
+      () => handleRestaurantsSelection(),
+    );
+  };
 
   onSelectMarker = (indexRestaurantSelected: number): void => {
     this.setState({
       indexRestaurantSelected,
     });
-  }
+  };
 
-  getRestaurantsFromRequest = (): Array<any> => {
-    const { restaurantsFromRequest } = this.props;
-    const { loading, data } = restaurantsFromRequest;
+  getnearbyRestaurants = (): Array<Object> => {
+    const { nearbyRestaurants } = this.props;
+    const { loading, data } = nearbyRestaurants;
 
-    const canShowRestaurants = (!loading && !!data.restaurants);
+    const canShowRestaurants = !loading && !!data.restaurants;
 
-    const restaurants = (canShowRestaurants ? data.restaurants : []);
+    const restaurants = canShowRestaurants ? data.restaurants : [];
 
     return restaurants;
-  }
+  };
 
-  getRestaurantsFromCache = (): Array<any> => {
+  getRestaurantsFromCache = (): Object => {
     const { indexDishesTypeSelected, restaurantsCached } = this.state;
 
     return restaurantsCached[indexDishesTypeSelected];
-  }
+  };
 
-  getRestaurantsList = (): Array<any> => {
+  getRestaurantsList = (): mixed => {
     const isRestaurantsCached = this.isRestaurantsCached();
 
-    const restaurants = isRestaurantsCached ? this.getRestaurantsFromCache() : this.getRestaurantsFromRequest();
+    const restaurants = isRestaurantsCached
+      ? this.getRestaurantsFromCache()
+      : this.getnearbyRestaurants();
 
     return restaurants;
-  }
+  };
 
-  isRestaurantsCached = () => {
+  isRestaurantsCached = (): boolean => {
     const { indexDishesTypeSelected, restaurantsCached } = this.state;
 
     const isCached = restaurantsCached[indexDishesTypeSelected];
 
     return !!isCached;
-  }
+  };
 
-  renderMap = (restaurants: Array<Object>, indexRestaurantSelected: number): Object => {
-    const { userLocation } = this.state;
+  render() {
+    const { indexRestaurantSelected, userLocation } = this.state;
+
+    const restaurants = this.getRestaurantsList();
 
     return (
-      <Map
-        onSelectMarker={index => this.onSelectMarker(index)}
-        indexLocationSelected={indexRestaurantSelected}
+      <NearYouComponent
+        indexRestaurantSelected={indexRestaurantSelected}
+        onDishesTypeChange={this.onDishesTypeChange}
+        onSelectMarker={this.onSelectMarker}
+        dishesTypesItems={dishesTypesItems}
         userLocation={userLocation}
         restaurants={restaurants}
       />
-    );
-  }
-
-  renderRestaurantsList = (restaurants: Array<Object>, indexRestaurantSelected: number): Object => (
-    <RestaurantsList
-      onSelectMarker={index => this.onSelectMarker(index)}
-      indexRestaurantSelected={indexRestaurantSelected}
-      restaurants={restaurants}
-    />
-  );
-
-  renderContent = (): Object => {
-    const restaurants = this.getRestaurantsList();
-    const hasRetaurants = (restaurants.length > 0);
-
-    const { indexRestaurantSelected } = this.state;
-
-    return (
-      <Fragment>
-        <ContentContainer>
-          {this.renderMap(restaurants, indexRestaurantSelected)}
-          {hasRetaurants && this.renderRestaurantsList(restaurants, indexRestaurantSelected)}
-        </ContentContainer>
-        <CustomTabWrapper>
-          <CustomTab
-            onChangeMenuIndex={index => this.onDishesTypeChange(index)}
-            contentWidth={appStyle.metrics.width}
-            data={menuItems}
-            theme="red"
-          />
-        </CustomTabWrapper>
-      </Fragment>
-    );
-  }
-
-  render() {
-    const { restaurantsFromRequest } = this.props;
-    const { error } = restaurantsFromRequest;
-
-    return (
-      <Container>
-        {error ? alert(Messages.ERROR_MESSAGE) : this.renderContent()}
-      </Container>
     );
   }
 }
@@ -208,7 +162,10 @@ class NearYou extends Component<Props, State> {
 const mapDispatchToProps = dispatch => bindActionCreators(NearbyRestaurantsActions, dispatch);
 
 const mapStateToProps = state => ({
-  restaurantsFromRequest: state.nearbyRestaurants,
+  nearbyRestaurants: state.nearbyRestaurants,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NearYou);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NearYouContainer);

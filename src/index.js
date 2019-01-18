@@ -1,29 +1,30 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import { ThemeProvider } from 'styled-components';
 import { StatusBar } from 'react-native';
-import { Provider } from 'react-redux';
-import store from 'store';
 
-import CreateNavigation from 'routes';
-import AppTheme from 'styles';
+import { ThemeProvider } from 'styled-components';
+import { Provider } from 'react-redux';
 
 import './config/ReactotronConfig';
 
-const ApplicationNavigator = CreateNavigation();
+import ApplicationNavigator from './routes';
+import AppTheme from './styles';
+import store from './store';
 
-console.disableYellowBox = true;
-
-const App = () => (
+const App = (): Object => (
   <Fragment>
     <StatusBar
       backgroundColor={AppTheme.colors.androidToolbarColor}
       barStyle="light-content"
       animated
     />
-    <ThemeProvider theme={AppTheme}>
-      <Provider store={store}>
+    <ThemeProvider
+      theme={AppTheme}
+    >
+      <Provider
+        store={store}
+      >
         <ApplicationNavigator />
       </Provider>
     </ThemeProvider>

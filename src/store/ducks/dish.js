@@ -1,99 +1,101 @@
 import Immutable from 'seamless-immutable';
 
 export const Types = {
-  GET_SINGLE_REQUEST: 'dish/GET_SINGLE_REQUEST',
-  GET_SINGLE_SUCCESS: 'dish/GET_SINGLE_SUCCESS',
-  GET_SINGLE_FAILURE: 'dish/GET_SINGLE_FAILURE',
-  GET_ALL_REQUEST: 'dish/GET_ALL_REQUEST',
-  GET_ALL_SUCCESS: 'dish/GET_ALL_SUCCESS',
-  GET_ALL_FAILURE: 'dish/GET_ALL_FAILURE',
+  GET_DISH_DETAIL_REQUEST: 'dish/GET_DISH_DETAIL_REQUEST',
+  GET_DISH_DETAIL_SUCCESS: 'dish/GET_DISH_DETAIL_SUCCESS',
+  GET_DISH_DETAIL_FAILURE: 'dish/GET_DISH_DETAIL_FAILURE',
+  GET_ALL_DISHES_REQUEST: 'dish/GET_ALL_DISHES_REQUEST',
+  GET_ALL_DISHES_SUCCESS: 'dish/GET_ALL_DISHES_SUCCESS',
+  GET_ALL_DISHES_FAILURE: 'dish/GET_ALL_DISHES_FAILURE',
 };
 
 const initialState = Immutable({
-  requestSingleLoading: false,
-  requestSingleError: null,
-  requestSingleData: {},
-  requestAllLoading: false,
-  requestAllError: null,
-  requestAllData: [],
+  isDishesEmpty: false,
+  loading: false,
+  dishDetail: {},
+  error: false,
+  dishes: [],
 });
 
-export default function dish(state = initialState, action) {
-  switch (action.type) {
-    case Types.GET_SINGLE_REQUEST:
+export const Creators = {
+  requestAllDishes: () => ({
+    type: Types.GET_ALL_DISHES_REQUEST,
+  }),
+
+  requestAllDishesSuccess: data => ({
+    type: Types.GET_ALL_DISHES_SUCCESS,
+    payload: { data },
+  }),
+
+  requestAllDishesFailure: () => ({
+    type: Types.GET_ALL_DISHES_FAILURE,
+  }),
+
+  requestDishDetail: id => ({
+    type: Types.GET_DISH_DETAIL_REQUEST,
+    payload: { id },
+  }),
+
+  requestDishDetailSuccess: data => ({
+    type: Types.GET_DISH_DETAIL_SUCCESS,
+    payload: { data },
+  }),
+
+  requestDishDetailFailure: () => ({
+    type: Types.GET_DISH_DETAIL_FAILURE,
+  }),
+};
+
+const dish = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case Types.GET_ALL_DISHES_REQUEST:
       return {
         ...state,
-        requestSingleLoading: true,
+        isDishesEmpty: false,
+        loading: true,
+        error: false,
       };
 
-    case Types.GET_SINGLE_SUCCESS:
+    case Types.GET_ALL_DISHES_SUCCESS:
       return {
         ...state,
-        requestSingleData: action.payload.data,
-        requestSingleLoading: false,
-        requestSingleError: null,
+        isDishesEmpty: payload.data.length === 0,
+        dishes: payload.data,
+        loading: false,
       };
 
-    case Types.GET_SINGLE_FAILURE:
+    case Types.GET_ALL_DISHES_FAILURE:
       return {
         ...state,
-        requestSingleLoading: false,
-        requestSingleError: action.payload.error,
+        loading: false,
+        error: true,
       };
 
-    case Types.GET_ALL_REQUEST:
+    case Types.GET_DISH_DETAIL_REQUEST:
       return {
         ...state,
-        requestAllLoading: true,
+        loading: true,
+        error: false,
       };
 
-    case Types.GET_ALL_SUCCESS:
+    case Types.GET_DISH_DETAIL_SUCCESS:
       return {
         ...state,
-        requestAllData: action.payload.data,
-        requestAllLoading: false,
-        requestAllError: null,
+        dishDetail: payload.data,
+        loading: false,
+        error: false,
       };
 
-    case Types.GET_ALL_FAILURE:
+    case Types.GET_DISH_DETAIL_FAILURE:
       return {
         ...state,
-        requestAllLoading: false,
-        requestAllError: action.payload.error,
+        loading: false,
+        error: true,
       };
 
     default:
       return state;
   }
-}
-
-export const Creators = {
-  getSingleDishRequest: id => ({
-    type: Types.GET_SINGLE_REQUEST,
-    id,
-  }),
-
-  getSingleDishSuccess: data => ({
-    type: Types.GET_SINGLE_SUCCESS,
-    payload: { data },
-  }),
-
-  getSingleDishFailure: error => ({
-    type: Types.GET_SINGLE_FAILURE,
-    payload: { error },
-  }),
-
-  getAllDishesRequest: () => ({
-    type: Types.GET_ALL_REQUEST,
-  }),
-
-  getAllDishesSuccess: data => ({
-    type: Types.GET_ALL_SUCCESS,
-    payload: { data },
-  }),
-
-  getAllDishesFailure: error => ({
-    type: Types.GET_ALL_FAILURE,
-    payload: { error },
-  }),
 };
+
+export default dish;

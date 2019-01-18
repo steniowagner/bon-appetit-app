@@ -1,20 +1,16 @@
 // @flow
 
 import React from 'react';
-import {
-  TouchableWithoutFeedback,
-  Text,
-  View,
-} from 'react-native';
+import { TouchableWithoutFeedback, Text, View } from 'react-native';
 
-import { ROUTE_NAMES } from 'components/screens/home/routes';
 import { withNavigation } from 'react-navigation';
-
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 
-import ReviewStars from 'components/common/ReviewStars';
-import FlagPrice from 'components/common/FlagPrice';
+import ProgressiveImage from '~/components/common/ProgressiveImage';
+import ReviewStars from '~/components/common/ReviewStars';
+import FlagPrice from '~/components/common/FlagPrice';
+import CONSTANTS from '~/utils/CONSTANTS';
 
 const Container = styled(View)`
   width: ${({ theme }) => theme.metrics.getWidthFromDP('45%')}px;
@@ -34,9 +30,9 @@ const DarkLayer = styled(View)`
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
-const DishImage = styled(FastImage).attrs({
-  source: ({ imageURL }) => ({ uri: imageURL }),
-})`
+const DishImage = styled(FastImage).attrs(props => ({
+  source: { uri: props.imageURL },
+}))`
   width: 100%;
   height: 70%;
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
@@ -50,66 +46,56 @@ const DishTitle = styled(Text).attrs({
   margin-top: ${({ theme }) => theme.metrics.getWidthFromDP('0.5%')}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4.5%')}px;
-  fontFamily: CircularStd-Medium;
+  fontfamily: CircularStd-Medium;
 `;
 
 type Props = {
+  navigation: Object,
   imageURL: string,
   title: string,
   price: number,
   stars: number,
+  id: string,
 };
 
-const onPressItem = (props: Object): void => {
-  const { navigation } = props;
-
-  const payload = {
-    ...props,
-  };
-
-  delete payload.navigation;
-
-  navigation.navigate(ROUTE_NAMES.DISHE_DETAIL_REVIEW, { payload });
-};
-
-const MenuListItem = (props: Props): Object => {
-  const {
-    imageURL,
-    price,
-    stars,
-    title,
-  } = props;
-
-  return (
-    <Container>
-      <TouchableWithoutFeedback
-        onPress={() => onPressItem(props)}
-      >
-        <View>
-          <DishImage
-            imageURL={imageURL}
-          />
-          <DarkLayer>
-            <FlagPriceWrapper>
-              <FlagPrice
-                price={price}
-              />
-            </FlagPriceWrapper>
-          </DarkLayer>
-          <DishTitle>
-            {title}
-          </DishTitle>
-          <ReviewStars
-            shouldShowReviewsText
-            textColor="darkText"
-            stars={stars}
-            reviews={12}
-            small
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    </Container>
-  );
-};
+const MenuListItem = ({
+  navigation,
+  imageURL,
+  price,
+  stars,
+  title,
+  id,
+}: Props): Object => (
+  <Container>
+    <TouchableWithoutFeedback
+      onPress={() => navigation.navigate(CONSTANTS.ROUTE_DISH_DETAIL_REVIEW, {
+        [CONSTANTS.NAVIGATION_PARAM_IS_DISH_DETAIL_REVIEW_MODE]: false,
+        [CONSTANTS.NAVIGATION_PARAM_ID]: id,
+      })
+      }
+    >
+      <View>
+        <DishImage
+          imageURL={imageURL}
+        />
+        <DarkLayer>
+          <FlagPriceWrapper>
+            <FlagPrice
+              price={price}
+            />
+          </FlagPriceWrapper>
+        </DarkLayer>
+        <DishTitle>{title}</DishTitle>
+        <ReviewStars
+          shouldShowReviewsText
+          textColor="darkText"
+          stars={stars}
+          reviews={12}
+          small
+        />
+      </View>
+    </TouchableWithoutFeedback>
+  </Container>
+);
 
 export default withNavigation(MenuListItem);

@@ -1,44 +1,7 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
 
-#target 'bon_appetit' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for bon_appetit
-
-  #target 'bon_appetit-tvOSTests' do
-    #inherit! :search_paths
-    # Pods for testing
-  #end
-#
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
-
-  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
-
-  #target 'bon_appetitTests' do
-    #inherit! :search_paths
-    # Pods for testing
-  #end
-
-#end
-
-#target 'bon_appetit-tvOS' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for bon_appetit-tvOS
-
-  #target 'bon_appetit-tvOSTests' do
-    #inherit! :search_paths
-    # Pods for testing
-  #end
-
-#end
-
-target 'bon_appetit' do
+target 'bonAppetitApp' do
   rn_path = '../node_modules/react-native'
   rn_maps_path = '../node_modules/react-native-maps'
 
@@ -71,9 +34,9 @@ target 'bon_appetit' do
 
   # react-native-maps dependencies
   pod 'react-native-maps', path: rn_maps_path
-  pod 'react-native-google-maps', path: rn_maps_path  # Remove this line if you don't want to support GoogleMaps on iOS
-  pod 'GoogleMaps'  # Remove this line if you don't want to support GoogleMaps on iOS
-  pod 'Google-Maps-iOS-Utils' # Remove this line if you don't want to support GoogleMaps on iOS
+  # pod 'react-native-google-maps', path: rn_maps_path  # Unomment this line if you want to support GoogleMaps on iOS
+  # pod 'GoogleMaps'  # Uncomment this line if you want to support GoogleMaps on iOS
+  # pod 'Google-Maps-iOS-Utils' # Uncomment this line if you want to support GoogleMaps on iOS
 end
 
 post_install do |installer|

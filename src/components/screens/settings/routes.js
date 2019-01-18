@@ -1,6 +1,6 @@
 import { createStackNavigator } from 'react-navigation';
 
-import appStyle from 'styles';
+import { setDefaultHeaderLayout } from '~/routes/headerUtils';
 
 import Settings from './index';
 
@@ -11,17 +11,7 @@ export const ROUTE_NAMES = {
 const ROUTES = createStackNavigator({
   [ROUTE_NAMES.SETTINGS]: {
     screen: Settings,
-    navigationOptions: () => ({
-      title: 'Settings',
-      headerStyle: {
-        backgroundColor: appStyle.colors.primaryColor,
-      },
-      headerTintColor: appStyle.colors.defaultWhite,
-      headerTitleStyle: {
-        color: appStyle.colors.defaultWhite,
-        fontFamily: 'CircularStd-Medium',
-      },
-    }),
+    navigationOptions: ({ navigation }) => setDefaultHeaderLayout(navigation, 'Settings'),
   },
 });
 

@@ -1,192 +1,95 @@
 import { createStackNavigator } from 'react-navigation';
-import { Platform, StatusBar } from 'react-native';
+import { Platform } from 'react-native';
 
-import RestaurantAddressMap from 'components/common/restaurant-detail/components/RestaurantAddressMap';
-import RestaurantDetail from 'components/common/restaurant-detail';
-import DisheDetail from 'components/common/dishe-detail';
-import DisheDetailReview from 'components/common/restaurant-detail/components/DisheDetailReview';
-import PopularSeeAll from 'components/screens/home/components/popular/popular-see-all';
-import YMLSeeAll from 'components/screens/home/components/recommended/recommended-see-all';
+import {
+  setHiddenHeaderLayout,
+  setDefaultHeaderLayout,
+} from '~/routes/headerUtils';
 
-import appStyles from 'styles';
-
-import EventDetails from './components/EventDetails';
-import AllEvents from './components/in-your-city/iyc-see-all';
-
+import RestaurantAddressMap from '~/components/common/restaurant-detail/components/RestaurantAddressMap';
+import RestaurantDetail from '~/components/common/restaurant-detail';
+import YouMightLikeSeeAll from './components/you-might-like/see-all';
+import DisheDetail from '~/components/common/dishe-detail';
+import AllEvents from './components/in-your-city/see-all';
+import PopularSeeAll from './components/popular/see-all';
+import EventDetails from './components/event-details';
 import Home from './index';
 
+import CONSTANTS from '~/utils/CONSTANTS';
+import appStyles from '~/styles';
+
 export const ROUTE_NAMES = {
-  HOME: 'HOME',
+  YOU_MIGHT_LIKE_SEE_ALL: 'YOU_MIGHT_LIKE_SEE_ALL',
+  POPULAR_SEE_ALL: 'POPULAR_SEE_ALL',
+  SEE_ALL_EVENTS: 'SEE_ALL_EVENTS',
   EVENT_DETAILS: 'EVENT_DETAILS',
-  ALL_EVENTS: 'ALL_EVENTS',
-  RESTAURANT_DETAIL: 'RESTAURANT_DETAIL',
-  RESTAURANT_ADDRESS_MAP: 'RESTAURANT_ADDRESS_MAP',
-  DISHE_DETAIL: 'DISHE_DETAIL',
-  ALL_POPULAR: 'ALL_POPULAR',
-  ALL_RECOMMENDED: 'ALL_RECOMMENDED',
-  DISHE_DETAIL_REVIEW: 'DISHE_DETAIL_REVIEW',
+  DISH_DETAIL: 'DISH_DETAIL',
+  HOME: 'HOME',
 };
 
-const ROUTES = createStackNavigator({
-  [ROUTE_NAMES.HOME]: {
-    screen: Home,
-    navigationOptions: () => ({
-      title: 'Bon Appetit',
-      headerStyle: {
-        backgroundColor: appStyles.colors.red,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTitleStyle: {
-        color: appStyles.colors.defaultWhite,
-        fontFamily: 'Modesta-Script',
-        fontWeight: '200',
-        fontSize: 28,
-      },
-      headerBackTitle: null,
-      borderBottomWidth: 0,
-    }),
-  },
+const RootStack = createStackNavigator(
+  {
+    [ROUTE_NAMES.HOME]: {
+      screen: Home,
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(
+        navigation,
+        'Bon Appetit',
+        'Modesta-Script',
+        appStyles.metrics.getWidthFromDP('8%'),
+      ),
+    },
 
-  [ROUTE_NAMES.EVENT_DETAILS]: {
-    screen: EventDetails,
-    navigationOptions: () => ({
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTransparent: true,
-      headerBackTitle: null,
-      borderBottomWidth: 0,
-      ...Platform.select({
-        android: {
-          headerStyle: {
-            marginTop: StatusBar.currentHeight,
-          },
-        },
-      }),
-    }),
-  },
+    [ROUTE_NAMES.SEE_ALL_EVENTS]: {
+      screen: AllEvents,
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(navigation, 'In Your City'),
+    },
 
-  [ROUTE_NAMES.ALL_EVENTS]: {
-    screen: AllEvents,
-    navigationOptions: ({ navigation }) => ({
-      title: navigation.state.params.title || '',
-      headerBackTitle: null,
-      headerStyle: {
-        backgroundColor: appStyles.colors.primaryColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTitleStyle: {
-        fontSize: appStyles.metrics.navigationHeaderFontSize,
-        fontFamily: 'CircularStd-Medium',
-        color: appStyles.colors.defaultWhite,
-      },
-    }),
-  },
+    [ROUTE_NAMES.YOU_MIGHT_LIKE_SEE_ALL]: {
+      screen: YouMightLikeSeeAll,
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(navigation, 'You Might Like'),
+    },
 
-  [ROUTE_NAMES.RESTAURANT_DETAIL]: {
-    screen: RestaurantDetail,
-    navigationOptions: () => ({
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTransparent: true,
-      headerBackTitle: null,
-      ...Platform.select({
-        android: {
-          headerStyle: {
-            marginTop: StatusBar.currentHeight,
-          },
-        },
-      }),
-    }),
-  },
+    [ROUTE_NAMES.POPULAR_SEE_ALL]: {
+      screen: PopularSeeAll,
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(navigation, 'Popular'),
+    },
 
-  [ROUTE_NAMES.RESTAURANT_ADDRESS_MAP]: {
-    screen: RestaurantAddressMap,
-    navigationOptions: () => ({
-      headerBackTitle: null,
-      title: 'Location',
-      headerStyle: {
-        backgroundColor: appStyles.colors.primaryColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTitleStyle: {
-        color: appStyles.colors.defaultWhite,
-        fontFamily: 'CircularStd-Medium',
-      },
-    }),
-  },
+    [ROUTE_NAMES.EVENT_DETAILS]: {
+      screen: EventDetails,
+      navigationOptions: ({ navigation }) => setHiddenHeaderLayout(navigation),
+    },
 
-  [ROUTE_NAMES.DISHE_DETAIL]: {
-    screen: DisheDetail,
-    navigationOptions: () => ({
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTransparent: true,
-      headerBackTitle: null,
-      ...Platform.select({
-        android: {
-          headerStyle: {
-            marginTop: StatusBar.currentHeight,
-          },
-        },
-      }),
-    }),
-  },
+    [ROUTE_NAMES.DISH_DETAIL]: {
+      screen: DisheDetail,
+      navigationOptions: ({ navigation }) => setHiddenHeaderLayout(navigation),
+    },
 
-  [ROUTE_NAMES.DISHE_DETAIL_REVIEW]: {
-    screen: DisheDetailReview,
-    navigationOptions: () => ({
-      headerBackTitle: null,
-      ...Platform.select({
-        android: {
-          headerStyle: {
-            marginTop: StatusBar.currentHeight,
-          },
-        },
-      }),
-    }),
-  },
+    [CONSTANTS.ROUTE_RESTAURANT_DETAIL]: {
+      screen: RestaurantDetail,
+      navigationOptions: ({ navigation }) => setHiddenHeaderLayout(navigation),
+    },
 
-  [ROUTE_NAMES.ALL_POPULAR]: {
-    screen: PopularSeeAll,
-    navigationOptions: () => ({
-      headerBackTitle: null,
-      title: 'Popular',
-      headerStyle: {
-        backgroundColor: appStyles.colors.primaryColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTitleStyle: {
-        color: appStyles.colors.defaultWhite,
-        fontFamily: 'CircularStd-Medium',
-      },
-    }),
-  },
+    [CONSTANTS.ROUTE_RESTAURANT_ADDRESS_MAP]: {
+      screen: RestaurantAddressMap,
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(
+        navigation,
+        navigation.state.params[CONSTANTS.NAVIGATION_PARAM_RESTAURANT_NAME],
+      ),
+    },
 
-  [ROUTE_NAMES.ALL_RECOMMENDED]: {
-    screen: YMLSeeAll,
-    navigationOptions: () => ({
-      headerBackTitle: null,
-      title: 'Recommended',
-      headerStyle: {
-        backgroundColor: appStyles.colors.primaryColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: appStyles.colors.defaultWhite,
-      headerTitleStyle: {
-        color: appStyles.colors.defaultWhite,
-        fontFamily: 'CircularStd-Medium',
-      },
-    }),
+    [CONSTANTS.ROUTE_DISH_DETAIL_REVIEW]: {
+      screen: DisheDetail,
+      navigationOptions: ({ navigation }) => setHiddenHeaderLayout(navigation),
+    },
   },
-},
-{
-  initialRouteName: ROUTE_NAMES.HOME,
-  mode: Platform.OS === 'ios' ? 'card' : 'modal',
-  headerMode: 'screen',
-});
+  {
+    initialRouteName: ROUTE_NAMES.HOME,
+    mode: Platform.OS === 'ios' ? 'card' : 'modal',
+    headerMode: 'screen',
+  },
+);
 
-ROUTES.navigationOptions = ({ navigation }) => {
+RootStack.navigationOptions = ({ navigation }) => {
   const tabBarVisible = navigation.state.index <= 0;
 
   return {
@@ -194,4 +97,4 @@ ROUTES.navigationOptions = ({ navigation }) => {
   };
 };
 
-export default ROUTES;
+export default RootStack;

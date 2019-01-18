@@ -2,21 +2,19 @@
 
 import React from 'react';
 import {
-  StatusBar,
-  Platform,
-  Text,
-  View,
+  StatusBar, Platform, Text, View,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MapView, { Marker } from 'react-native-maps';
 import styled from 'styled-components';
-import appStyles from 'styles';
 
-import FloatinActionButton from 'components/common/FloatingActionButton';
-import ReviewStars from 'components/common/ReviewStars';
+import FloatinActionButton from '~/components/common/FloatingActionButton';
 
-const mapHeight = appStyles.metrics.getHeightFromDP('75%');
+import CONSTANTS from '~/utils/CONSTANTS';
+import appStyles from '~/styles';
+
+const mapHeight = appStyles.metrics.getHeightFromDP('78%');
 
 const Container = styled(View)`
   flex: 1;
@@ -35,40 +33,38 @@ const FloatingActionButtonWrapper = styled(View)`
 `;
 
 const FooterContainer = styled(View)`
-  width: 100%;
-  height: 100%;
-  padding-left: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-top: ${({ theme }) => (Platform.OS === 'ios' ? theme.metrics.largeSize : theme.metrics.mediumSize)}px;
+  height: ${appStyles.metrics.getHeightFromDP('22%')};
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: ${appStyles.metrics.mediumSize}px;
+  padding-left: ${appStyles.metrics.largeSize}px;
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const ResturantName = styled(Text).attrs({
+const StatusText = styled(Text).attrs({
   ellipsizeMode: 'tail',
   numberOfLines: 2,
 })`
-  width: ${({ theme }) => theme.metrics.getWidthFromDP('75%')}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${({ theme }) => {
     const percentage = Platform.OS === 'android' ? '5%' : '4.5%';
     return theme.metrics.getWidthFromDP(percentage);
   }}px;
-  fontFamily: CircularStd-Black;
+  fontfamily: CircularStd-Black;
 `;
 
 const EstablishmentStatus = styled(Text)`
-  color: ${({ theme, isOpen }) => (isOpen ? theme.colors.green : theme.colors.red)};
+  color: ${({ theme }) => theme.colors.darkLayer};
   padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
-  fontFamily: CircularStd-Medium;
+  fontfamily: CircularStd-Medium;
 `;
 
-const MarkerIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.primaryColor,
-  name: ({ name }) => name,
+const MarkerIcon = styled(Icon).attrs(({ name }) => ({
   size: 28,
-})`
-  width: 28px;
-  height: 28px;
+  name,
+}))`
+  color: ${({ theme }) => theme.colors.primaryColor};
 `;
 
 type Props = {
@@ -90,7 +86,7 @@ const edgePadding = {
   left: 50,
 };
 
-let _mapRef;
+let _mapRef: any;
 
 const onFitMapCoordinates = (markers: Array<Object>): void => {
   _mapRef.fitToCoordinates(markers, {
@@ -110,7 +106,9 @@ const renderMap = (restaurantName: string, markers: Array<Object>): Object => (
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       }}
-      ref={(ref) => { _mapRef = ref; }}
+      ref={(ref) => {
+        _mapRef = ref;
+      }}
       showsPointsOfInterest={false}
       rotateEnabled={false}
       scrollEnabled={false}
@@ -119,12 +117,16 @@ const renderMap = (restaurantName: string, markers: Array<Object>): Object => (
     >
       {markers.map(marker => (
         <Marker
-          title={marker.id === 'user_location' ? 'You\'re here' : restaurantName}
+          title={marker.id === 'user_location' ? "You're here" : restaurantName}
           key={marker.id}
           coordinate={marker}
         >
           <MarkerIcon
-            name={marker.id === 'user_location' ? 'account-location' : 'map-marker-radius'}
+            name={
+              marker.id === 'user_location'
+                ? 'account-location'
+                : 'map-marker-radius'
+            }
           />
         </Marker>
       ))}
@@ -132,22 +134,19 @@ const renderMap = (restaurantName: string, markers: Array<Object>): Object => (
   </MapContainer>
 );
 
-const renderFooter = (restaurantName: string, distance: number, isOpen: boolean, stars: number): Object => {
-  const status = (isOpen ? 'Open' : 'Closed');
+const renderFooter = (
+  restaurantName: string,
+  distance: number,
+  isOpen: boolean,
+): Object => {
+  const status = `${isOpen ? 'Open' : 'Closed'} now`;
 
   return (
     <FooterContainer>
-      <ResturantName>
-        {restaurantName}
-      </ResturantName>
-      <ReviewStars
-        stars={stars}
-      />
-      <EstablishmentStatus
-        isOpen={isOpen}
-      >
-        {`${status} now - ${distance} km from you`}
-      </EstablishmentStatus>
+      <View>
+        <StatusText>{status}</StatusText>
+        <EstablishmentStatus>{`${distance} km from you`}</EstablishmentStatus>
+      </View>
     </FooterContainer>
   );
 };
@@ -155,9 +154,9 @@ const renderFooter = (restaurantName: string, distance: number, isOpen: boolean,
 const renderFloatingActionButton = (markers: Array<Object>): Object => (
   <FloatingActionButtonWrapper>
     <FloatinActionButton
+      action={() => onFitMapCoordinates(markers)}
       name="directions"
       color="blue"
-      action={() => onFitMapCoordinates(markers)}
     />
   </FloatingActionButtonWrapper>
 );
@@ -169,8 +168,7 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
     restaurantName,
     distance,
     isOpen,
-    stars,
-  } = navigation.getParam('payload', {});
+  } = navigation.getParam(CONSTANTS.NAVIGATION_PARAM_USER_LOCATION, {});
 
   const markers = [restaurantLocation, userLocation];
 
@@ -183,7 +181,7 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
         animated
       />
       {renderMap(restaurantName, markers)}
-      {renderFooter(restaurantName, distance, isOpen, stars)}
+      {renderFooter(restaurantName, distance, isOpen)}
       {renderFloatingActionButton(markers)}
     </Container>
   );

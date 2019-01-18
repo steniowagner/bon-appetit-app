@@ -1,31 +1,31 @@
-import api from 'services/api';
 import { call, put } from 'redux-saga/effects';
-import { Creators as EventsActions } from 'store/ducks/events';
-import parseParams from './utils/parseParams';
+
+import { Creators as EventsActions } from '~/store/ducks/events';
+import api from '~/services/api';
 
 export function* requestAllEvents() {
   try {
-    const response = yield call(api.get, '/event');
+    const { data } = yield call(api.get, '/event');
 
-    yield put(EventsActions.getAllEventsSuccess(response.data));
+    yield put(EventsActions.requestAllEventsSuccess(data));
   } catch (err) {
-    yield put(EventsActions.getAllEventsFailure('Error when try to get Events data.'));
+    yield put(EventsActions.requestAllEventsFailure());
   }
 }
 
-export function* getRestaurantsRequest(action) {
+export function* requestEventDetails(action) {
   try {
-    const { dishesTypes, restaurantsParticipating } = action.payload;
+    const { id } = action.payload;
 
-    const paramsMerged = Object.assign({}, { dishesTypes }, { restaurantsParticipating });
+    const { data } = yield call(api.get, `/event/${id}`);
 
-    const response = yield call(api.get, '/event/restaurants', {
-      paramsSerializer: params => parseParams(params),
-      params: paramsMerged,
-    });
-
-    yield put(EventsActions.getRestaurantsSuccess(response.data));
+    yield put(
+      EventsActions.requestEventDetailsSuccess({
+        restaurants: data.restaurants,
+        details: data.event,
+      }),
+    );
   } catch (err) {
-    yield put(EventsActions.getRestaurantsError('Error when try to get Event data.'));
+    yield put(EventsActions.requestEventDetailsFailure());
   }
 }

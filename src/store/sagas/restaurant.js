@@ -1,11 +1,11 @@
-import api from 'services/api';
 import { call, put } from 'redux-saga/effects';
 
-import { Creators as RestaurantActions } from 'store/ducks/restaurant';
+import { Creators as RestaurantActions } from '~/store/ducks/restaurant';
+import api from '~/services/api';
 
-export function* restaurantRequest(action) {
+export function* requestRestaurantDetail(action) {
   try {
-    const { userLocation, id } = action;
+    const { userLocation, id } = action.payload;
 
     const headers = {
       userLatitude: userLocation.latitude,
@@ -14,8 +14,8 @@ export function* restaurantRequest(action) {
 
     const response = yield call(api.get, `/restaurants/${id}`, { headers });
 
-    yield put(RestaurantActions.getRestaurantSuccess(response.data));
+    yield put(RestaurantActions.requestRestaurantDetailSuccess(response.data));
   } catch (err) {
-    yield put(RestaurantActions.getRestaurantFailure('Error when try to read Restaurant data.'));
+    yield put(RestaurantActions.requestRestaurantDetailFailure());
   }
 }

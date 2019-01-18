@@ -11,9 +11,14 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components';
-import appStyle from 'styles';
+import appStyle from '~/styles';
 
-import { getItemFromStorage, persistItemInStorage } from 'components/utils/AsyncStoarageManager';
+import {
+  getItemFromStorage,
+  persistItemInStorage,
+} from '~/utils/AsyncStoarageManager';
+
+import { SWITCH_STATE_REFS, getItemConfig, TYPES } from './ItemConfig';
 
 const Container = styled(View)`
   flex: 1;
@@ -23,8 +28,8 @@ const Container = styled(View)`
 const SectionTitleText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
   font-family: CircularStd-Bold;
-  font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '4%' : '5.5%');
+  font-size: ${({ theme }) => {
+    const percentage = Platform.OS === 'ios' ? '4.2%' : '5.5%';
     return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
@@ -48,18 +53,18 @@ const LanguageSectionWrapper = styled(View)`
 const SelectedLanguageText = styled(Text)`
   color: ${({ theme }) => theme.colors.red};
   font-family: CircularStd-Medium;
-  font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '4%' : '5.5%');
+  font-size: ${({ theme }) => {
+    const percentage = Platform.OS === 'ios' ? '4%' : '5.5%';
     return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
 
 const SmallText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
-  margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px 0`}
+  margin: ${({ theme }) => `${theme.metrics.extraSmallSize}px 0`};
   font-family: CircularStd-Book;
-  font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '3%' : '4.5%');
+  font-size: ${({ theme }) => {
+    const percentage = Platform.OS === 'ios' ? '3.8%' : '4.5%';
     return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
@@ -76,10 +81,10 @@ const OptionTextWrapper = styled(View)`
 
 const MediumText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
-  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}
+  margin-top: ${({ theme }) => theme.metrics.extraSmallSize};
   font-family: CircularStd-Bold;
-  font-size:  ${({ theme }) => {
-    const percentage = (Platform.OS === 'ios' ? '3.5%' : '5%');
+  font-size: ${({ theme }) => {
+    const percentage = Platform.OS === 'ios' ? '4%' : '5%';
     return theme.metrics.getWidthFromDP(percentage);
   }}px;
 `;
@@ -87,43 +92,71 @@ const MediumText = styled(Text)`
 const OptionWithouDescriptionWrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const MultipleOptionsTitleWrapper = styled(View)`
-  padding: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.mediumSize}px ${theme.metrics.largeSize}px`};
+  padding: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.mediumSize}px ${
+    theme.metrics.largeSize
+  }px`};
 `;
 
-const receivePromotionsOptionDescription = 'By enabling this option, the app will periodically use your current location and will show promotions that are happening near you.';
-const notificationsSoundOptionDescription = 'Enable the sound of the Notifications';
+type State = {
+  receiveAllNotifications: boolean,
+  whenIsAboutPromotions: boolean,
+  notificationsSound: boolean,
+  promotionsNearMe: boolean,
+  whenPastSearch: boolean,
+};
 
-class Settings extends Component {
+class Settings extends Component<{}, State> {
   state = {
-    receiveNearMe: false,
-    notificationsSound: false,
     receiveAllNotifications: false,
+    whenIsAboutPromotions: false,
+    notificationsSound: false,
+    promotionsNearMe: false,
     whenPastSearch: false,
-    whenAboutPromotions: false,
   };
 
   async componentDidMount() {
-    const receiveNearMeFromStorage = await getItemFromStorage('receiveNearMe', false);
-    const notificationsSoundFromStorage = await getItemFromStorage('notificationsSound', false);
-    const receiveAllNotificationsFromStorage = await getItemFromStorage('receiveAllNotifications', false);
-    const whenPastSearchFromStorage = await getItemFromStorage('whenPastSearch', false);
-    const whenAboutPromotionsFromStorage = await getItemFromStorage('whenAboutPromotions', false);
+    const receiveAllNotificationsFromStorage = await getItemFromStorage(
+      SWITCH_STATE_REFS.RECEIVE_ALL_NOTIFICATIONS,
+      false,
+    );
+
+    const whenAboutPromotionsFromStorage = await getItemFromStorage(
+      SWITCH_STATE_REFS.WHEN_ABOUT_DISCOUNTS,
+      false,
+    );
+
+    const notificationsSoundFromStorage = await getItemFromStorage(
+      SWITCH_STATE_REFS.NOTIFICATIONS_SOUND,
+      false,
+    );
+
+    const receiveNearMeFromStorage = await getItemFromStorage(
+      SWITCH_STATE_REFS.PROMOTIONS_NEAR_ME,
+      false,
+    );
+
+    const whenPastSearchFromStorage = await getItemFromStorage(
+      SWITCH_STATE_REFS.WHEN_PAST_SEARCH,
+      false,
+    );
 
     this.setState({
-      receiveNearMe: (receiveNearMeFromStorage === 'true'),
-      notificationsSound: (notificationsSoundFromStorage === 'true'),
-      receiveAllNotifications: (receiveAllNotificationsFromStorage === 'true'),
-      whenPastSearch: (whenPastSearchFromStorage === 'true'),
-      whenAboutPromotions: (whenAboutPromotionsFromStorage === 'true'),
+      receiveAllNotifications: Boolean(receiveAllNotificationsFromStorage),
+      whenIsAboutPromotions: Boolean(whenAboutPromotionsFromStorage),
+      notificationsSound: Boolean(notificationsSoundFromStorage),
+      promotionsNearMe: Boolean(receiveNearMeFromStorage),
+      whenPastSearch: Boolean(whenPastSearchFromStorage),
     });
   }
 
-  handleSwitchToggle = async (option: string): void => {
+  handleSwitchToggle = async (option: string): Promise<void> => {
     const { state } = this;
+
     const value = !state[option];
 
     this.setState({
@@ -131,95 +164,89 @@ class Settings extends Component {
     });
 
     await persistItemInStorage(option, value);
-  }
+  };
 
   renderSelectLanguageSection = (): Object => (
     <ItemWrapper>
       <LanguageSectionWrapper>
-        <SectionTitleText>
-          Select Language
-        </SectionTitleText>
+        <SectionTitleText>Select Language</SectionTitleText>
         <TouchableOpacity>
-          <SelectedLanguageText>
-            English, US
-          </SelectedLanguageText>
+          <SelectedLanguageText>English, US</SelectedLanguageText>
         </TouchableOpacity>
       </LanguageSectionWrapper>
     </ItemWrapper>
   );
 
-  renderOptionWithDescription = (title: string, description: string): Object => (
+  renderOptionWithDescription = (
+    title: string,
+    description: string,
+  ): Object => (
     <OptionTextWrapper>
-      <SectionTitleText>
-        {title}
-      </SectionTitleText>
-      <SmallText>
-        {description}
-      </SmallText>
+      <SectionTitleText>{title}</SectionTitleText>
+      <SmallText>{description}</SmallText>
     </OptionTextWrapper>
   );
 
-  renderOptionWithoutDescription = (title: string, id: string): Object => (
-    <OptionWithouDescriptionWrapper>
-      <MediumText>
-        {title}
-      </MediumText>
-      {this.renderSwitch(id)}
-    </OptionWithouDescriptionWrapper>
-  );
-
   renderSwitch = (id: string): Object => {
-    const thumbTintColor = (Platform.OS === 'android') ? appStyle.colors.red : '';
+    const thumbTintColor = Platform.OS === 'android' ? appStyle.colors.red : '';
     const { state } = this;
     const value = state[id];
 
     return (
       <Switch
+        trackColor={{ false: '', true: appStyle.colors.red }}
         onValueChange={() => this.handleSwitchToggle(id)}
-        onTintColor={appStyle.colors.red}
-        thumbTintColor={thumbTintColor}
+        thumbColor={thumbTintColor}
         value={value}
       />
     );
-  }
+  };
+
+  renderItemWitDescription = (type: string): Object => {
+    const config = getItemConfig(type);
+
+    const { switchId, title, text } = config;
+
+    return (
+      <ItemWrapper>
+        <OptionWrapper>
+          {this.renderOptionWithDescription(title, text)}
+          {this.renderSwitch(switchId)}
+        </OptionWrapper>
+      </ItemWrapper>
+    );
+  };
+
+  renderItemWithoutDescription = (type: string): Object => {
+    const config = getItemConfig(type);
+
+    const { switchId, title } = config;
+
+    return (
+      <OptionWithouDescriptionWrapper>
+        <MediumText>{title}</MediumText>
+        {this.renderSwitch(switchId)}
+      </OptionWithouDescriptionWrapper>
+    );
+  };
 
   render() {
     return (
       <Container>
-        <ScrollView>
+        <ScrollView
+          alwaysBounceVertical={false}
+        >
           {this.renderSelectLanguageSection()}
-
           <LineSeparator />
-
-          <ItemWrapper>
-            <OptionWrapper>
-              {this.renderOptionWithDescription('Receive Promotions near me', receivePromotionsOptionDescription)}
-              {this.renderSwitch('receiveNearMe')}
-            </OptionWrapper>
-          </ItemWrapper>
-
+          {this.renderItemWitDescription(TYPES.PROMOTIONS_NEAR_ME)}
+          {this.renderItemWitDescription(TYPES.NOTIFICATIONS_SOUND)}
           <LineSeparator />
-
-          <ItemWrapper>
-            <OptionWrapper>
-              {this.renderOptionWithDescription('Notifications Sound', notificationsSoundOptionDescription)}
-              {this.renderSwitch('notificationsSound')}
-            </OptionWrapper>
-          </ItemWrapper>
-
-          <LineSeparator />
-
           <MultipleOptionsTitleWrapper>
-            <SectionTitleText>
-              Push Notifications
-            </SectionTitleText>
+            <SectionTitleText>Push Notifications</SectionTitleText>
           </MultipleOptionsTitleWrapper>
-
-          {this.renderOptionWithoutDescription('Receive all notifications', 'receiveAllNotifications')}
-
-          {this.renderOptionWithoutDescription('When is about my past searches', 'whenPastSearch')}
-
-          {this.renderOptionWithoutDescription('When is about promotions', 'whenAboutPromotions')}
+          {this.renderItemWithoutDescription(TYPES.RECEIVE_ALL_NOTIFICATIONS)}
+          {this.renderItemWithoutDescription(TYPES.WHEN_PAST_SEARCH)}
+          {this.renderItemWithoutDescription(TYPES.WHEN_ABOUT_DISCOUNTS)}
         </ScrollView>
       </Container>
     );

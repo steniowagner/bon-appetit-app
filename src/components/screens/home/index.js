@@ -1,32 +1,29 @@
 // @flow
 
-import React, { Component, Fragment } from 'react';
-import {
-  RefreshControl,
-  ScrollView,
-  View,
-} from 'react-native';
+import React, { Component } from 'react';
+import { ScrollView, RefreshControl, View } from 'react-native';
+import styled from 'styled-components';
 
-import { Creators as HomeCreators } from 'store/ducks/home';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Creators as HomeCreators } from '~/store/ducks/home';
 
-import styled from 'styled-components';
-import appStyles from 'styles';
+import {
+  persistItemInStorage,
+  getItemFromStorage,
+} from '~/utils/AsyncStoarageManager';
+import CONSTANTS from '~/utils/CONSTANTS';
+import appStyles from '~/styles';
 
-import { persistItemInStorage } from 'components/utils/AsyncStoarageManager';
-import { ROUTE_NAMES } from 'components/screens/home/routes';
+import { Alert, TYPES } from '~/components/common/alert';
+import Loading from '~/components/common/Loading';
 
-import FunnyMessage from 'components/common/FunnyMessage';
-import Messages from 'components/utils/Messages';
-import Loading from 'components/common/Loading';
-import AppKeys from 'components/utils/Keys';
+import YouMightLikeSection from './components/you-might-like/home-section';
+import InYourCitySection from './components/in-your-city/home-section';
+import PopularSection from './components/popular/home-section';
 
-import RecommendedSection from './components/recommended/recommended-home-section';
-import InYourCitySection from './components/in-your-city/iyc-home-section';
-import Popular from './components/popular/popular-home-section';
-import HeaderCurrentCity from './components/HeaderCurrentCity';
 import Section from './components/Section';
+import { ROUTE_NAMES } from './routes';
 
 const Container = styled(View)`
   flex: 1;
@@ -42,7 +39,14 @@ type State = {
   isRefresing: boolean,
 };
 
-class HomeMainContent extends Component<Props, State> {
+type HomeRequestResult = {
+  youMightLikeDishes: Array<Object>,
+  inYourCityEvents: Array<Object>,
+  popularDishes: Array<Object>,
+  userLocation: Object,
+};
+
+class Home extends Component<Props, State> {
   state = {
     isRefresing: false,
   };
@@ -51,147 +55,110 @@ class HomeMainContent extends Component<Props, State> {
     this.requestData();
   }
 
-  componentWillReceiveProps() {
+  async componentWillReceiveProps(nextProps) {
+    const { homeRequest } = nextProps;
+    const { userLocation } = homeRequest.data;
+
+    if (
+      typeof userLocation === 'object'
+      && Object.keys(userLocation).length === 2
+    ) {
+      await persistItemInStorage(
+        CONSTANTS.USER_LOCATION,
+        JSON.stringify(userLocation),
+      );
+    }
+
     this.setState({
       isRefresing: false,
     });
-  }
-
-  getRequestResponseData = (): Array<Object> => {
-    const { homeRequest } = this.props;
-    const { data, loading, error } = homeRequest;
-
-    if (loading || error) {
-      return {
-        userLocation: {
-          latitude: 0,
-          longitude: 0,
-        },
-        inYourCityEvents: [],
-        youMightLikeDishes: [],
-        popularDishes: [],
-      };
-    }
-
-    return {
-      ...data,
-    };
   }
 
   requestData = (): void => {
     const { getHomeRequest } = this.props;
 
     getHomeRequest();
-  }
+  };
 
-  persistUserLocation = async (userLocation): void => {
-    await persistItemInStorage(AppKeys.USER_LOCATION, JSON.stringify(userLocation));
-  }
-
-  renderContent = (): Object => {
-    const {
-      youMightLikeDishes,
-      inYourCityEvents,
-      popularDishes,
-      userLocation,
-    } = this.getRequestResponseData();
-
+  renderMainContent = (data: HomeRequestResult): Object => {
     const { isRefresing } = this.state;
 
-    if (userLocation) {
-      this.persistUserLocation(userLocation);
-    }
+    const { youMightLikeDishes, inYourCityEvents, popularDishes } = data;
 
     const hasYouMightLikeDishes = youMightLikeDishes && youMightLikeDishes.length > 0;
     const hasInYourCityEvents = inYourCityEvents && inYourCityEvents.length > 0;
     const hasPopularDishes = popularDishes && popularDishes.length > 0;
 
-    const isEmpty = !false && !hasYouMightLikeDishes && !hasPopularDishes;
-
-    const HomeContent = (
+    return (
       <ScrollView
         showsVerticalScrollIndicator={false}
-        refreshControl={(
+        refreshControl={
           <RefreshControl
             progressBackgroundColor={appStyles.colors.primaryColor}
-            onRefresh={() => this.requestData()}
             tintColor={appStyles.colors.primaryColor}
             colors={[appStyles.colors.white]}
+            onRefresh={this.requestData}
             refreshing={isRefresing}
           />
-        )}
+        }
       >
-        <HeaderCurrentCity />
         {hasInYourCityEvents && (
           <Section
+            nextRoute={ROUTE_NAMES.SEE_ALL_EVENTS}
             title="In Your City"
-            nextRoute={ROUTE_NAMES.ALL_EVENTS}
-            render={() => (
-              <InYourCitySection
-                events={inYourCityEvents}
-              />
-            )}
-          />
+          >
+            <InYourCitySection
+              events={inYourCityEvents}
+            />
+          </Section>
         )}
         {hasYouMightLikeDishes && (
           <Section
-            title="Recommended"
-            nextRoute={ROUTE_NAMES.ALL_RECOMMENDED}
-            render={() => (
-              <RecommendedSection
-                dishes={youMightLikeDishes}
-              />
-            )}
-          />
+            nextRoute={ROUTE_NAMES.YOU_MIGHT_LIKE_SEE_ALL}
+            title="You Might Like"
+          >
+            <YouMightLikeSection
+              dishes={youMightLikeDishes}
+            />
+          </Section>
         )}
         {hasPopularDishes && (
           <Section
+            nextRoute={ROUTE_NAMES.POPULAR_SEE_ALL}
             title="Popular"
-            nextRoute={ROUTE_NAMES.ALL_POPULAR}
-            render={() => (
-              <Popular
-                dishes={popularDishes}
-              />
-            )}
-          />
+          >
+            <PopularSection
+              dishes={popularDishes}
+            />
+          </Section>
         )}
       </ScrollView>
     );
-
-    const HomeEmpty = (
-      <FunnyMessage
-        description={'This is weird...\n\nSeems like that we don\'t have nothing to offer you today.'}
-        iconName="alert-decagram"
-        funnyText="I am empty :("
-        tipText="Sorry for that."
-      />
-    );
-
-    return (
-      isEmpty ? HomeEmpty : HomeContent
-    );
-  }
-
-  renderMainContent = (isLoading: boolean): Object => (isLoading ? <Loading /> : this.renderContent());
+  };
 
   render() {
     const { homeRequest } = this.props;
-    const { loading, error } = homeRequest;
+    const { loading, error, data } = homeRequest;
 
     return (
-      <Fragment>
-        <Container>
-          {error ? alert(Messages.ERROR_MESSAGE) : this.renderMainContent(loading)}
-        </Container>
-      </Fragment>
+      <Container>
+        {loading && <Loading />}
+        {error && <Alert
+          type={TYPES.ERROR_SERVER_CONNECTION}
+        />}
+        {!loading && !error && this.renderMainContent(data)}
+      </Container>
     );
   }
 }
-
-const mapDispatchToProps = dispatch => bindActionCreators(HomeCreators, dispatch);
 
 const mapStateToProps = state => ({
   homeRequest: state.home,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeMainContent);
+const mapDispatchToProps = dispatch => bindActionCreators(HomeCreators, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Home);

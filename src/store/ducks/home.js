@@ -7,37 +7,10 @@ export const Types = {
 };
 
 const initialState = Immutable({
-  data: [],
   loading: false,
-  error: null,
+  error: false,
+  data: [],
 });
-
-export default function home(state = initialState, action) {
-  switch (action.type) {
-    case Types.GET_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-
-    case Types.GET_SUCCESS:
-      return {
-        data: action.payload.data,
-        loading: false,
-        error: null,
-      };
-
-    case Types.GET_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload.error,
-      };
-
-    default:
-      return state;
-  }
-}
 
 export const Creators = {
   getHomeRequest: () => ({
@@ -49,8 +22,36 @@ export const Creators = {
     payload: { data },
   }),
 
-  getHomeFailure: error => ({
+  getHomeFailure: () => ({
     type: Types.GET_FAILURE,
-    payload: { error },
   }),
 };
+
+const home = (state = initialState, action) => {
+  switch (action.type) {
+    case Types.GET_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case Types.GET_SUCCESS:
+      return {
+        ...state,
+        data: action.payload.data,
+        loading: false,
+      };
+
+    case Types.GET_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default home;

@@ -1,10 +1,12 @@
-const parseParams = (params) => {
+// @flow
+
+const parseParams = (params: Object): string => {
   const keys = Object.keys(params);
   let options = '';
 
   keys.forEach((key) => {
     const isParamTypeObject = typeof params[key] === 'object';
-    const isParamTypeArray = isParamTypeObject && (params[key].length >= 0);
+    const isParamTypeArray = isParamTypeObject && params[key].length >= 0;
 
     if (!isParamTypeObject) {
       options += `${key}=${params[key]}&`;

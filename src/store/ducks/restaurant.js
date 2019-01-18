@@ -1,68 +1,59 @@
 import Immutable from 'seamless-immutable';
 
 export const Types = {
-  GET_REQUEST: 'restaurant/GET_REQUEST',
-  GET_SUCCESS: 'restaurant/GET_SUCCESS',
-  GET_FAILURE: 'restaurant/GET_FAILURE',
-  RESET_STATE: 'restaurant/RESET_STATE',
+  GET_DETAIL_REQUEST: 'restaurant/GET_DETAIL_REQUEST',
+  GET_DETAIL_REQUEST_SUCCESS: 'restaurant/GET_DETAIL_REQUEST_SUCCESS',
+  GET_DETAIL_REQUEST_FAILURE: 'restaurant/GET_DETAIL_REQUEST_FAILURE',
 };
 
 const initialState = Immutable({
-  data: {},
   loading: false,
-  error: null,
+  error: false,
+  data: {},
 });
 
-export default function restaurant(state = initialState, action) {
+export const Creators = {
+  requestRestaurantDetailRequest: (userLocation, id) => ({
+    type: Types.GET_DETAIL_REQUEST,
+    payload: { userLocation, id },
+  }),
+
+  requestRestaurantDetailSuccess: data => ({
+    type: Types.GET_DETAIL_REQUEST_SUCCESS,
+    payload: { ...data },
+  }),
+
+  requestRestaurantDetailFailure: () => ({
+    type: Types.GET_DETAIL_REQUEST_FAILURE,
+  }),
+};
+
+const restaurant = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_REQUEST:
+    case Types.GET_DETAIL_REQUEST:
       return {
         ...state,
         loading: true,
       };
 
-    case Types.GET_SUCCESS:
+    case Types.GET_DETAIL_REQUEST_SUCCESS:
       return {
+        ...state,
         data: action.payload,
         loading: false,
-        error: null,
+        error: false,
       };
 
-    case Types.GET_FAILURE:
+    case Types.GET_DETAIL_REQUEST_FAILURE:
       return {
-        data: {},
-        error: action.payload.error,
+        ...state,
         loading: false,
-      };
-
-    case Types.RESET_STATE:
-      return {
-        ...initialState,
+        error: true,
       };
 
     default:
       return state;
   }
-}
-
-export const Creators = {
-  getRestaurantRequest: (userLocation, id) => ({
-    type: Types.GET_REQUEST,
-    userLocation,
-    id,
-  }),
-
-  getRestaurantSuccess: data => ({
-    type: Types.GET_SUCCESS,
-    payload: { ...data },
-  }),
-
-  getRestaurantFailure: error => ({
-    type: Types.GET_FAILURE,
-    payload: { error },
-  }),
-
-  resetState: () => ({
-    type: Types.RESET_STATE,
-  }),
 };
+
+export default restaurant;

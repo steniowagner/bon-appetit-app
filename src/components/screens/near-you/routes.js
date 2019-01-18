@@ -1,77 +1,55 @@
 import { createStackNavigator } from 'react-navigation';
-import { Platform, StatusBar } from 'react-native';
+import { Platform } from 'react-native';
 
-import appStyle from 'styles';
+import {
+  setHiddenHeaderLayout,
+  setDefaultHeaderLayout,
+} from '~/routes/headerUtils';
 
-import RestaurantAddressMap from 'components/common/restaurant-detail/components/RestaurantAddressMap';
-import DisheDetailReview from 'components/common/restaurant-detail/components/DisheDetailReview';
-import RestaurantDetail from 'components/common/restaurant-detail';
+import RestaurantAddressMap from '~/components/common/restaurant-detail/components/RestaurantAddressMap';
+import RestaurantDetail from '~/components/common/restaurant-detail';
+import DishDetail from '~/components/common/dishe-detail';
 
+import CONSTANTS from '~/utils/CONSTANTS';
 import NearYou from './index';
 
 export const ROUTE_NAMES = {
-  RESTAURANT_ADDRESS_MAP: 'RESTAURANT_ADDRESS_MAP',
-  RESTAURANT_DETAIL: 'RESTAURANT_DETAIL',
-  DISHE_DETAIL_REVIEW: 'DISHE_DETAIL_REVIEW',
   NEAR_YOU: 'NEAR_YOU',
 };
 
-const ROUTES = createStackNavigator({
-  [ROUTE_NAMES.NEAR_YOU]: {
-    screen: NearYou,
-    navigationOptions: () => ({
-      title: 'Near You',
-      headerStyle: {
-        backgroundColor: appStyle.colors.primaryColor,
-        borderBottomWidth: 0,
-        elevation: 0,
-      },
-      headerBackTitle: null,
-      headerTintColor: appStyle.colors.defaultWhite,
-      headerTitleStyle: {
-        color: appStyle.colors.defaultWhite,
-        fontFamily: 'CircularStd-Medium',
-      },
-    }),
-  },
+const RootStack = createStackNavigator(
+  {
+    [ROUTE_NAMES.NEAR_YOU]: {
+      screen: NearYou,
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(navigation, 'Near You'),
+    },
 
-  [ROUTE_NAMES.RESTAURANT_DETAIL]: {
-    screen: RestaurantDetail,
-    navigationOptions: () => ({
-      headerBackTitle: null,
-      ...Platform.select({
-        android: {
-          headerStyle: {
-            marginTop: StatusBar.currentHeight,
-          },
-        },
-      }),
-    }),
-  },
+    [CONSTANTS.ROUTE_RESTAURANT_ADDRESS_MAP]: {
+      screen: RestaurantAddressMap,
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(
+        navigation,
+        navigation.state.params[CONSTANTS.NAVIGATION_PARAM_RESTAURANT_NAME],
+      ),
+    },
 
-  [ROUTE_NAMES.DISHE_DETAIL_REVIEW]: {
-    screen: DisheDetailReview,
-    navigationOptions: () => ({
-      headerBackTitle: null,
-      ...Platform.select({
-        android: {
-          headerStyle: {
-            marginTop: StatusBar.currentHeight,
-          },
-        },
-      }),
-    }),
-  },
+    [CONSTANTS.ROUTE_DISH_DETAIL_REVIEW]: {
+      screen: DishDetail,
+      navigationOptions: ({ navigation }) => setHiddenHeaderLayout(navigation),
+    },
 
-  [ROUTE_NAMES.RESTAURANT_ADDRESS_MAP]: {
-    screen: RestaurantAddressMap,
-    navigationOptions: () => ({
-      headerBackTitle: null,
-    }),
+    [CONSTANTS.ROUTE_RESTAURANT_DETAIL]: {
+      screen: RestaurantDetail,
+      navigationOptions: ({ navigation }) => setHiddenHeaderLayout(navigation),
+    },
   },
-});
+  {
+    initialRouteName: ROUTE_NAMES.SEARCH,
+    mode: Platform.OS === 'ios' ? 'card' : 'modal',
+    headerMode: 'screen',
+  },
+);
 
-ROUTES.navigationOptions = ({ navigation }) => {
+RootStack.navigationOptions = ({ navigation }) => {
   const tabBarVisible = navigation.state.index <= 0;
 
   return {
@@ -79,4 +57,4 @@ ROUTES.navigationOptions = ({ navigation }) => {
   };
 };
 
-export default ROUTES;
+export default RootStack;

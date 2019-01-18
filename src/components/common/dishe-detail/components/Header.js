@@ -1,73 +1,101 @@
 // @flow
 
-import React from 'react';
-import { Platform, Text, View } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { View } from 'react-native';
+
+import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components';
 
-import ReviewStars from 'components/common/ReviewStars';
-import FlagPrice from 'components/common/FlagPrice';
+import ProgressiveImage from '~/components/common/ProgressiveImage';
+import CONSTANTS from '~/utils/CONSTANTS';
+import appStyles from '~/styles';
 
-const ContentWrapper = styled(View)`
+import SeeRestaurantButton from './SeeRestaurantButton';
+
+const ImageWrapper = styled(View)`
   width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('27%')};
 `;
 
-const TitleAndPriceWrapper = styled(View)`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+const SeeRestaurantButtonWrapper = styled(View)`
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('27%')};
+  position: absolute;
+  align-self: flex-end;
+  justify-content: flex-end;
 `;
 
-const PriceWrapper = styled(View)`
-  height: 100%;
-  padding-top: ${({ theme }) => (theme.metrics.extraSmallSize / 1.5)}px;
-`;
-
-const DisheTitle = styled(Text).attrs({
-  ellipsizeMode: 'tail',
-  numberOfLines: 2,
+const SmokeShadow = styled(LinearGradient).attrs({
+  colors: ['transparent', appStyles.colors.dark, appStyles.colors.dark],
 })`
-  width: 80%;
-  padding-bottom: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => {
-    const percentage = (Platform.OS === 'android' ? '6.5%' : '6%');
-    return theme.metrics.getWidthFromDP(percentage);
-  }};
-  font-family: CircularStd-Black;
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('28%')};
+  margin-top: ${({ theme }) => theme.metrics.getHeightFromDP('12%')};
+`;
+
+const DishImageWrapper = styled(View)`
+  width: 100%;
+  height: 100%;
+  position: absolute;
 `;
 
 type Props = {
-  reviews: number,
-  price: number,
-  stars: number,
-  title: string,
+  thumbnailImageURL: string,
+  restaurantId: string,
+  navigation: Object,
+  imageURL: string,
 };
 
-const DisheInfo = ({
-  reviews,
-  price,
-  stars,
-  title,
-}: Props) => (
-  <ContentWrapper>
-    <TitleAndPriceWrapper>
-      <DisheTitle>
-        {title}
-      </DisheTitle>
-      <PriceWrapper>
-        <FlagPrice
-          price={price}
-        />
-      </PriceWrapper>
-    </TitleAndPriceWrapper>
-    <ReviewStars
-      shouldShowReviewsText
-      textColor="darkText"
-      reviews={reviews}
-      stars={stars}
-    />
-  </ContentWrapper>
-);
+type State = {
+  isImageLoaded: boolean,
+};
 
-export default DisheInfo;
+class Header extends Component<Props, State> {
+  state = {
+    isImageLoaded: false,
+  };
+
+  onLoadImage = (): void => {
+    const { isImageLoaded } = this.state;
+
+    this.setState({
+      isImageLoaded: !isImageLoaded,
+    });
+  };
+
+  render() {
+    const {
+      thumbnailImageURL,
+      restaurantId,
+      navigation,
+      imageURL,
+    } = this.props;
+
+    const isDishDetailInReviewMode = navigation.getParam(
+      CONSTANTS.NAVIGATION_PARAM_IS_DISH_DETAIL_REVIEW_MODE,
+      false,
+    );
+
+    return (
+      <Fragment>
+        <ImageWrapper>
+          <DishImageWrapper>
+            <ProgressiveImage
+              thumbnailImageURL={thumbnailImageURL}
+              imageURL={imageURL}
+            />
+          </DishImageWrapper>
+          <SmokeShadow />
+        </ImageWrapper>
+        {isDishDetailInReviewMode && (
+          <SeeRestaurantButtonWrapper>
+            <SeeRestaurantButton
+              restaurantId={restaurantId}
+            />
+          </SeeRestaurantButtonWrapper>
+        )}
+      </Fragment>
+    );
+  }
+}
+
+export default Header;

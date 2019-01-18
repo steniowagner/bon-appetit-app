@@ -4,14 +4,18 @@ const { width, height } = Dimensions.get('window');
 
 const getWidthFromDP = (widthPercentage) => {
   const percentageDesired = parseFloat(widthPercentage);
-  const widthPercentageToDP = PixelRatio.roundToNearestPixel((width * percentageDesired) / 100);
+  const widthPercentageToDP = PixelRatio.roundToNearestPixel(
+    (width * percentageDesired) / 100,
+  );
 
   return widthPercentageToDP;
 };
 
 const getHeightFromDP = (heightPercentage) => {
   const percentageDesired = parseFloat(heightPercentage);
-  const heightPercentageToDP = PixelRatio.roundToNearestPixel((height * percentageDesired) / 100);
+  const heightPercentageToDP = PixelRatio.roundToNearestPixel(
+    (height * percentageDesired) / 100,
+  );
 
   return heightPercentageToDP;
 };

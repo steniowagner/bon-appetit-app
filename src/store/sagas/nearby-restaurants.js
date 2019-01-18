@@ -1,9 +1,9 @@
-import api from 'services/api';
 import { call, put } from 'redux-saga/effects';
 
-import { Creators as NearbyRestaurantsActions } from 'store/ducks/nearby-restaurants';
+import { Creators as NearbyRestaurantsActions } from '~/store/ducks/nearby-restaurants';
+import api from '~/services/api';
 
-export function* getNearbyRestaurantsRequest(action) {
+export function* requestNearbyRestaurants(action) {
   try {
     const { dishesType, userLocation } = action.payload;
 
@@ -16,10 +16,15 @@ export function* getNearbyRestaurantsRequest(action) {
       dishesType,
     };
 
-    const response = yield call(api.get, '/restaurants/nearby', { params, headers });
+    const response = yield call(api.get, '/restaurants/nearby', {
+      params,
+      headers,
+    });
 
-    yield put(NearbyRestaurantsActions.getNearbyRestaurantsSuccess(response.data));
+    yield put(
+      NearbyRestaurantsActions.requestNearbyRestaurantsSuccess(response.data),
+    );
   } catch (err) {
-    yield put(NearbyRestaurantsActions.getNearbyRestaurantsFailure('Error when try to get nearby restaurants.'));
+    yield put(NearbyRestaurantsActions.requestNearbyRestaurantsFailure());
   }
 }

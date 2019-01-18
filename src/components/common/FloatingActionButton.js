@@ -15,26 +15,20 @@ const ButtonShape = styled(View)`
   align-items: center;
 `;
 
-const ButtonIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.defaultWhite,
-  name: ({ name }) => name,
+const ButtonIcon = styled(Icon).attrs(({ name }) => ({
   size: 25,
-})`
-  width: 25px;
-  height: 25px;
+  name,
+}))`
+  color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
 type Props = {
-  name: string,
-  color: string,
   action: Function,
+  color: string,
+  name: string,
 };
 
-const FloatingActionButton = ({
-  name,
-  color,
-  action,
-}: Props) => (
+const FloatingActionButton = ({ action, color, name }: Props) => (
   <TouchableOpacity
     onPress={() => action()}
   >

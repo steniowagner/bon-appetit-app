@@ -7,6 +7,8 @@ import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
 
+import CONSTANTS from '~/utils/CONSTANTS';
+
 const ContentContainer = styled(View)`
   margin-bottom: ${({ theme }) => theme.metrics.largeSize}px;
 `;
@@ -15,7 +17,9 @@ const HeaderWrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.smallSize}px ${theme.metrics.extraSmallSize}px  ${theme.metrics.largeSize}px`}
+  padding: ${({ theme }) => `${theme.metrics.largeSize}px ${theme.metrics.smallSize}px ${
+    theme.metrics.extraSmallSize
+  }px  ${theme.metrics.largeSize}px`};
 `;
 
 const SeeAllButtonWrapper = styled(TouchableOpacity)`
@@ -26,8 +30,8 @@ const SeeAllButtonWrapper = styled(TouchableOpacity)`
 
 const SectionText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText};
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')};
   font-family: CircularStd-Black;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')};
 `;
 
 const SeeAllText = styled(Text)`
@@ -37,50 +41,45 @@ const SeeAllText = styled(Text)`
 `;
 
 const ArrowIcon = styled(Icon).attrs({
-  color: ({ theme }) => theme.colors.primaryColor,
   name: 'chevron-right',
   size: 25,
 })`
+  color: ${({ theme }) => theme.colors.primaryColor};
   margin-left: -5px;
   width: 25px;
   height: 25px;
 `;
 
-type Props = {
-  title: string,
+const renderSectionHeader = (
+  navigation: Object,
   nextRoute: string,
-  navigation: Function,
-  render: any,
-}
-
-const handleButtonPress = (nextRoute: string, navigation: Function, title: string): void => {
-  navigation.navigate(nextRoute, { title });
-};
-
-const renderSectionHeader = (title: string, nextRoute: string, navigation: Function): Object => (
+  title: string,
+): Object => (
   <HeaderWrapper>
-    <SectionText>
-      {title}
-    </SectionText>
-    <SeeAllButtonWrapper onPress={() => handleButtonPress(nextRoute, navigation, title)}>
-      <SeeAllText>
-        See All
-      </SeeAllText>
+    <SectionText>{title}</SectionText>
+    <SeeAllButtonWrapper
+      onPress={() => navigation.navigate(nextRoute)}
+    >
+      <SeeAllText>See All</SeeAllText>
       <ArrowIcon />
     </SeeAllButtonWrapper>
   </HeaderWrapper>
 );
 
+type Props = {
+  navigation: Object,
+  nextRoute: string,
+  children: Object,
+  title: string,
+};
+
 const Section = ({
-  title,
-  nextRoute,
-  navigation,
-  render,
+  title, nextRoute, navigation, children,
 }: Props) => (
   <ContentContainer>
     <View>
-      {renderSectionHeader(title, nextRoute, navigation)}
-      {render()}
+      {renderSectionHeader(navigation, nextRoute, title)}
+      {children}
     </View>
   </ContentContainer>
 );

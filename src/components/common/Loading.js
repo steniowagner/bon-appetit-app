@@ -1,6 +1,10 @@
+// @flow
+
 import React from 'react';
 import { ActivityIndicator, Platform, View } from 'react-native';
+
 import styled from 'styled-components';
+import appStyles from '~/styles';
 
 const LoadingWrapper = styled(View)`
   flex: 1;
@@ -8,14 +12,12 @@ const LoadingWrapper = styled(View)`
   align-items: center;
 `;
 
-const LoadingIndicator = styled(ActivityIndicator).attrs({
-  size: Platform.OS === 'ios' ? 'small' : 'large',
-  color: ({ theme }) => theme.colors.primaryColor,
-})``;
-
 const Loading = (): Object => (
   <LoadingWrapper>
-    <LoadingIndicator />
+    <ActivityIndicator
+      size={Platform.OS === 'ios' ? 'small' : 'large'}
+      color={appStyles.colors.primaryColor}
+    />
   </LoadingWrapper>
 );
 
