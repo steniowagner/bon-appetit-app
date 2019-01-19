@@ -2,20 +2,16 @@
 
 import React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Linking,
-  Image,
-  Platform,
+  TouchableOpacity, Linking, Platform, View, Text,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components';
 
-import { TYPES, SOCIAL_BUTTONS } from './SOCIAL_BUTTONS';
-import HeartBeating from './HeartBeating';
+import FastImage from 'react-native-fast-image';
+import { TYPES, SOCIAL_BUTTONS } from './components/SOCIAL_BUTTONS';
+import HeartBeating from './components/HeartBeating';
 
 const PROFILE_IMAGE_URL = 'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/user-profile/user-profile.jpg';
 
@@ -28,10 +24,18 @@ const Content = styled(View)`
   align-items: center;
 `;
 
-const ProfileAvatarWrapper = styled(View)`
+const ProfileImageWrapper = styled(View)`
   margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
   width: 80px;
   height: 80px;
+  border-radius: 40px;
+`;
+
+const ProfileImage = styled(FastImage).attrs(({ uri }) => ({
+  source: { uri },
+}))`
+  width: 100%;
+  height: 100%;
   border-radius: 40px;
 `;
 
@@ -163,17 +167,11 @@ const renderSocialButton = (type: string): Object => {
 const Profile = () => (
   <Container>
     <Content>
-      <ProfileAvatarWrapper>
-        <Image
-          style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: 40,
-          }}
-          border={40}
-          source={{ uri: PROFILE_IMAGE_URL }}
+      <ProfileImageWrapper>
+        <ProfileImage
+          uri={PROFILE_IMAGE_URL}
         />
-      </ProfileAvatarWrapper>
+      </ProfileImageWrapper>
       <NameTextWrapper>
         <NameText>Stenio Wagner</NameText>
       </NameTextWrapper>

@@ -30,8 +30,8 @@ const DarkLayer = styled(View)`
   border-radius: ${({ theme }) => theme.metrics.borderRadius}px;
 `;
 
-const DishImage = styled(FastImage).attrs(props => ({
-  source: { uri: props.imageURL },
+const DishImage = styled(FastImage).attrs(({ imageURL }) => ({
+  source: { uri: imageURL },
 }))`
   width: 100%;
   height: 70%;
