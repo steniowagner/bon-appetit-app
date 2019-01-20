@@ -33,7 +33,7 @@ const RootStack = createStackNavigator(
       screen: Home,
       navigationOptions: ({ navigation }) => setDefaultHeaderLayout(
         navigation,
-        'Bon Appetit',
+        'Bon Appetit!',
         'Modesta-Script',
         appStyles.metrics.getWidthFromDP('8%'),
       ),

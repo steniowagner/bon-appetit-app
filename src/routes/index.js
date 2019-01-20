@@ -1,99 +1,29 @@
 // @flow
 
-import React from 'react';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  createMaterialTopTabNavigator,
-  createAppContainer,
-} from 'react-navigation';
-
-import SearchRestaurantsRoutes from '~/components/screens/search-restaurants/routes';
-import NearYouRoutes from '~/components/screens/near-you/routes';
-import Settings from '~/components/screens/settings/routes';
-import ProfileRoutes from '~/components/screens/profile/routes';
-import HomeRoutes from '~/components/screens/home/routes';
-
-import appStyles from '~/styles';
+import Login from '~/components/screens/login';
+import MainStack from './mainStack';
 
 export const ROUTE_NAMES = {
-  HOME: 'HOME',
-  SEARCH_RESTAURANTS: 'SEARCH_RESTAURANTS',
-  NEAR_YOU: 'NEAR_YOU',
-  PROFILE: 'PROFILE',
-  SETTINGS: 'SETTINGS',
+  LOGIN: 'LOGIN',
+  MAIN_STACK: 'MAIN_STACK',
 };
 
-type Props = {
-  tintColor: string,
-};
-
-const getTabIcon = (icon: string): Object => ({ tintColor }: Props) => (
-  <Icon
-    color={tintColor}
-    name={icon}
-    size={25}
-  />
-);
-
-const ApplicationTabs = createMaterialTopTabNavigator(
+const LoginStack = createSwitchNavigator(
   {
-    [ROUTE_NAMES.HOME]: {
-      screen: HomeRoutes,
-      navigationOptions: {
-        tabBarIcon: getTabIcon('home'),
-      },
+    [ROUTE_NAMES.LOGIN]: {
+      screen: Login,
     },
-    [ROUTE_NAMES.SEARCH_RESTAURANTS]: {
-      screen: SearchRestaurantsRoutes,
-      navigationOptions: {
-        tabBarIcon: getTabIcon('magnify'),
-      },
-    },
-    [ROUTE_NAMES.NEAR_YOU]: {
-      screen: NearYouRoutes,
-      navigationOptions: {
-        tabBarIcon: getTabIcon('map'),
-      },
-    },
-    [ROUTE_NAMES.PROFILE]: {
-      screen: ProfileRoutes,
-      navigationOptions: {
-        tabBarIcon: getTabIcon('account'),
-      },
-    },
-    [ROUTE_NAMES.SETTINGS]: {
-      screen: Settings,
-      navigationOptions: {
-        tabBarIcon: getTabIcon('settings'),
-      },
+    [ROUTE_NAMES.MAIN_STACK]: {
+      screen: MainStack,
     },
   },
   {
-    initialRouteName: ROUTE_NAMES.PROFILE,
-    tabBarPosition: 'bottom',
-    optimizationsEnabled: true,
-    animationEnabled: true,
-    swipeEnabled: false,
-    lazy: true,
-    tabBarOptions: {
-      showLabel: false,
-      showIcon: true,
-      style: {
-        backgroundColor: appStyles.colors.white,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 10,
-      },
-      indicatorStyle: {
-        backgroundColor: 'transparent',
-      },
-      inactiveTintColor: appStyles.colors.gray,
-      activeTintColor: appStyles.colors.primaryColor,
-    },
+    initialRouteName: ROUTE_NAMES.LOGIN,
   },
 );
 
-const AppContainer = createAppContainer(ApplicationTabs);
+const AppContainer = createAppContainer(LoginStack);
 
 export default AppContainer;
