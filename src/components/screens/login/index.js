@@ -63,11 +63,10 @@ const BackgroundImage = styled(Image).attrs({
 
 const NavigationTitleWrapper = styled(View)`
   width: 100%;
-  height: ${({ theme }) => theme.metrics.getWidthFromDP('10%')}px;
+  height: ${({ theme }) => theme.metrics.getHeightFromDP('10%')}px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.metrics.extraLargeSize}px;
   padding-horizontal: ${({ theme }) => 2 * theme.metrics.extraLargeSize}px;
 `;
 
@@ -145,7 +144,7 @@ class Login extends Component {
         <DarkLayer />
         <Wrapper>
           <TitleWrapper>
-            <Title>Bon Appettit!</Title>
+            <Title>Bon Appetit!</Title>
           </TitleWrapper>
           <NavigationTitleWrapper>
             <TouchableOpacity
@@ -153,6 +152,9 @@ class Login extends Component {
             >
               <Animated.Text
                 style={{
+                  paddingBottom: appStyles.metrics.getHeightFromDP('3%'),
+                  paddingRight: appStyles.metrics.getHeightFromDP('4%'),
+                  paddingTop: appStyles.metrics.getHeightFromDP('1%'),
                   fontFamily: 'CircularStd-Black',
                   color: this._loginFontSize.interpolate({
                     inputRange: [0, 1],
@@ -177,6 +179,9 @@ class Login extends Component {
             >
               <Animated.Text
                 style={{
+                  paddingBottom: appStyles.metrics.getHeightFromDP('3%'),
+                  paddingLeft: appStyles.metrics.getHeightFromDP('4%'),
+                  paddingTop: appStyles.metrics.getHeightFromDP('1%'),
                   fontFamily: 'CircularStd-Black',
                   color: this._signUpFontSize.interpolate({
                     inputRange: [0, 1],

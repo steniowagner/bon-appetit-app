@@ -2,7 +2,12 @@
 
 import React from 'react';
 import {
-  TouchableOpacity, Linking, Platform, View, Text,
+  TouchableOpacity,
+  Linking,
+  Platform,
+  ScrollView,
+  View,
+  Text,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,10 +30,11 @@ const Content = styled(View)`
 `;
 
 const ProfileImageWrapper = styled(View)`
-  margin: ${({ theme }) => `${theme.metrics.largeSize}px 0 ${theme.metrics.largeSize}px 0`}
+  margin-vertical: ${({ theme }) => theme.metrics.largeSize}px;
   width: 80px;
   height: 80px;
   border-radius: 40px;
+  background-color: ${({ theme }) => theme.colors.primaryColor};
 `;
 
 const ProfileImage = styled(FastImage).attrs(({ uri }) => ({
@@ -97,15 +103,15 @@ const AboutMeWrapper = styled(View)`
 const AboutMeDescription = styled(Text)`
   color: ${({ theme }) => theme.colors.darkLayer};
   font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '2.5%' : '2.2%';
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = Platform.OS === 'android' ? '2.5%' : '4%';
+    return theme.metrics.getWidthFromDP(percentage);
   }}px;
   text-align: left;
   font-family: CircularStd-Medium;
 `;
 
-const AboutMeText = styled(Text)`
-  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+const AboutMeTitle = styled(Text)`
+  margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
   color: ${({ theme }) => theme.colors.darkText};
   font-family: CircularStd-Black;
   font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.7%')};
@@ -164,37 +170,41 @@ const renderSocialButton = (type: string): Object => {
   );
 };
 
-const Profile = () => (
+const Profile = (): Object => (
   <Container>
-    <Content>
-      <ProfileImageWrapper>
-        <ProfileImage
-          uri={PROFILE_IMAGE_URL}
-        />
-      </ProfileImageWrapper>
-      <NameTextWrapper>
-        <NameText>Stenio Wagner</NameText>
-      </NameTextWrapper>
-      <SubTextWrapper>
-        <SubText>Full Stack Engineer</SubText>
-        <HeartBeating />
-      </SubTextWrapper>
-      <SocialContactsWrapper>
-        <SocialButtonsWrapper>
-          {renderSocialButton(TYPES.LINKEDIN)}
-          {renderSocialButton(TYPES.GITHUB)}
-          {renderSocialButton(TYPES.INSTAGRAM)}
-        </SocialButtonsWrapper>
-      </SocialContactsWrapper>
-      <AboutMeWrapper>
-        <AboutMeText>About Me</AboutMeText>
-        <AboutMeDescription>
-          {
-            "A Full Stack Engineer with interests in the Javascript world, including NodeJS and, obviously, the React Ecossystem (ReactJS, React-Native and GraphQL).\n\nI also have a good eye for design, and that’s why I’m passionate about building amazing, beautiful and problem-solver things to contribute and sum with other people's lives!"
-          }
-        </AboutMeDescription>
-      </AboutMeWrapper>
-    </Content>
+    <ScrollView
+      alwaysBounceVertical={false}
+    >
+      <Content>
+        <ProfileImageWrapper>
+          <ProfileImage
+            uri={PROFILE_IMAGE_URL}
+          />
+        </ProfileImageWrapper>
+        <NameTextWrapper>
+          <NameText>Stenio Wagner</NameText>
+        </NameTextWrapper>
+        <SubTextWrapper>
+          <SubText>Full Stack Engineer</SubText>
+          <HeartBeating />
+        </SubTextWrapper>
+        <SocialContactsWrapper>
+          <SocialButtonsWrapper>
+            {renderSocialButton(TYPES.LINKEDIN)}
+            {renderSocialButton(TYPES.GITHUB)}
+            {renderSocialButton(TYPES.INSTAGRAM)}
+          </SocialButtonsWrapper>
+        </SocialContactsWrapper>
+        <AboutMeWrapper>
+          <AboutMeTitle>About Me</AboutMeTitle>
+          <AboutMeDescription>
+            {
+              "A Full Stack Engineer with interests in the Javascript world, including NodeJS and, obviously, the React Ecossystem (ReactJS, React-Native and GraphQL).\n\nI also have a good eye for design, and that’s why I’m passionate about building amazing, beautiful and problem-solver things to contribute and sum with other people's lives!"
+            }
+          </AboutMeDescription>
+        </AboutMeWrapper>
+      </Content>
+    </ScrollView>
   </Container>
 );
 

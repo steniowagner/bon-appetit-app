@@ -6,9 +6,10 @@ import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
 
-import { DefaultText } from './Common';
 import ButtonContent from './ButtonContent';
-import Input from './CustomInput';
+import { DefaultText } from './Common';
+import Input from './Input';
+
 import appStyles from '~/styles';
 
 const Container = styled(View)`
@@ -55,11 +56,9 @@ const renderInput = (
   placeholder: string,
   iconName: string,
   type: string,
-  autoFocus: boolean = false,
 ): Object => (
   <Input
     placeholder={placeholder}
-    autoFocus={autoFocus}
     iconName={iconName}
     type={type}
   />
@@ -115,7 +114,7 @@ const renderSocialButtons = (): Object => (
 
 const LoginComponent = (): Object => (
   <Container>
-    {renderInput('E-mail', 'email-outline', 'emailAddress', true)}
+    {renderInput('E-mail', 'email-outline', 'emailAddress')}
     {renderInput('Password', 'lock-outline', 'password')}
     <ButtonContent
       color={appStyles.colors.primaryColor}

@@ -16,7 +16,6 @@ import EventDetails from './components/event-details';
 import Home from './index';
 
 import CONSTANTS from '~/utils/CONSTANTS';
-import appStyles from '~/styles';
 
 export const ROUTE_NAMES = {
   YOU_MIGHT_LIKE_SEE_ALL: 'YOU_MIGHT_LIKE_SEE_ALL',
@@ -35,7 +34,7 @@ const RootStack = createStackNavigator(
         navigation,
         'Bon Appetit!',
         'Modesta-Script',
-        appStyles.metrics.getWidthFromDP('8%'),
+        28,
       ),
     },
 

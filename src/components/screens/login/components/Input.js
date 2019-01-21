@@ -25,21 +25,16 @@ const InputIcon = styled(Icon).attrs(({ iconName }) => ({
   color: ${({ theme }) => theme.colors.defaultWhite};
 `;
 
-const CustomInput = styled(TextInput).attrs(
-  ({
-    placeholder, autoFocus, type, theme,
-  }) => ({
-    placeholderTextColor: theme.colors.transparentGrayx,
-    selectionColor: theme.colors.defaultWhite,
-    underlineColorAndroid: 'transparent',
-    secureTextEntry: type === 'password',
-    autoCapitalize: 'none',
-    textContentType: type,
-    autoCorrect: false,
-    placeholder,
-    autoFocus,
-  }),
-)`
+const CustomInput = styled(TextInput).attrs(({ placeholder, type, theme }) => ({
+  placeholderTextColor: theme.colors.transparentGrayx,
+  selectionColor: theme.colors.defaultWhite,
+  underlineColorAndroid: 'transparent',
+  secureTextEntry: type === 'password',
+  autoCapitalize: 'none',
+  textContentType: type,
+  autoCorrect: false,
+  placeholder,
+}))`
   width: 90%;
   height: 100%;
   font-family: CircularStd-Book;
@@ -48,17 +43,11 @@ const CustomInput = styled(TextInput).attrs(
 
 type InputProps = {
   placeholder: string,
-  autoFocus: ?boolean,
   iconName: string,
   type: string,
 };
 
-const Input = ({
-  placeholder,
-  autoFocus,
-  iconName,
-  type,
-}: InputProps): Object => (
+const Input = ({ placeholder, iconName, type }: InputProps): Object => (
   <ContentContainer
     color={appStyles.colors.transparentGray}
   >
@@ -68,7 +57,6 @@ const Input = ({
       />
       <CustomInput
         placeholder={placeholder}
-        autoFocus={autoFocus}
         type={type}
       />
     </InputWrapper>
