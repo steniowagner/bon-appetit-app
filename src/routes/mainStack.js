@@ -70,7 +70,7 @@ const ApplicationTabs = createMaterialTopTabNavigator(
     },
   },
   {
-    initialRouteName: ROUTE_NAMES.PROFILE,
+    initialRouteName: ROUTE_NAMES.SETTINGS,
     tabBarPosition: 'bottom',
     optimizationsEnabled: true,
     animationEnabled: true,

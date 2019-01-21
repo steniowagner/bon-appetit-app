@@ -102,10 +102,7 @@ const AboutMeWrapper = styled(View)`
 
 const AboutMeDescription = styled(Text)`
   color: ${({ theme }) => theme.colors.darkLayer};
-  font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'android' ? '2.5%' : '4%';
-    return theme.metrics.getWidthFromDP(percentage);
-  }}px;
+  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   text-align: left;
   font-family: CircularStd-Medium;
 `;
@@ -122,7 +119,6 @@ const SocialIcon = styled(Icon).attrs(({ name }) => ({
   name,
 }))`
   color: ${({ theme }) => theme.colors.white};
-  margin: 1.5px 0px 0px 1px;
 `;
 
 const ButtonWrapper = styled(LinearGradient).attrs({

@@ -2,12 +2,13 @@
 
 import React, { Component } from 'react';
 import {
-  View,
-  Image,
-  Text,
   TouchableOpacity,
+  StatusBar,
   Animated,
   FlatList,
+  Image,
+  View,
+  Text,
 } from 'react-native';
 
 import styled from 'styled-components';
@@ -140,6 +141,12 @@ class Login extends Component {
   render() {
     return (
       <Container>
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle="light-content"
+          translucent
+          animated
+        />
         <BackgroundImage />
         <DarkLayer />
         <Wrapper>

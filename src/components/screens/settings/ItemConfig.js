@@ -20,7 +20,7 @@ const CONFIG = {
   [TYPES.PROMOTIONS_NEAR_ME]: {
     switchId: SWITCH_STATE_REFS.PROMOTIONS_NEAR_ME,
     text:
-      'By enabling this option, the app will periodically use your current location and will show promotions that are happening near you.',
+      'By enabling this option, the app will periodically use your current location and will show promotions that are happening near to you.',
     title: 'Receive Promotions near me',
   },
   [TYPES.NOTIFICATIONS_SOUND]: {
