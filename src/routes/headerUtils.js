@@ -122,10 +122,13 @@ export const setDefaultHeaderLayout = (
   navigation: Object,
   title: string,
   fontFamily: string = 'CircularStd-Medium',
+  fontSize: ?number,
 ): Object => ({
   title,
   headerTitleStyle: {
+    fontSize: fontSize || appStyles.metrics.navigationHeaderFontSize,
     color: appStyles.colors.defaultWhite,
+    fontWeight: undefined,
     fontFamily,
   },
   headerTintColor: appStyles.colors.defaultWhite,

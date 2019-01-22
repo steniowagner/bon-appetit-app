@@ -72,7 +72,7 @@ const DisheTitle = styled(Text).attrs({
   width: 100%;
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: 20px;
-  fontfamily: CircularStd-Black;
+  font-family: CircularStd-Black;
 `;
 
 const DistanceWrapper = styled(View)`
@@ -85,7 +85,7 @@ const DistanceWrapper = styled(View)`
 const RestaurantDistance = styled(Text)`
   color: ${({ theme }) => theme.colors.defaultWhite};
   font-size: ${getTextSize('default')}px;
-  fontfamily: CircularStd-Medium;
+  font-family: CircularStd-Medium;
 `;
 
 const MapIcon = styled(Icon).attrs({

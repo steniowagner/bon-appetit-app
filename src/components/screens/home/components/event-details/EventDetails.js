@@ -92,11 +92,6 @@ const renderHeader = (
   numberRestaurantsParticipating: number,
 ): Object => (
   <HeaderCotainer>
-    {console.tron.log(
-      'here',
-      eventDetails.thumbnailImageURL,
-      eventDetails.imageURL,
-    )}
     <ImageWrapper>
       <ProgressiveImage
         thumbnailImageURL={eventDetails.thumbnailImageURL}

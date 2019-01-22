@@ -13,12 +13,12 @@ import { Alert, TYPES } from '~/components/common/alert';
 import CustomTab from '~/components/common/CustomTab';
 import Loading from '~/components/common/Loading';
 
-import CONSTANTS from '~/utils/CONSTANTS';
-import appStyles from '~/styles';
-
 import AboutRestaurant from './components/AboutRestaurant';
 import MenuListItem from './components/MenuListItem';
 import Header from './components/Header';
+
+import CONSTANTS from '~/utils/CONSTANTS';
+import appStyles from '~/styles';
 
 const Container = styled(View)`
   flex: 1;

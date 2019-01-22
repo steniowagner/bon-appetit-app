@@ -25,7 +25,7 @@ export default {
   navigationHeaderHeight: Platform.OS === 'ios' ? 64 : 54,
   borderRadius: 8,
 
-  navigationHeaderFontSize: Platform.OS === 'ios' ? 16 : 22,
+  navigationHeaderFontSize: Platform.OS === 'ios' ? 17 : 19,
 
   extraSmallSize: getWidthFromDP('1%'),
   smallSize: getWidthFromDP('2%'),

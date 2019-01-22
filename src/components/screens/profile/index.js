@@ -104,7 +104,7 @@ const AboutMeDescription = styled(Text)`
   color: ${({ theme }) => theme.colors.darkLayer};
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('4%')}px;
   text-align: left;
-  font-family: CircularStd-Medium;
+  font-family: CircularStd-Book;
 `;
 
 const AboutMeTitle = styled(Text)`
@@ -119,6 +119,7 @@ const SocialIcon = styled(Icon).attrs(({ name }) => ({
   name,
 }))`
   color: ${({ theme }) => theme.colors.white};
+  margin-top: ${({ withMarginTop }) => (Platform.OS === 'ios' && withMarginTop ? 2 : 0)}px;
 `;
 
 const ButtonWrapper = styled(LinearGradient).attrs({
@@ -149,7 +150,9 @@ const handleSocialButtonClick = async (url: string): void => {
 };
 
 const renderSocialButton = (type: string): Object => {
-  const { iconName, colors, url } = SOCIAL_BUTTONS[type];
+  const {
+    withMarginTop, iconName, colors, url,
+  } = SOCIAL_BUTTONS[type];
 
   return (
     <ButtonWrapper
@@ -159,6 +162,7 @@ const renderSocialButton = (type: string): Object => {
         onPress={() => handleSocialButtonClick(url)}
       >
         <SocialIcon
+          withMarginTop={withMarginTop}
           name={iconName}
         />
       </SocialButton>

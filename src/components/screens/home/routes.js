@@ -30,7 +30,12 @@ const RootStack = createStackNavigator(
   {
     [ROUTE_NAMES.HOME]: {
       screen: Home,
-      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(navigation, 'Bon Appetit!', 'Modesta-Script'),
+      navigationOptions: ({ navigation }) => setDefaultHeaderLayout(
+        navigation,
+        'Bon Appetit!',
+        'Modesta-Script',
+        27,
+      ),
     },
 
     [ROUTE_NAMES.SEE_ALL_EVENTS]: {

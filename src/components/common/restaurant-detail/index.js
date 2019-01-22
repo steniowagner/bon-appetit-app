@@ -14,6 +14,7 @@ import RestaurantDetail from './RestaurantDetail';
 
 type Props = {
   requestRestaurantDetailRequest: Function,
+  resetState: Function,
   restaurant: Object,
   navigation: Object,
 };
@@ -37,6 +38,12 @@ class RestaurantDetailContainer extends Component<Props, State> {
     const { navigation } = this.props;
 
     handleHiddenHeaderStyle(navigation, loading, error);
+  }
+
+  componentWillUnmount() {
+    const { resetState } = this.props;
+
+    resetState();
   }
 
   handleRecoverUserLocationFromStorage = async (): any => {

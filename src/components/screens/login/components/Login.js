@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import React, { Component } from 'react';
+import { TouchableOpacity, Animated, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled from 'styled-components';
@@ -38,7 +38,7 @@ const SocialButtonsContainer = styled(View)`
   justify-content: flex-end;
 `;
 
-const ForgotPasswordContainer = styled(View)`
+const ForgotPasswordContainer = styled(Animated.View)`
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -52,78 +52,192 @@ const RecoverTextButton = styled(TouchableOpacity)`
   margin-left: 4px;
 `;
 
-const renderInput = (
-  placeholder: string,
-  iconName: string,
-  type: string,
-): Object => (
-  <Input
-    placeholder={placeholder}
-    iconName={iconName}
-    type={type}
-  />
-);
+const createAnimationStyle = (animation: Object): Object => {
+  const translateY = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-5, 0],
+  });
 
-const renderForgotPasswordText = (): Object => (
-  <ForgotPasswordContainer>
-    <ForgotPasswordWrapper>
-      <DefaultText>Forgot your Password?</DefaultText>
-      <RecoverTextButton>
-        <DefaultText
-          color={appStyles.colors.primaryColor}
-        >
-          Recover here
-        </DefaultText>
-      </RecoverTextButton>
-    </ForgotPasswordWrapper>
-  </ForgotPasswordContainer>
-);
+  return {
+    opacity: animation,
+    transform: [
+      {
+        translateY,
+      },
+    ],
+  };
+};
 
-const renderSocialButton = (
-  text: string,
-  icon: string,
-  color: string,
-): Object => (
-  <ButtonContent
-    color={color}
-  >
-    <SocialButtonWrapper>
-      <ButtonIcon
-        iconName={icon}
-      />
-      <DefaultText>{text}</DefaultText>
-      <View />
-    </SocialButtonWrapper>
-  </ButtonContent>
-);
+class LoginComponent extends Component {
+  _emailInputFieldAnimation = new Animated.Value(0);
+  _passwordInputFieldAnimation = new Animated.Value(0);
+  _loginButtonAnimation = new Animated.Value(0);
+  _loginFacebookButtonAnimation = new Animated.Value(0);
+  _loginGooglePlusButtonAnimation = new Animated.Value(0);
+  _forgotPasswordTextAnimation = new Animated.Value(0);
 
-const renderSocialButtons = (): Object => (
-  <SocialButtonsContainer>
-    {renderSocialButton(
-      'Login with Facebook',
-      'facebook',
-      appStyles.colors.facebook,
-    )}
-    {renderSocialButton(
-      'Login with Google+',
-      'google-plus',
-      appStyles.colors.googlePlus,
-    )}
-  </SocialButtonsContainer>
-);
+  componentDidMount() {
+    Animated.stagger(100, [
+      Animated.timing(this._emailInputFieldAnimation, {
+        toValue: 1,
+        duration: 350,
+      }),
+      Animated.timing(this._passwordInputFieldAnimation, {
+        toValue: 1,
+        duration: 350,
+      }),
+      Animated.timing(this._loginButtonAnimation, {
+        toValue: 1,
+        duration: 350,
+      }),
+      Animated.timing(this._loginFacebookButtonAnimation, {
+        toValue: 1,
+        duration: 350,
+      }),
+      Animated.timing(this._loginGooglePlusButtonAnimation, {
+        toValue: 1,
+        duration: 350,
+      }),
+      Animated.timing(this._forgotPasswordTextAnimation, {
+        toValue: 1,
+        duration: 350,
+      }),
+    ]).start();
+  }
 
-const LoginComponent = (): Object => (
-  <Container>
-    {renderInput('E-mail', 'email-outline', 'emailAddress')}
-    {renderInput('Password', 'lock-outline', 'password')}
+  renderInput = (
+    placeholder: string,
+    iconName: string,
+    type: string,
+    style: Object,
+  ): Object => (
+    <Input
+      placeholder={placeholder}
+      iconName={iconName}
+      style={style}
+      type={type}
+    />
+  );
+
+  renderForgotPasswordText = (): Object => {
+    const forgotPasswordTextAnimationStyle = createAnimationStyle(
+      this._forgotPasswordTextAnimation,
+    );
+
+    return (
+      <ForgotPasswordContainer
+        style={forgotPasswordTextAnimationStyle}
+      >
+        <ForgotPasswordWrapper>
+          <DefaultText>Forgot your Password?</DefaultText>
+          <RecoverTextButton>
+            <DefaultText
+              color={appStyles.colors.primaryColor}
+            >
+              Recover here
+            </DefaultText>
+          </RecoverTextButton>
+        </ForgotPasswordWrapper>
+      </ForgotPasswordContainer>
+    );
+  };
+
+  renderSocialButton = (text: string, icon: string, color: string): Object => (
     <ButtonContent
-      color={appStyles.colors.primaryColor}
+      color={color}
     >
-      <DefaultText>LOGIN</DefaultText>
+      <SocialButtonWrapper>
+        <ButtonIcon
+          iconName={icon}
+        />
+        <DefaultText>{text}</DefaultText>
+        <View />
+      </SocialButtonWrapper>
     </ButtonContent>
-    {renderForgotPasswordText()}
-    {renderSocialButtons()}
-  </Container>
-);
+  );
+
+  renderSocialButtons = (): Object => {
+    const loginFacebookButtonAnimationStyle = createAnimationStyle(
+      this._loginFacebookButtonAnimation,
+    );
+
+    const loginGooglePlusButtonAnimationStyle = createAnimationStyle(
+      this._loginGooglePlusButtonAnimation,
+    );
+
+    return (
+      <SocialButtonsContainer>
+        <Animated.View
+          style={loginFacebookButtonAnimationStyle}
+        >
+          {this.renderSocialButton(
+            'Login with Facebook',
+            'facebook',
+            appStyles.colors.facebook,
+            this._loginFacebookButtonAnimation,
+          )}
+        </Animated.View>
+        <Animated.View
+          style={loginGooglePlusButtonAnimationStyle}
+        >
+          {this.renderSocialButton(
+            'Login with Google+',
+            'google-plus',
+            appStyles.colors.googlePlus,
+            this._loginGooglePlusButtonAnimation,
+          )}
+        </Animated.View>
+      </SocialButtonsContainer>
+    );
+  };
+
+  render() {
+    const emailAnimationStyle = createAnimationStyle(
+      this._emailInputFieldAnimation,
+    );
+    const passwordAnimationStyle = createAnimationStyle(
+      this._passwordInputFieldAnimation,
+    );
+    const loginButtonAnimationStyle = createAnimationStyle(
+      this._loginButtonAnimation,
+    );
+
+    return (
+      <Container>
+        <Animated.View
+          style={emailAnimationStyle}
+        >
+          {this.renderInput(
+            'E-mail',
+            'email-outline',
+            'emailAddress',
+            emailAnimationStyle,
+          )}
+        </Animated.View>
+        <Animated.View
+          style={passwordAnimationStyle}
+        >
+          {this.renderInput(
+            'Password',
+            'lock-outline',
+            'password',
+            passwordAnimationStyle,
+          )}
+        </Animated.View>
+        <Animated.View
+          style={loginButtonAnimationStyle}
+        >
+          <ButtonContent
+            color={appStyles.colors.primaryColor}
+          >
+            <DefaultText>LOGIN</DefaultText>
+          </ButtonContent>
+        </Animated.View>
+        {this.renderForgotPasswordText()}
+        {this.renderSocialButtons()}
+      </Container>
+    );
+  }
+}
 
 export default LoginComponent;

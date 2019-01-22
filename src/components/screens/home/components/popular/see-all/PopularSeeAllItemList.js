@@ -70,7 +70,7 @@ const DisheTitle = styled(Text).attrs({
 })`
   color: ${({ theme }) => theme.colors.darkText};
   font-size: ${getTextSize('title')}px;
-  fontfamily: CircularStd-Black;
+  font-family: CircularStd-Black;
   width: 70%;
 `;
 
@@ -81,7 +81,7 @@ const DisheDescription = styled(Text).attrs({
   margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   color: ${({ theme }) => theme.colors.subText};
   font-size: ${getTextSize('default')}px;
-  fontfamily: CircularStd-Book;
+  font-family: CircularStd-Book;
 `;
 
 type Props = {

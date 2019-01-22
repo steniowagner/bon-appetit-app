@@ -59,7 +59,7 @@ const OptionText = styled(Text)`
     const percentage = Platform.OS === 'android' ? '4.5%' : '4%';
     return theme.metrics.getWidthFromDP(percentage);
   }}px;
-  fontFamily: CircularStd-Medium;
+  font-family: CircularStd-Medium;
 `;
 
 type Props = {

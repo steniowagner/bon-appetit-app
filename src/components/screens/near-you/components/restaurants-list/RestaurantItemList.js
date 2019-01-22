@@ -63,7 +63,7 @@ const RestaurantName = styled(Text).attrs({
   width: 70%;
   color: ${({ theme }) => theme.colors.darkText}
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
-  fontFamily: CircularStd-Black;
+  font-family: CircularStd-Black;
 `;
 
 const DistanceWrapper = styled(View)`
@@ -78,7 +78,7 @@ const DistanceText = styled(Text)`
     const percentage = Platform.OS === 'ios' ? '1.8%' : '2%';
     return theme.metrics.getHeightFromDP(percentage);
   }}px;
-  fontFamily: CircularStd-Medium;
+  font-family: CircularStd-Medium;
   padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
