@@ -67,10 +67,6 @@ const MarkerIcon = styled(Icon).attrs(({ name }) => ({
   color: ${({ theme }) => theme.colors.primaryColor};
 `;
 
-type Props = {
-  navigation: Function,
-};
-
 const ASPECT_RATIO = appStyles.metrics.width / appStyles.metrics.height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -86,7 +82,9 @@ const edgePadding = {
   left: 50,
 };
 
-let _mapRef: any;
+let _restaurantMarkerRef: Object;
+let _userMarkerRef: Object;
+let _mapRef: Object;
 
 const onFitMapCoordinates = (markers: Array<Object>): void => {
   _mapRef.fitToCoordinates(markers, {
@@ -118,8 +116,22 @@ const renderMap = (restaurantName: string, markers: Array<Object>): Object => (
       {markers.map(marker => (
         <Marker
           title={marker.id === 'user_location' ? "You're here" : restaurantName}
-          key={marker.id}
+          ref={(markerRef) => {
+            if (marker.id === 'user_location') {
+              _userMarkerRef = markerRef;
+            } else {
+              _restaurantMarkerRef = markerRef;
+            }
+          }}
+          onPress={() => {
+            const ref = marker.id === 'user_location'
+              ? _userMarkerRef
+              : _restaurantMarkerRef;
+
+            ref.showCallout();
+          }}
           coordinate={marker}
+          key={marker.id}
         >
           <MarkerIcon
             name={
@@ -134,11 +146,7 @@ const renderMap = (restaurantName: string, markers: Array<Object>): Object => (
   </MapContainer>
 );
 
-const renderFooter = (
-  restaurantName: string,
-  distance: number,
-  isOpen: boolean,
-): Object => {
+const renderFooter = (distance: number, isOpen: boolean): Object => {
   const status = `${isOpen ? 'Open' : 'Closed'} now`;
 
   return (
@@ -161,14 +169,22 @@ const renderFloatingActionButton = (markers: Array<Object>): Object => (
   </FloatingActionButtonWrapper>
 );
 
+type Props = {
+  navigation: Function,
+};
+
 const RestaurantAddressMap = ({ navigation }: Props): Object => {
   const {
     restaurantLocation,
     userLocation,
-    restaurantName,
     distance,
     isOpen,
   } = navigation.getParam(CONSTANTS.NAVIGATION_PARAM_USER_LOCATION, {});
+
+  const restaurantName = navigation.getParam(
+    CONSTANTS.NAVIGATION_PARAM_RESTAURANT_NAME,
+    '',
+  );
 
   const markers = [restaurantLocation, userLocation];
 
@@ -181,7 +197,7 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
         animated
       />
       {renderMap(restaurantName, markers)}
-      {renderFooter(restaurantName, distance, isOpen)}
+      {renderFooter(distance, isOpen)}
       {renderFloatingActionButton(markers)}
     </Container>
   );

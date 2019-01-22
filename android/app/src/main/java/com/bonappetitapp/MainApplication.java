@@ -10,6 +10,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.airbnb.android.react.maps.MapsPackage;
 
 import com.BV.LinearGradient.LinearGradientPackage;
 
@@ -31,7 +32,8 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new RNGestureHandlerPackage(),
           new FastImageViewPackage(),
-          new LinearGradientPackage()
+          new LinearGradientPackage(),
+          new MapsPackage()
       );
     }
 
