@@ -193,7 +193,7 @@ const RestaurantAddressMap = ({ navigation }: Props): Object => {
       <StatusBar
         backgroundColor={appStyles.colors.androidToolbarColor}
         barStyle="light-content"
-        translucent={false}
+        translucent
         animated
       />
       {renderMap(restaurantName, markers)}

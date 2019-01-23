@@ -17,6 +17,7 @@ const App = (): Object => (
     <StatusBar
       backgroundColor={AppTheme.colors.androidToolbarColor}
       barStyle="light-content"
+      translucent
       animated
     />
     <ThemeProvider

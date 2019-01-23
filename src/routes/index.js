@@ -1,5 +1,3 @@
-// @flow
-
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 
 import Login from '~/components/screens/login';
@@ -10,7 +8,7 @@ export const ROUTE_NAMES = {
   MAIN_STACK: 'MAIN_STACK',
 };
 
-const LoginStack = createSwitchNavigator(
+const InitialStack = createSwitchNavigator(
   {
     [ROUTE_NAMES.LOGIN]: {
       screen: Login,
@@ -24,6 +22,6 @@ const LoginStack = createSwitchNavigator(
   },
 );
 
-const AppContainer = createAppContainer(LoginStack);
+const AppContainer = createAppContainer(InitialStack);
 
 export default AppContainer;

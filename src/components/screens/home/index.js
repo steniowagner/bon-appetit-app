@@ -8,10 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Creators as HomeCreators } from '~/store/ducks/home';
 
-import {
-  persistItemInStorage,
-  getItemFromStorage,
-} from '~/utils/AsyncStoarageManager';
+import { persistItemInStorage } from '~/utils/AsyncStoarageManager';
 import CONSTANTS from '~/utils/CONSTANTS';
 import appStyles from '~/styles';
 

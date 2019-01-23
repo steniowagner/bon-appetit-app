@@ -84,21 +84,29 @@ class Login extends Component {
   _signUpFontSize: Object = new Animated.Value(0);
   _flatListRef: Object = {};
 
+  state = {
+    isBackgroundImageLoaded: false,
+  };
+
   componentDidMount() {
-    this._flatListRef.getScrollResponder().setNativeProps({
-      scrollEnabled: false,
-    });
+    const { isBackgroundImageLoaded } = this.state;
+
+    if (isBackgroundImageLoaded) {
+      this._flatListRef.getScrollResponder().setNativeProps({
+        scrollEnabled: false,
+      });
+    }
   }
 
   onClickLoginButton = (): void => {
     Animated.parallel([
       Animated.timing(this._loginFontSize, {
         toValue: 1,
-        duration: 200,
+        duration: 350,
       }),
       Animated.timing(this._signUpFontSize, {
         toValue: 0,
-        duration: 200,
+        duration: 350,
       }),
     ]).start(this._flatListRef.scrollToIndex({ animated: true, index: 0 }));
   };
@@ -107,13 +115,19 @@ class Login extends Component {
     Animated.parallel([
       Animated.timing(this._loginFontSize, {
         toValue: 0,
-        duration: 200,
+        duration: 350,
       }),
       Animated.timing(this._signUpFontSize, {
         toValue: 1,
-        duration: 200,
+        duration: 350,
       }),
     ]).start(this._flatListRef.scrollToIndex({ animated: true, index: 1 }));
+  };
+
+  onLoadBackgroundImage = (): void => {
+    this.setState({
+      isBackgroundImageLoaded: true,
+    });
   };
 
   renderContent = (): Object => (
@@ -139,6 +153,8 @@ class Login extends Component {
   );
 
   render() {
+    const { isBackgroundImageLoaded } = this.state;
+
     return (
       <Container>
         <StatusBar
@@ -147,70 +163,74 @@ class Login extends Component {
           translucent
           animated
         />
-        <BackgroundImage />
+        <BackgroundImage
+          onLoad={this.onLoadBackgroundImage}
+        />
         <DarkLayer />
-        <Wrapper>
-          <TitleWrapper>
-            <Title>Bon Appetit!</Title>
-          </TitleWrapper>
-          <NavigationTitleWrapper>
-            <TouchableOpacity
-              onPress={this.onClickLoginButton}
-            >
-              <Animated.Text
-                style={{
-                  paddingBottom: appStyles.metrics.getHeightFromDP('3%'),
-                  paddingRight: appStyles.metrics.getHeightFromDP('4%'),
-                  paddingTop: appStyles.metrics.getHeightFromDP('1%'),
-                  fontFamily: 'CircularStd-Black',
-                  color: this._loginFontSize.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [
-                      appStyles.colors.gray,
-                      appStyles.colors.defaultWhite,
-                    ],
-                    extrapolate: 'clamp',
-                  }),
-                  fontSize: this._loginFontSize.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [MIN_FONT_SIZE, MAX_FONT_SIZE],
-                    extrapolate: 'clamp',
-                  }),
-                }}
+        {isBackgroundImageLoaded && (
+          <Wrapper>
+            <TitleWrapper>
+              <Title>Bon Appetit!</Title>
+            </TitleWrapper>
+            <NavigationTitleWrapper>
+              <TouchableOpacity
+                onPress={this.onClickLoginButton}
               >
-                Login
-              </Animated.Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={this.onClickSignUpButton}
-            >
-              <Animated.Text
-                style={{
-                  paddingBottom: appStyles.metrics.getHeightFromDP('3%'),
-                  paddingLeft: appStyles.metrics.getHeightFromDP('4%'),
-                  paddingTop: appStyles.metrics.getHeightFromDP('1%'),
-                  fontFamily: 'CircularStd-Black',
-                  color: this._signUpFontSize.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [
-                      appStyles.colors.gray,
-                      appStyles.colors.defaultWhite,
-                    ],
-                    extrapolate: 'clamp',
-                  }),
-                  fontSize: this._signUpFontSize.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [MIN_FONT_SIZE, MAX_FONT_SIZE],
-                    extrapolate: 'clamp',
-                  }),
-                }}
+                <Animated.Text
+                  style={{
+                    paddingBottom: appStyles.metrics.getHeightFromDP('3%'),
+                    paddingRight: appStyles.metrics.getHeightFromDP('4%'),
+                    paddingTop: appStyles.metrics.getHeightFromDP('1%'),
+                    fontFamily: 'CircularStd-Black',
+                    color: this._loginFontSize.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [
+                        appStyles.colors.gray,
+                        appStyles.colors.defaultWhite,
+                      ],
+                      extrapolate: 'clamp',
+                    }),
+                    fontSize: this._loginFontSize.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [MIN_FONT_SIZE, MAX_FONT_SIZE],
+                      extrapolate: 'clamp',
+                    }),
+                  }}
+                >
+                  Login
+                </Animated.Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this.onClickSignUpButton}
               >
-                Sign Up
-              </Animated.Text>
-            </TouchableOpacity>
-          </NavigationTitleWrapper>
-          {this.renderContent()}
-        </Wrapper>
+                <Animated.Text
+                  style={{
+                    paddingBottom: appStyles.metrics.getHeightFromDP('3%'),
+                    paddingLeft: appStyles.metrics.getHeightFromDP('4%'),
+                    paddingTop: appStyles.metrics.getHeightFromDP('1%'),
+                    fontFamily: 'CircularStd-Black',
+                    color: this._signUpFontSize.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [
+                        appStyles.colors.gray,
+                        appStyles.colors.defaultWhite,
+                      ],
+                      extrapolate: 'clamp',
+                    }),
+                    fontSize: this._signUpFontSize.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [MIN_FONT_SIZE, MAX_FONT_SIZE],
+                      extrapolate: 'clamp',
+                    }),
+                  }}
+                >
+                  Sign Up
+                </Animated.Text>
+              </TouchableOpacity>
+            </NavigationTitleWrapper>
+            {this.renderContent()}
+          </Wrapper>
+        )}
       </Container>
     );
   }

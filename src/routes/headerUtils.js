@@ -133,10 +133,18 @@ export const setDefaultHeaderLayout = (
   },
   headerTintColor: appStyles.colors.defaultWhite,
   headerStyle: {
-    elevation: Platform.OS === 'android' && title === 'Near You' ? 0 : 4,
     backgroundColor: appStyles.colors.primaryColor,
     borderBottomWidth: 0,
   },
+  ...Platform.select({
+    android: {
+      headerStyle: {
+        backgroundColor: appStyles.colors.primaryColor,
+        elevation: title === 'Near You' ? 0 : 4,
+        marginTop: StatusBar.currentHeight,
+      },
+    },
+  }),
   headerBackTitle: null,
   borderBottomWidth: 0,
 });
