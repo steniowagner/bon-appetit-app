@@ -88,16 +88,6 @@ class Login extends Component {
     isBackgroundImageLoaded: false,
   };
 
-  componentDidMount() {
-    const { isBackgroundImageLoaded } = this.state;
-
-    if (isBackgroundImageLoaded) {
-      this._flatListRef.getScrollResponder().setNativeProps({
-        scrollEnabled: false,
-      });
-    }
-  }
-
   onClickLoginButton = (): void => {
     Animated.parallel([
       Animated.timing(this._loginFontSize, {
@@ -146,6 +136,7 @@ class Login extends Component {
       ref={(ref: any): void => {
         this._flatListRef = ref;
       }}
+      scrollEnabled={false}
       data={LAYOUTS}
       pagingEnabled
       horizontal
