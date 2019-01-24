@@ -5932,6 +5932,11 @@ react-native-shimmer-placeholder@^1.0.30:
   resolved "https://registry.yarnpkg.com/react-native-shimmer-placeholder/-/react-native-shimmer-placeholder-1.0.30.tgz#2c2c331f820c22f8c01dfe3c169bebcbb6591d46"
   integrity sha512-GWAuFPrVpjhVdCyBWcqJkkEpvwuK+R7LwveV1IZZlvZuojmj1E9AbCTKc9J4XgpSpnjgOOzdfSZvO9AILfaDDA==
 
+react-native-splash-screen@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-3.1.1.tgz#1a4e46c9fdce53ff52af2a2cb4181788c4e30b30"
+  integrity sha512-PU2YocOSGbLjL9Vgcq/cwMNuHHKNjjuPpa1IPMuWo+6EB/fSZ5VOmxSa7+eucQe3631s3NhGuk3eHKahU03a4Q==
+
 react-native-tab-view@^1.0.0, react-native-tab-view@^1.2.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.3.1.tgz#f9932d6bd5ba7dad75ef9335a68f13d85ba5bd56"

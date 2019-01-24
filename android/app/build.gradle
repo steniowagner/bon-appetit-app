@@ -156,6 +156,7 @@ dependencies {
     implementation project(':react-native-fast-image')
     compile project(':react-native-linear-gradient')
     implementation project(':react-native-maps')
+    compile project(':react-native-splash-screen')
 }
 
 // Run this once to be able to run the application with BUCK

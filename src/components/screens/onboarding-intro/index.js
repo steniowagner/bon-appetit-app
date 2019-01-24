@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { StatusBar, FlatList, View } from 'react-native';
 
+import SplashScreen from 'react-native-splash-screen';
 import styled from 'styled-components';
 
 import BottomPagination from './components/BottomPagination';
@@ -46,6 +47,10 @@ class OnboardingIntro extends Component<Props, State> {
   state = {
     currentPageIndex: 0,
   };
+
+  componentDidMount() {
+    SplashScreen.hide();
+  }
 
   onIncrementPageIndex = (): void => {
     const { currentPageIndex } = this.state;

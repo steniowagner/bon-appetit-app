@@ -11,6 +11,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.airbnb.android.react.maps.MapsPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
 import com.BV.LinearGradient.LinearGradientPackage;
 
@@ -33,7 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNGestureHandlerPackage(),
           new FastImageViewPackage(),
           new LinearGradientPackage(),
-          new MapsPackage()
+          new MapsPackage(),
+          new SplashScreenReactPackage()
       );
     }
 
