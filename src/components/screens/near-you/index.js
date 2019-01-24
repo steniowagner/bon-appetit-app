@@ -1,9 +1,6 @@
 // @flow
 
 import React, { Component } from 'react';
-import { View } from 'react-native';
-
-import styled from 'styled-components';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -39,24 +36,15 @@ class NearYouContainer extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const { userLocation } = this.state;
-
     const persistedUserLocation = await getItemFromStorage(
       CONSTANTS.USER_LOCATION,
-      [userLocation.latitude, userLocation.longitude],
+      [
+        CONSTANTS.FORTALEZA_CITY_LOCATION.latitude,
+        CONSTANTS.FORTALEZA_CITY_LOCATION.longitude,
+      ],
     );
 
-    const { latitude, longitude } = JSON.parse(persistedUserLocation);
-
-    this.setState(
-      {
-        userLocation: {
-          latitude: parseFloat(latitude),
-          longitude: parseFloat(longitude),
-        },
-      },
-      () => this.onRequestNearbyRestaurants(),
-    );
+    this.handleGetUserLocation(persistedUserLocation);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -133,6 +121,26 @@ class NearYouContainer extends Component<Props, State> {
     return restaurants;
   };
 
+  handleGetUserLocation = (persistedUserLocation: Array<any>): void => {
+    let userLocation;
+
+    if (typeof persistedUserLocation[0] === 'string') {
+      const { latitude, longitude } = JSON.parse(persistedUserLocation);
+
+      userLocation = {
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+      };
+    } else {
+      userLocation = {
+        latitude: persistedUserLocation[0],
+        longitude: persistedUserLocation[1],
+      };
+    }
+
+    this.setState({ userLocation }, () => this.onRequestNearbyRestaurants());
+  };
+
   isRestaurantsCached = (): boolean => {
     const { indexDishesTypeSelected, restaurantsCached } = this.state;
 
@@ -143,6 +151,8 @@ class NearYouContainer extends Component<Props, State> {
 
   render() {
     const { indexRestaurantSelected, userLocation } = this.state;
+    const { nearbyRestaurants } = this.props;
+    const { error } = nearbyRestaurants;
 
     const restaurants = this.getRestaurantsList();
 
@@ -154,6 +164,7 @@ class NearYouContainer extends Component<Props, State> {
         dishesTypesItems={dishesTypesItems}
         userLocation={userLocation}
         restaurants={restaurants}
+        error={error}
       />
     );
   }

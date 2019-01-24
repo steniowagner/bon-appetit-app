@@ -70,7 +70,9 @@ class Map extends Component<Props, {}> {
     );
 
     setTimeout(() => {
-      const isMarkerSet = this._markersRefs[indexLocationSelected];
+      const isMarkerSet = typeof this._markersRefs[indexLocationSelected].showCallout
+        === 'function';
+
       if (isMarkerSet) {
         this._markersRefs[indexLocationSelected].showCallout();
       }

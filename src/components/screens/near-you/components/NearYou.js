@@ -1,10 +1,11 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { View } from 'react-native';
 
 import styled from 'styled-components';
 
+import { Alert, TYPES } from '~/components/common/alert';
 import CustomTab from '~/components/common/CustomTab';
 import appStyles from '~/styles';
 
@@ -33,6 +34,7 @@ type Props = {
   restaurants: Array<Object>,
   onSelectMarker: Function,
   userLocation: Object,
+  error: boolean,
 };
 
 const NearYou = ({
@@ -42,31 +44,39 @@ const NearYou = ({
   onSelectMarker,
   userLocation,
   restaurants,
+  error,
 }: Props): Object => (
   <Container>
-    <ContentContainer>
-      <Map
-        indexLocationSelected={indexRestaurantSelected}
-        onSelectMarker={onSelectMarker}
-        userLocation={userLocation}
-        restaurants={restaurants}
-      />
-      {restaurants.length > 0 && (
-        <RestaurantsList
-          indexRestaurantSelected={indexRestaurantSelected}
-          onSelectMarker={onSelectMarker}
-          restaurants={restaurants}
-        />
-      )}
-    </ContentContainer>
-    <CustomTabWrapper>
-      <CustomTab
-        onChangeMenuIndex={index => onDishesTypeChange(index)}
-        contentWidth={appStyles.metrics.width}
-        data={dishesTypesItems}
-        theme="red"
-      />
-    </CustomTabWrapper>
+    {error && <Alert
+      type={TYPES.ERROR_SERVER_CONNECTION}
+    />}
+    {!error && (
+      <Fragment>
+        <ContentContainer>
+          <Map
+            indexLocationSelected={indexRestaurantSelected}
+            onSelectMarker={onSelectMarker}
+            userLocation={userLocation}
+            restaurants={restaurants}
+          />
+          {restaurants.length > 0 && (
+            <RestaurantsList
+              indexRestaurantSelected={indexRestaurantSelected}
+              onSelectMarker={onSelectMarker}
+              restaurants={restaurants}
+            />
+          )}
+        </ContentContainer>
+        <CustomTabWrapper>
+          <CustomTab
+            onChangeMenuIndex={index => onDishesTypeChange(index)}
+            contentWidth={appStyles.metrics.width}
+            data={dishesTypesItems}
+            theme="red"
+          />
+        </CustomTabWrapper>
+      </Fragment>
+    )}
   </Container>
 );
 

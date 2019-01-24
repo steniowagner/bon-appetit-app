@@ -92,11 +92,11 @@ class Login extends Component {
     Animated.parallel([
       Animated.timing(this._loginFontSize, {
         toValue: 1,
-        duration: 350,
+        duration: 200,
       }),
       Animated.timing(this._signUpFontSize, {
         toValue: 0,
-        duration: 350,
+        duration: 200,
       }),
     ]).start(this._flatListRef.scrollToIndex({ animated: true, index: 0 }));
   };
@@ -105,11 +105,11 @@ class Login extends Component {
     Animated.parallel([
       Animated.timing(this._loginFontSize, {
         toValue: 0,
-        duration: 350,
+        duration: 200,
       }),
       Animated.timing(this._signUpFontSize, {
         toValue: 1,
-        duration: 350,
+        duration: 200,
       }),
     ]).start(this._flatListRef.scrollToIndex({ animated: true, index: 1 }));
   };

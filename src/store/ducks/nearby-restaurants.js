@@ -47,7 +47,7 @@ const nearbyRestaurants = (state = INITIAL_STATE, { type, payload }) => {
       return {
         data: payload.data,
         loading: false,
-        error: true,
+        error: false,
       };
 
     case Types.GET_NEAR_BY_RESTAURANTS_FAILURE:
