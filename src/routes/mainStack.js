@@ -14,6 +14,7 @@ import Settings from '~/components/screens/settings/routes';
 import ProfileRoutes from '~/components/screens/profile/routes';
 import HomeRoutes from '~/components/screens/home/routes';
 
+import isIphoneX from '~/utils/isIphoneX';
 import appStyles from '~/styles';
 
 export const ROUTE_NAMES = {
@@ -80,6 +81,7 @@ const ApplicationTabs = createMaterialTopTabNavigator(
       showLabel: false,
       showIcon: true,
       style: {
+        paddingBottom: isIphoneX() ? 30 : 0,
         backgroundColor: appStyles.colors.white,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
