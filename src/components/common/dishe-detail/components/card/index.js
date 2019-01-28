@@ -33,19 +33,19 @@ type Props = {
 };
 
 const Card = ({ dishDetail }: Props): Object => {
-  const { reviews, dishe } = dishDetail;
+  const { reviews, dish } = dishDetail;
 
   return (
     <Container>
       <Header
-        price={dishe.price.toFixed(2)}
-        reviews={dishe.reviews}
-        stars={dishe.stars}
-        title={dishe.title}
+        price={dish.price.toFixed(2)}
+        reviews={dish.reviews}
+        stars={dish.stars}
+        title={dish.title}
       />
-      <DishDescription>{dishe.description}</DishDescription>
+      <DishDescription>{dish.description}</DishDescription>
       <Tabs
-        ingredients={dishe.ingredients}
+        ingredients={dish.ingredients}
         reviews={reviews}
       />
     </Container>

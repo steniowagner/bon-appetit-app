@@ -138,7 +138,7 @@ class Map extends Component<Props, {}> {
         initialRegion={initialRegion}
         rotateEnabled={false}
       >
-        {markers.length > 1 && this.renderMarkers(markers, onSelectMarker)}
+        {markers.length > 0 && this.renderMarkers(markers, onSelectMarker)}
       </MapContainer>
     );
   }

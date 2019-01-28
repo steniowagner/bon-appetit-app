@@ -114,8 +114,8 @@ class RestaurantList extends Component<Props, {}> {
           }
           renderItem={({ item }) => (
             <RestaurantListItem
+              address={item.location.address}
               imageURL={item.imageURL}
-              address={item.address}
               stars={item.stars}
               name={item.name}
               id={item.id}

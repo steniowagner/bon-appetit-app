@@ -129,10 +129,10 @@ class SearchRestaurants extends PureComponent<Props, State> {
         {
           <RestaurantsList
             onSearchRestaurants={onSearchRestaurants}
-            dishesTypes={dishesTypes}
-            maxDistance={maxDistance}
             isRequestingNewData={isRequestingNewData}
             restaurants={data.restaurants}
+            dishesTypes={dishesTypes}
+            maxDistance={maxDistance}
           />
         }
         {!loading && this.renderFloatingActionButton()}

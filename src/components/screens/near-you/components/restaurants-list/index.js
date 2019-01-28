@@ -10,7 +10,6 @@ import RestaurantItemList from './RestaurantItemList';
 
 const ListWrapper = styled(View)`
   width: 100%;
-  padding-bottom: ${({ theme }) => theme.metrics.smallSize}px;
   position: absolute;
 `;
 

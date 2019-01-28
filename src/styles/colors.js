@@ -15,6 +15,7 @@ export default {
   lightGray: '#F2F2F2',
   subText: 'rgba(0, 0, 0, 0.6)',
   transparentGray: 'rgba(218, 218, 218, 0.5)',
+  progressiveImageForeground: 'rgba(242, 242, 242, 0.5)',
   transparentGrayx: '#DADADA',
   androidToolbarColor: '#a60023',
   facebook: '#3B5998',

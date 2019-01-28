@@ -17,6 +17,7 @@ import appStyles from '~/styles';
 const Container = styled(View)`
   width: ${({ theme }) => theme.metrics.width - theme.metrics.getWidthFromDP('24%')}px;
   margin-horizontal: ${({ theme }) => theme.metrics.getWidthFromDP('12%')}px;
+  padding-bottom: ${({ theme }) => theme.metrics.getHeightFromDP('1.5%')}px;
 `;
 
 const Card = styled(View)`
@@ -84,10 +85,7 @@ const DistanceText = styled(Text)`
 
 const RestaurantStatus = styled(Text)`
   color: ${({ color }) => color};
-  font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'ios' ? '1.8%' : '2%';
-    return theme.metrics.getHeightFromDP(percentage);
-  }}px;
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.4%')}px;
   font-family: CircularStd-Medium;
 `;
 

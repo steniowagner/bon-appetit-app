@@ -15,7 +15,7 @@ export function* requestSearchRestaurants(action) {
 
     const paramsMerged = Object.assign({}, { dishesTypes }, { maxDistance });
 
-    const response = yield call(api.get, '/restaurants/filter', {
+    const response = yield call(api.get, '/restaurant/filter', {
       paramsSerializer: params => parseParams(params),
       params: paramsMerged,
       headers,

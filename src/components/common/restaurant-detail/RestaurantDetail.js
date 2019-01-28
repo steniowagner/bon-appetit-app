@@ -116,7 +116,6 @@ class RestaurantDetail extends Component<Props, State> {
     <AboutRestaurant
       {...restaurantInfo}
       address={restaurantInfo.location.address}
-      isOpen={false}
     />
   );
 

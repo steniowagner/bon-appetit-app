@@ -12,7 +12,7 @@ export function* requestRestaurantDetail(action) {
       userLongitude: userLocation.longitude,
     };
 
-    const response = yield call(api.get, `/restaurants/${id}`, { headers });
+    const response = yield call(api.get, `/restaurant/${id}`, { headers });
 
     yield put(RestaurantActions.requestRestaurantDetailSuccess(response.data));
   } catch (err) {

@@ -16,7 +16,7 @@ export function* requestNearbyRestaurants(action) {
       dishesType,
     };
 
-    const response = yield call(api.get, '/restaurants/nearby', {
+    const response = yield call(api.get, '/restaurant/nearby', {
       params,
       headers,
     });

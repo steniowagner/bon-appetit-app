@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import appStyles from '~/styles';
 
 const ForegroundLayer = styled(View)`
-  background-color: ${({ theme }) => theme.colors.lightGray};
+  background-color: ${({ theme }) => theme.colors.progressiveImageForeground};
   border-radius: ${({ theme, withBorder }) => (withBorder ? theme.metrics.borderRadius : 0)}px;
 `;
 

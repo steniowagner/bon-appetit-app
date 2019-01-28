@@ -47,9 +47,9 @@ const DishDetail = ({
       {shouldShowContent && (
         <Container>
           <Header
-            thumbnailImageURL={dishDetail.dishe.thumbnailImageURL}
+            thumbnailImageURL={dishDetail.dish.thumbnailImageURL}
             restaurantId={dishDetail.restaurant.id}
-            imageURL={dishDetail.dishe.imageURL}
+            imageURL={dishDetail.dish.imageURL}
             navigation={navigation}
           />
           <Card

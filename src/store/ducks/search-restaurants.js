@@ -49,7 +49,7 @@ const searchRestaurants = (state = INITIAL_STATE, { payload, type }) => {
         error: false,
       };
 
-    case Types.GET_FAILURE:
+    case Types.SEARCH_RESTAURANTS_FAILURE:
       return {
         ...state,
         loading: false,

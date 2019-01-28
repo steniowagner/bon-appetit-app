@@ -1,14 +1,10 @@
 // @flow
 
-import React, { Component, Fragment } from 'react';
-import { View } from 'react-native';
+import React, { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Creators as DishCreators } from '~/store/ducks/dish';
-
-import { Alert, TYPES } from '~/components/common/alert';
-import Loading from '~/components/common/Loading';
 
 import AllYouMightLike from './AllYouMightLike';
 
@@ -27,26 +23,9 @@ class SeeAllYouMightLikeContainer extends Component<Props, {}> {
   render() {
     const { dish } = this.props;
 
-    const {
-      isDishesEmpty, loading, dishes, error,
-    } = dish;
-
-    const shouldRenderContent = !isDishesEmpty && !loading && !error;
-
-    return (
-      <Fragment>
-        {loading && <Loading />}
-        {error && <Alert
-          type={TYPES.ERROR_SERVER_CONNECTION}
-        />}
-        {isDishesEmpty && <Alert
-          type={TYPES.YOU_MIGHT_LIKE_EMPTY}
-        />}
-        {shouldRenderContent && <AllYouMightLike
-          dishes={dishes}
-        />}
-      </Fragment>
-    );
+    return <AllYouMightLike
+      {...dish}
+    />;
   }
 }
 
