@@ -20,4 +20,6 @@ export default {
   androidToolbarColor: '#a60023',
   facebook: '#3B5998',
   googlePlus: '#DD4B39',
+  inactiveSwitch: 'rgba(0, 0, 0, 0.38)',
+  activeSwitch: 'rgba(222, 60, 75, 0.54)',
 };

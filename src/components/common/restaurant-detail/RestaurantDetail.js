@@ -224,14 +224,17 @@ class RestaurantDetail extends Component<Props, State> {
       <Container>
         <StatusBar
           backgroundColor="transparent"
-          barStyle="light-content"
+          barStyle={error || loading ? 'dark-content' : 'light-content'}
           translucent
           animated
         />
         {loading && <Loading />}
-        {error && <Alert
-          type={TYPES.ERROR_SERVER_CONNECTION}
-        />}
+        {error && (
+          <Alert
+            type={TYPES.ERROR_SERVER_CONNECTION}
+            withExtraTopPadding
+          />
+        )}
         {shouldShowContent && (
           <Fragment>
             {this.renderHeaderSection(

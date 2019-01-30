@@ -12,6 +12,7 @@ import { SCREENS, TYPES } from './components/SCREENS_TYPES';
 import IntroScreen from './components/IntroScreen';
 
 import { ROUTE_NAMES } from '~/routes/index';
+import appStyles from '~/styles';
 
 const Container = styled(View)`
   flex: 1;
@@ -83,8 +84,22 @@ class OnboardingIntro extends Component<Props, State> {
     });
   };
 
+  onFlatlistMomentumScrollEnd = (event: Object): void => {
+    const { contentOffset } = event.nativeEvent;
+
+    const isHorizontalSwipeMovement = contentOffset.x > 0;
+    const currentPageIndex = isHorizontalSwipeMovement
+      ? Math.ceil(contentOffset.x / appStyles.metrics.width)
+      : 0;
+
+    this.setState({
+      currentPageIndex,
+    });
+  };
+
   renderPages = (): Object => (
     <FlatList
+      onMomentumScrollEnd={event => this.onFlatlistMomentumScrollEnd(event)}
       renderItem={({ item }) => (
         <IntroScreenWrapper>
           <IntroScreen
@@ -97,7 +112,7 @@ class OnboardingIntro extends Component<Props, State> {
       ref={(ref: any): void => {
         this._pagesListRef = ref;
       }}
-      scrollEnabled={false}
+      bounces={false}
       pagingEnabled
       data={PAGES}
       horizontal

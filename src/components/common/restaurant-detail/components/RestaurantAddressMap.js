@@ -14,7 +14,7 @@ import FloatinActionButton from '~/components/common/FloatingActionButton';
 import CONSTANTS from '~/utils/CONSTANTS';
 import appStyles from '~/styles';
 
-const mapHeight = appStyles.metrics.getHeightFromDP('78%');
+const mapHeight = appStyles.metrics.getHeightFromDP('75%');
 
 const Container = styled(View)`
   flex: 1;
@@ -33,7 +33,6 @@ const FloatingActionButtonWrapper = styled(View)`
 `;
 
 const FooterContainer = styled(View)`
-  height: ${appStyles.metrics.getHeightFromDP('22%')};
   align-items: flex-start;
   justify-content: flex-start;
   padding-top: ${appStyles.metrics.mediumSize}px;

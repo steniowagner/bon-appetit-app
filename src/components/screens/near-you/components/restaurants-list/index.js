@@ -32,7 +32,7 @@ class RestaurantList extends Component<Props, {}> {
     this._flatListRef.scrollToIndex({ animated: true, index });
   };
 
-  onMomentumScrollEnd = (event: Object): void => {
+  onFlatlistMomentumScrollEnd = (event: Object): void => {
     const { onSelectMarker } = this.props;
     const { contentOffset } = event.nativeEvent;
 
@@ -50,7 +50,7 @@ class RestaurantList extends Component<Props, {}> {
     return (
       <ListWrapper>
         <FlatList
-          onMomentumScrollEnd={event => this.onMomentumScrollEnd(event)}
+          onMomentumScrollEnd={event => this.onFlatlistMomentumScrollEnd(event)}
           ref={(ref: any): void => {
             this._flatListRef = ref;
           }}

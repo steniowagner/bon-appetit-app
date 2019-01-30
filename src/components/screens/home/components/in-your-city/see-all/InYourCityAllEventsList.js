@@ -18,9 +18,12 @@ const Container = styled(View)`
 
 const renderList = (events: Array<Object>): Object => (
   <FlatList
-    renderItem={({ item }) => <AllEventsListItem
-      {...item}
-    />}
+    renderItem={({ item, index }) => (
+      <AllEventsListItem
+        isFirst={index === 0}
+        {...item}
+      />
+    )}
     showsVerticalScrollIndicator={false}
     keyExtractor={item => item.id}
     data={events}
@@ -35,12 +38,14 @@ type Props = {
 
 const InYourCityAllEventsList = ({ loading, events, error }: Props): Object => {
   const hasEvents = events.length > 0;
+
+  const shouldShowBoringCityAlert = !hasEvents && !loading && !error;
   const shouldShowList = hasEvents && !loading && !error;
 
   return (
     <Container>
       {loading && <Loading />}
-      {!hasEvents && !loading && <Alert
+      {shouldShowBoringCityAlert && <Alert
         type={TYPES.BORING_CITY}
       />}
       {error && <Alert

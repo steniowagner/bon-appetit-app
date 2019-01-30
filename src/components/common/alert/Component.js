@@ -10,6 +10,7 @@ import { getAlertConfig } from './config';
 
 const Container = styled(View)`
   flex: 1;
+  padding-top: ${({ theme, withExtraTopPadding }) => (withExtraTopPadding ? theme.metrics.getHeightFromDP('10%') : 0)}px;
   align-items: center;
 `;
 
@@ -53,16 +54,19 @@ const MiddleText = styled(Text)`
 `;
 
 type Props = {
+  withExtraTopPadding: ?boolean,
   type: string,
 };
 
-const Alert = ({ type }: Props) => {
+const Alert = ({ withExtraTopPadding, type }: Props) => {
   const {
     middleText, bottomText, iconName, topText,
   } = getAlertConfig(type);
 
   return (
-    <Container>
+    <Container
+      withExtraTopPadding={withExtraTopPadding}
+    >
       <Wrapper>
         <FoodNotFoundIcon
           iconName={iconName}

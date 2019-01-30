@@ -16,6 +16,7 @@ import appStyles from '~/styles';
 const Container = styled(View)`
   width: 100%;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')};
+  margin-top: ${({ theme, isFirst }) => (isFirst ? 0 : theme.metrics.extraSmallSize)}px;
 `;
 
 const DarkWrapper = styled(View)`
@@ -88,6 +89,7 @@ type Props = {
   restaurantsParticipating: number,
   navigation: Function,
   description: string,
+  isFirst: boolean,
   imageURL: string,
   title: string,
   id: string,
@@ -99,6 +101,7 @@ const AllEventsListItem = (props: Props): Object => {
     description,
     navigation,
     imageURL,
+    isFirst,
     title,
     id,
   } = props;
@@ -110,7 +113,9 @@ const AllEventsListItem = (props: Props): Object => {
       })
       }
     >
-      <Container>
+      <Container
+        isFirst={isFirst}
+      >
         <EventImage
           imageURL={imageURL}
         />

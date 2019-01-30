@@ -14,16 +14,10 @@ const hiddenProps = {
     },
   },
   [CONSTANTS.NAVIGATION_PARAM_HEADER_LOADING_STYLE]: {
+    headerTintColor: appStyles.colors.primaryColor,
     headerTransparent: true,
     headerStyle: {
       backgroundColor: 'transparent',
-      borderBottomWidth: 0,
-    },
-  },
-  [CONSTANTS.NAVIGATION_PARAM_HEADER_ERROR_STYLE]: {
-    headerTransparent: false,
-    headerStyle: {
-      backgroundColor: appStyles.colors.primaryColor,
       borderBottomWidth: 0,
     },
   },
@@ -39,11 +33,6 @@ export const handleHiddenHeaderStyle = (
     false,
   );
 
-  const hasErrorHeaderStyleParam = navigation.getParam(
-    CONSTANTS.NAVIGATION_PARAM_HEADER_ERROR_STYLE,
-    false,
-  );
-
   const hasHasDataHeaderStyleParam = navigation.getParam(
     CONSTANTS.NAVIGATION_PARAM_HEADER_HAS_DATA_STYLE,
     false,
@@ -53,15 +42,6 @@ export const handleHiddenHeaderStyle = (
     navigation.setParams({
       [CONSTANTS.NAVIGATION_PARAM_HEADER_LOADING_STYLE]: true,
       [CONSTANTS.NAVIGATION_PARAM_HEADER_HAS_DATA_STYLE]: false,
-      [CONSTANTS.NAVIGATION_PARAM_HEADER_ERROR_STYLE]: false,
-    });
-  }
-
-  if (!hasErrorHeaderStyleParam && error) {
-    navigation.setParams({
-      [CONSTANTS.NAVIGATION_PARAM_HEADER_ERROR_STYLE]: true,
-      [CONSTANTS.NAVIGATION_PARAM_HEADER_LOADING_STYLE]: false,
-      [CONSTANTS.NAVIGATION_PARAM_HEADER_HAS_DATA_STYLE]: false,
     });
   }
 
@@ -69,7 +49,6 @@ export const handleHiddenHeaderStyle = (
     navigation.setParams({
       [CONSTANTS.NAVIGATION_PARAM_HEADER_HAS_DATA_STYLE]: true,
       [CONSTANTS.NAVIGATION_PARAM_HEADER_LOADING_STYLE]: false,
-      [CONSTANTS.NAVIGATION_PARAM_HEADER_ERROR_STYLE]: false,
     });
   }
 };
@@ -88,10 +67,6 @@ const getHiddenProps = (navigation: Object): Object => {
 
   if (!!params && params[CONSTANTS.NAVIGATION_PARAM_HEADER_LOADING_STYLE]) {
     props = hiddenProps[CONSTANTS.NAVIGATION_PARAM_HEADER_LOADING_STYLE];
-  }
-
-  if (!!params && params[CONSTANTS.NAVIGATION_PARAM_HEADER_ERROR_STYLE]) {
-    props = hiddenProps[CONSTANTS.NAVIGATION_PARAM_HEADER_ERROR_STYLE];
   }
 
   if (!!params && params[CONSTANTS.NAVIGATION_PARAM_HEADER_HAS_DATA_STYLE]) {

@@ -122,35 +122,35 @@ class Settings extends Component<{}, State> {
   async componentDidMount() {
     const receiveAllNotificationsFromStorage = await getItemFromStorage(
       SWITCH_STATE_REFS.RECEIVE_ALL_NOTIFICATIONS,
-      false,
+      'false',
     );
 
     const whenAboutPromotionsFromStorage = await getItemFromStorage(
       SWITCH_STATE_REFS.WHEN_ABOUT_DISCOUNTS,
-      false,
+      'false',
     );
 
     const notificationsSoundFromStorage = await getItemFromStorage(
       SWITCH_STATE_REFS.NOTIFICATIONS_SOUND,
-      false,
+      'false',
     );
 
     const receiveNearMeFromStorage = await getItemFromStorage(
       SWITCH_STATE_REFS.PROMOTIONS_NEAR_ME,
-      false,
+      'false',
     );
 
     const whenPastSearchFromStorage = await getItemFromStorage(
       SWITCH_STATE_REFS.WHEN_PAST_SEARCH,
-      false,
+      'false',
     );
 
     this.setState({
-      receiveAllNotifications: Boolean(receiveAllNotificationsFromStorage),
-      whenIsAboutPromotions: Boolean(whenAboutPromotionsFromStorage),
-      notificationsSound: Boolean(notificationsSoundFromStorage),
-      promotionsNearMe: Boolean(receiveNearMeFromStorage),
-      whenPastSearch: Boolean(whenPastSearchFromStorage),
+      receiveAllNotifications: receiveAllNotificationsFromStorage === 'true',
+      whenIsAboutPromotions: whenAboutPromotionsFromStorage === 'true',
+      notificationsSound: notificationsSoundFromStorage === 'true',
+      promotionsNearMe: receiveNearMeFromStorage === 'true',
+      whenPastSearch: whenPastSearchFromStorage === 'true',
     });
   }
 
@@ -188,15 +188,25 @@ class Settings extends Component<{}, State> {
   );
 
   renderSwitch = (id: string): Object => {
-    const thumbTintColor = Platform.OS === 'android' ? appStyle.colors.red : '';
     const { state } = this;
     const value = state[id];
 
+    const thumbTintColor = value
+      ? appStyle.colors.primaryColor
+      : appStyle.colors.white;
+    const trackColor = {
+      true:
+        Platform.OS === 'android'
+          ? appStyle.colors.activeSwitch
+          : appStyle.colors.primaryColor,
+      false: Platform.OS === 'android' ? appStyle.colors.inactiveSwitch : '',
+    };
+
     return (
       <Switch
-        trackColor={{ false: '', true: appStyle.colors.red }}
+        thumbColor={Platform.OS === 'android' ? thumbTintColor : ''}
         onValueChange={() => this.handleSwitchToggle(id)}
-        thumbColor={thumbTintColor}
+        trackColor={trackColor}
         value={value}
       />
     );
