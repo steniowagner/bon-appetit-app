@@ -7,6 +7,7 @@ import styled from 'styled-components';
 
 import { Alert, TYPES } from '~/components/common/alert';
 import CustomTab from '~/components/common/CustomTab';
+import Loading from '~/components/common/Loading';
 import appStyles from '~/styles';
 
 import RestaurantsList from './restaurants-list';
@@ -34,6 +35,7 @@ type Props = {
   restaurants: Array<Object>,
   onSelectMarker: Function,
   userLocation: Object,
+  hasSomeData: boolean,
   error: boolean,
 };
 
@@ -43,14 +45,16 @@ const NearYou = ({
   dishesTypesItems,
   onSelectMarker,
   userLocation,
+  hasSomeData,
   restaurants,
   error,
 }: Props): Object => (
   <Container>
+    {!hasSomeData && !error && <Loading />}
     {error && <Alert
       type={TYPES.ERROR_SERVER_CONNECTION}
     />}
-    {!error && (
+    {!error && hasSomeData && (
       <Fragment>
         <ContentContainer>
           <Map

@@ -34,7 +34,7 @@ const FloatingActionButtonWrapper = styled(View)`
 
 const FooterContainer = styled(View)`
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   padding-top: ${appStyles.metrics.mediumSize}px;
   padding-left: ${appStyles.metrics.largeSize}px;
   background-color: ${({ theme }) => theme.colors.white};

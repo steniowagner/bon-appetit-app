@@ -150,7 +150,11 @@ class NearYouContainer extends Component<Props, State> {
   };
 
   render() {
-    const { indexRestaurantSelected, userLocation } = this.state;
+    const {
+      indexRestaurantSelected,
+      restaurantsCached,
+      userLocation,
+    } = this.state;
     const { nearbyRestaurants } = this.props;
     const { error } = nearbyRestaurants;
 
@@ -160,6 +164,7 @@ class NearYouContainer extends Component<Props, State> {
       <NearYouComponent
         indexRestaurantSelected={indexRestaurantSelected}
         onDishesTypeChange={this.onDishesTypeChange}
+        hasSomeData={restaurantsCached.length > 0}
         onSelectMarker={this.onSelectMarker}
         dishesTypesItems={dishesTypesItems}
         userLocation={userLocation}
