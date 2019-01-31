@@ -27,7 +27,7 @@ const RecommendedHomeSection = ({ dishes }: Props): Object => (
         renderItem={({ item, index }) => (
           <YouMightLikeSectionListItem
             distance={parseFloat(item.reviews / item.stars).toFixed(1)}
-            imageURL={item.imageURL}
+            imageURL={item.mediumImageURL}
             reviews={item.reviews}
             isFirst={index === 0}
             price={item.price}

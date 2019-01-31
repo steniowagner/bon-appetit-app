@@ -44,7 +44,7 @@ const AllYouMightLike = ({
             <PopularSeeAllItemList
               price={parseFloat(item.price).toFixed(2)}
               description={item.description}
-              imageURL={item.imageURL}
+              imageURL={item.mediumImageURL}
               title={item.title}
               stars={item.stars}
               id={item.id}

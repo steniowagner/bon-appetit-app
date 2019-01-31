@@ -26,7 +26,7 @@ const PopularSection = ({ dishes }: Props): Object => (
       <FlatList
         renderItem={({ item, index }) => (
           <PopularSectionListItem
-            imageURL={item.imageURL}
+            imageURL={item.mediumImageURL}
             isFirst={index === 0}
             price={item.price}
             stars={item.stars}
