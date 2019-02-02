@@ -55,7 +55,8 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 class RestaurantDetail extends Component<Props, State> {
   _animatedFlatlistPosition = new Animated.Value(0);
   _animatedFlatlistOpacity = new Animated.Value(1);
-  _flatListWidth = 0;
+  _dishesListRef = null;
+  _dishesListWidth = 0;
 
   state = {
     indexMenuSelected: 0,
@@ -70,7 +71,7 @@ class RestaurantDetail extends Component<Props, State> {
 
     const animationAppearCombo = Animated.sequence([
       Animated.timing(this._animatedFlatlistPosition, {
-        toValue: this._flatListWidth,
+        toValue: this._dishesListWidth,
         duration: 150,
         useNativeDriver: true,
       }),
@@ -88,6 +89,8 @@ class RestaurantDetail extends Component<Props, State> {
       }),
     ]);
 
+    this.animateDishesListToFirstIndex();
+
     Animated.timing(this._animatedFlatlistOpacity, {
       toValue: 0,
       duration: 150,
@@ -99,6 +102,13 @@ class RestaurantDetail extends Component<Props, State> {
         },
         () => animationAppearCombo.start(),
       );
+    });
+  };
+
+  animateDishesListToFirstIndex = (): void => {
+    this._dishesListRef.getNode().scrollToIndex({
+      animated: true,
+      index: 0,
     });
   };
 
@@ -164,13 +174,12 @@ class RestaurantDetail extends Component<Props, State> {
     }));
 
     const menuData = menu.map(item => item.dishes);
-    const contentWidth = appStyles.metrics.width - 2 * appStyles.metrics.largeSize;
 
     return (
       <Menu>
         <CustomTab
           onChangeMenuIndex={this.onChangeMenuIndex}
-          contentWidth={contentWidth}
+          contentWidth={appStyles.metrics.width}
           data={tabMenu}
           theme="gray"
         />
@@ -188,6 +197,9 @@ class RestaurantDetail extends Component<Props, State> {
             paddingVertical: appStyles.metrics.smallSize,
             opacity: this._animatedFlatlistOpacity,
           }}
+          ref={(ref) => {
+            this._dishesListRef = ref;
+          }}
           renderItem={({ item }) => (
             <MenuListItem
               description={item.description}
@@ -204,7 +216,7 @@ class RestaurantDetail extends Component<Props, State> {
           data={menuData[indexMenuSelected]}
           onLayout={(event: Object): void => {
             const { width } = event.nativeEvent.layout;
-            this._flatListWidth = width;
+            this._dishesListWidth = width;
           }}
           keyExtractor={item => item.id}
           horizontal

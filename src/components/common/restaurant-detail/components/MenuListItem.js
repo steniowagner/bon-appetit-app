@@ -7,7 +7,6 @@ import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 
-import ProgressiveImage from '~/components/common/ProgressiveImage';
 import ReviewStars from '~/components/common/ReviewStars';
 import FlagPrice from '~/components/common/FlagPrice';
 import CONSTANTS from '~/utils/CONSTANTS';
@@ -77,6 +76,7 @@ const MenuListItem = ({
       <View>
         <DishImage
           imageURL={imageURL}
+          onLoad={() => console.tron.log(title)}
         />
         <DarkLayer>
           <FlagPriceWrapper>
