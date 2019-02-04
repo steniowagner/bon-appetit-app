@@ -7,7 +7,6 @@ import {
 
 import { withNavigation } from 'react-navigation';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 
 import ReviewStars from '~/components/common/ReviewStars';
@@ -15,29 +14,16 @@ import CONSTANTS from '~/utils/CONSTANTS';
 import appStyles from '~/styles';
 
 const Container = styled(View)`
-  width: ${({ theme }) => theme.metrics.width - theme.metrics.getWidthFromDP('24%')}px;
-  margin-horizontal: ${({ theme }) => theme.metrics.getWidthFromDP('12%')}px;
-  padding-bottom: ${({ theme }) => theme.metrics.getHeightFromDP('1.5%')}px;
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('82%')}px;
+  margin-horizontal: ${({ theme }) => theme.metrics.getWidthFromDP('9%')}px;
+  align-self: flex-end;
 `;
 
 const Card = styled(View)`
   width: 100%;
-  padding: ${({ theme }) => theme.metrics.smallSize}px;
+  padding-vertical: ${({ theme }) => theme.metrics.smallSize}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
   background-color: ${({ theme }) => theme.colors.defaultWhite};
-  border-radius: 4px;
-`;
-
-const RestaurantImageWrapper = styled(View)`
-  height: ${({ theme }) => theme.metrics.getHeightFromDP('12.5%')}px;
-  border-radius: 4px;
-  overflow: hidden;
-`;
-
-const RestaurantImage = styled(FastImage).attrs(({ imageURL }) => ({
-  source: { uri: imageURL },
-}))`
-  width: 100%;
-  height: 100%;
   border-radius: 4px;
 `;
 
@@ -57,16 +43,6 @@ const BottomRowContentWrapper = styled(View)`
   margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
-const RestaurantName = styled(Text).attrs({
-  ellipsizeMode: 'tail',
-  numberOfLines: 1,
-})`
-  width: 70%;
-  color: ${({ theme }) => theme.colors.darkText}
-  font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5%')}px;
-  font-family: CircularStd-Black;
-`;
-
 const DistanceWrapper = styled(View)`
   flex-direction: row;
   justify-content: space-between;
@@ -76,11 +52,23 @@ const DistanceWrapper = styled(View)`
 const DistanceText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText}
   font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'ios' ? '1.8%' : '2%';
+    const percentage = Platform.OS === 'ios' ? '2%' : '2.2%';
     return theme.metrics.getHeightFromDP(percentage);
   }}px;
   font-family: CircularStd-Medium;
   padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+`;
+
+const RestaurantDescriptionText = styled(Text)`
+  color: ${({ theme }) => theme.colors.subText};
+  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.3%')}px;
+  font-family: CircularStd-Medium;
+  padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
+`;
+
+const RestaurantDescriptionWrapper = styled(View)`
+  width: 100%;
+  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const RestaurantStatus = styled(Text)`
@@ -96,14 +84,6 @@ const Icon = styled(Icons).attrs(({
   name,
   size,
 }))``;
-
-const renderRestaurantImage = (imageURL: string): Object => (
-  <RestaurantImageWrapper>
-    <RestaurantImage
-      imageURL={imageURL}
-    />
-  </RestaurantImageWrapper>
-);
 
 const renderRestaurantStatus = (isOpen: boolean): Object => {
   const restaurantStatus = {
@@ -139,21 +119,14 @@ const renderDistanceContent = (distance: number): Object => (
   </DistanceWrapper>
 );
 
-const renderTopRowContent = (
-  name: string,
-  stars: number,
-  distance: number,
-): Object => (
-  <Fragment>
-    <TopRowContentWrapper>
-      <RestaurantName>{name}</RestaurantName>
-      {renderDistanceContent(distance)}
-    </TopRowContentWrapper>
+const renderTopRowContent = (stars: number, distance: number): Object => (
+  <TopRowContentWrapper>
     <ReviewStars
       textColor="darkText"
       stars={stars}
     />
-  </Fragment>
+    {renderDistanceContent(distance)}
+  </TopRowContentWrapper>
 );
 
 const renderBottomRowContent = (
@@ -180,7 +153,7 @@ const renderBottomRowContent = (
 
 type Props = {
   navigation: Function,
-  imageURL: string,
+  description: string,
   distance: number,
   isOpen: boolean,
   stars: number,
@@ -189,9 +162,9 @@ type Props = {
 };
 
 const RestaurantItemList = ({
+  description,
   navigation,
   distance,
-  imageURL,
   isOpen,
   stars,
   name,
@@ -223,8 +196,10 @@ const RestaurantItemList = ({
       }}
     >
       <Fragment>
-        {renderRestaurantImage(imageURL)}
-        {renderTopRowContent(name, stars, distance)}
+        {renderTopRowContent(stars, distance)}
+        <RestaurantDescriptionWrapper>
+          <RestaurantDescriptionText>{description}</RestaurantDescriptionText>
+        </RestaurantDescriptionWrapper>
         {renderBottomRowContent(navigation, isOpen, id)}
       </Fragment>
     </Card>

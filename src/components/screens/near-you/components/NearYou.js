@@ -29,6 +29,8 @@ const CustomTabWrapper = styled(View)`
 `;
 
 type Props = {
+  turnOffMoveRestaurantList: Function,
+  shouldMoveRestaurantList: boolean,
   dishesTypesItems: Array<Object>,
   indexRestaurantSelected: number,
   onDishesTypeChange: Function,
@@ -40,6 +42,8 @@ type Props = {
 };
 
 const NearYou = ({
+  turnOffMoveRestaurantList,
+  shouldMoveRestaurantList,
   indexRestaurantSelected,
   onDishesTypeChange,
   dishesTypesItems,
@@ -65,6 +69,8 @@ const NearYou = ({
           />
           {restaurants.length > 0 && (
             <RestaurantsList
+              turnOffMoveRestaurantList={turnOffMoveRestaurantList}
+              shouldMoveRestaurantList={shouldMoveRestaurantList}
               indexRestaurantSelected={indexRestaurantSelected}
               onSelectMarker={onSelectMarker}
               restaurants={restaurants}

@@ -9,27 +9,39 @@ import appStyles from '~/styles';
 import RestaurantItemList from './RestaurantItemList';
 
 const ListWrapper = styled(View)`
-  width: 100%;
+  flex: 1;
+  padding-bottom: ${({ theme }) => theme.metrics.getHeightFromDP('1.5%')}px;
   position: absolute;
 `;
 
 type Props = {
+  turnOffMoveRestaurantList: Function,
+  shouldMoveRestaurantList: boolean,
   indexRestaurantSelected: number,
   restaurants: Array<Object>,
   onSelectMarker: Function,
 };
 
+const ITEM_LIST_WIDTH = appStyles.metrics.width;
+
 class RestaurantList extends Component<Props, {}> {
-  _flatListRef: Object = {};
+  _restaurantListRef = {};
 
   componentDidUpdate() {
-    const { indexRestaurantSelected } = this.props;
+    const {
+      turnOffMoveRestaurantList,
+      shouldMoveRestaurantList,
+      indexRestaurantSelected,
+    } = this.props;
 
-    this.onChangeListIndex(indexRestaurantSelected);
+    if (shouldMoveRestaurantList) {
+      this.onChangeListIndex(indexRestaurantSelected);
+      turnOffMoveRestaurantList();
+    }
   }
 
   onChangeListIndex = (index: number): void => {
-    this._flatListRef.scrollToIndex({ animated: true, index });
+    this._restaurantListRef.scrollToIndex({ animated: true, index });
   };
 
   onFlatlistMomentumScrollEnd = (event: Object): void => {
@@ -51,8 +63,23 @@ class RestaurantList extends Component<Props, {}> {
       <ListWrapper>
         <FlatList
           onMomentumScrollEnd={event => this.onFlatlistMomentumScrollEnd(event)}
+          renderItem={({ item }) => (
+            <RestaurantItemList
+              description={item.description}
+              distance={item.distance}
+              isOpen={item.isOpen}
+              stars={item.stars}
+              name={item.name}
+              id={item.id}
+            />
+          )}
+          getItemLayout={(data, index) => ({
+            length: ITEM_LIST_WIDTH,
+            offset: ITEM_LIST_WIDTH * index,
+            index,
+          })}
           ref={(ref: any): void => {
-            this._flatListRef = ref;
+            this._restaurantListRef = ref;
           }}
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item.id}
@@ -60,16 +87,6 @@ class RestaurantList extends Component<Props, {}> {
           data={restaurants}
           pagingEnabled
           horizontal
-          renderItem={({ item }) => (
-            <RestaurantItemList
-              distance={item.distance}
-              imageURL={item.imageURL}
-              isOpen={item.isOpen}
-              stars={item.stars}
-              name={item.name}
-              id={item.id}
-            />
-          )}
         />
       </ListWrapper>
     );

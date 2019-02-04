@@ -85,9 +85,7 @@ class Map extends Component<Props, {}> {
   ): Object => (
     <Fragment>
       {markers.map((marker, index) => {
-        const {
-          description, location, name, id,
-        } = marker;
+        const { location, name, id } = marker;
 
         const iconName = id === 'user-location' ? 'account-location' : 'map-marker-radius';
 
@@ -101,7 +99,6 @@ class Map extends Component<Props, {}> {
               latitude: location.latitude,
               longitude: location.longitude,
             }}
-            description={description}
             title={name}
             key={id}
           >

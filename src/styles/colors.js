@@ -5,6 +5,7 @@ export default {
   intermediateDarkLayer: 'rgba(0, 0, 0, 0.65)',
   darkLayer: 'rgba(0, 0, 0, 0.5)',
   lightDarkLayer: 'rgba(0, 0, 0, 0.3)',
+  lightingDarkLayer: 'rgba(0, 0, 0, 0.2)',
   red: '#DE3C4B',
   blue: '#4688F1',
   white: '#FDFDFD',

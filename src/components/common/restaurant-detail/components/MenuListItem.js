@@ -76,7 +76,6 @@ const MenuListItem = ({
       <View>
         <DishImage
           imageURL={imageURL}
-          onLoad={() => console.tron.log(title)}
         />
         <DarkLayer>
           <FlagPriceWrapper>

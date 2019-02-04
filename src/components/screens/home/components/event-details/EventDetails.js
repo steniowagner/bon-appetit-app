@@ -115,9 +115,8 @@ const renderRestaurantList = (
     <FlatList
       renderItem={({ item }) => (
         <RestaurantItemList
-          thumbnailImageURL={item.thumbnailImageURL}
           address={item.location.address}
-          imageURL={item.imageURL}
+          imageURL={item.mediumImageURL}
           stars={item.stars}
           name={item.name}
           id={item.id}

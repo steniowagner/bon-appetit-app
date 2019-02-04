@@ -11,6 +11,13 @@ const Container = styled(View)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
 `;
 
+const DarkLayer = styled(View)`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: ${({ theme }) => theme.colors.lightingDarkLayer};
+`;
+
 type Props = {
   thumbnailImageURL: string,
   imageURL: string,
@@ -22,6 +29,7 @@ const HeaderSection = ({ thumbnailImageURL, imageURL }: Props): Object => (
       thumbnailImageURL={thumbnailImageURL}
       imageURL={imageURL}
     />
+    <DarkLayer />
   </Container>
 );
 

@@ -30,6 +30,7 @@ class NearYouContainer extends Component<Props, State> {
       latitude: CONSTANTS.FORTALEZA_CITY_LOCATION.latitude,
       longitude: CONSTANTS.FORTALEZA_CITY_LOCATION.longitude,
     },
+    shouldMoveRestaurantList: false,
     indexDishesTypeSelected: 0,
     indexRestaurantSelected: 0,
     restaurantsCached: [],
@@ -71,7 +72,7 @@ class NearYouContainer extends Component<Props, State> {
   };
 
   onDishesTypeChange = (indexDishesTypeSelected: number): void => {
-    const handleRestaurantsSelection = () => {
+    const handleRestaurantsSelection = (): void => {
       const isRestaurantsCached = this.isRestaurantsCached();
 
       if (!isRestaurantsCached) {
@@ -81,16 +82,30 @@ class NearYouContainer extends Component<Props, State> {
 
     this.setState(
       {
-        indexDishesTypeSelected,
+        shouldMoveRestaurantList: true,
         indexRestaurantSelected: 0,
+        indexDishesTypeSelected,
       },
       () => handleRestaurantsSelection(),
     );
   };
 
-  onSelectMarker = (indexRestaurantSelected: number): void => {
+  onSelectMarker = (indexMarkerSelected: number): void => {
+    const { indexRestaurantSelected } = this.state;
+
+    if (indexRestaurantSelected === indexMarkerSelected) {
+      return;
+    }
+
     this.setState({
-      indexRestaurantSelected,
+      indexRestaurantSelected: indexMarkerSelected,
+      shouldMoveRestaurantList: true,
+    });
+  };
+
+  turnOffMoveRestaurantList = (): void => {
+    this.setState({
+      shouldMoveRestaurantList: false,
     });
   };
 
@@ -151,6 +166,7 @@ class NearYouContainer extends Component<Props, State> {
 
   render() {
     const {
+      shouldMoveRestaurantList,
       indexRestaurantSelected,
       restaurantsCached,
       userLocation,
@@ -162,6 +178,8 @@ class NearYouContainer extends Component<Props, State> {
 
     return (
       <NearYouComponent
+        turnOffMoveRestaurantList={this.turnOffMoveRestaurantList}
+        shouldMoveRestaurantList={shouldMoveRestaurantList}
         indexRestaurantSelected={indexRestaurantSelected}
         onDishesTypeChange={this.onDishesTypeChange}
         hasSomeData={restaurantsCached.length > 0}
