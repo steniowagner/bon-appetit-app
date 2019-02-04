@@ -87,42 +87,38 @@ const renderTextContent = (
 
 type Props = {
   restaurantsParticipating: number,
+  mediumImageURL: string,
   navigation: Function,
   description: string,
   isFirst: boolean,
-  imageURL: string,
   title: string,
   id: string,
 };
 
-const AllEventsListItem = (props: Props): Object => {
-  const {
-    restaurantsParticipating,
-    description,
-    navigation,
-    imageURL,
-    isFirst,
-    title,
-    id,
-  } = props;
-
-  return (
-    <TouchableWithoutFeedback
-      onPress={() => navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
-        [CONSTANTS.NAVIGATION_PARAM_ID]: id,
-      })
-      }
+const AllEventsListItem = ({
+  restaurantsParticipating,
+  mediumImageURL,
+  description,
+  navigation,
+  isFirst,
+  title,
+  id,
+}: Props): Object => (
+  <TouchableWithoutFeedback
+    onPress={() => navigation.navigate(ROUTE_NAMES.EVENT_DETAILS, {
+      [CONSTANTS.NAVIGATION_PARAM_ID]: id,
+    })
+    }
+  >
+    <Container
+      isFirst={isFirst}
     >
-      <Container
-        isFirst={isFirst}
-      >
-        <EventImage
-          imageURL={imageURL}
-        />
-        {renderTextContent(title, description, restaurantsParticipating)}
-      </Container>
-    </TouchableWithoutFeedback>
-  );
-};
+      <EventImage
+        imageURL={mediumImageURL}
+      />
+      {renderTextContent(title, description, restaurantsParticipating)}
+    </Container>
+  </TouchableWithoutFeedback>
+);
 
 export default withNavigation(AllEventsListItem);

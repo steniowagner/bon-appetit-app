@@ -29,7 +29,7 @@ const InYourCitySection = ({ events }: Props): Object => (
             restaurantsParticipating={item.restaurantsParticipating}
             dishesTypes={item.dishesTypes}
             description={item.description}
-            imageURL={item.imageURL}
+            imageURL={item.smallImageURL}
             isFirst={index === 0}
             title={item.title}
             id={item.id}

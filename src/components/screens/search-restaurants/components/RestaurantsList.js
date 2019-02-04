@@ -13,7 +13,6 @@ import RestaurantListItem from '~/components/common/RestaurantListItem';
 const ListWrapper = styled(View)`
   width: 100%;
   height: 100%;
-  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
   padding-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
@@ -29,10 +28,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 type Props = {
   onSearchRestaurants: Function,
-  isRequestingNewData: boolean,
   restaurants: Array<Object>,
-  dishesTypes: Array<string>,
-  maxDistance: number,
 };
 
 class RestaurantList extends Component<Props, {}> {
