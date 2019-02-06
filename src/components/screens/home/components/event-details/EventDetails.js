@@ -29,7 +29,8 @@ const Container = styled(View)`
 
 const ListWrapper = styled(View)`
   flex: 1;
-  padding: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  padding-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
 
 const ImageWrapper = styled(View)`

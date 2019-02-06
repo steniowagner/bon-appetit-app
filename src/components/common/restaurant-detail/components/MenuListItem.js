@@ -51,6 +51,7 @@ const DishTitle = styled(Text).attrs({
 type Props = {
   navigation: Object,
   imageURL: string,
+  reviews: number,
   title: string,
   price: number,
   stars: number,
@@ -60,6 +61,7 @@ type Props = {
 const MenuListItem = ({
   navigation,
   imageURL,
+  reviews,
   price,
   stars,
   title,
@@ -88,8 +90,8 @@ const MenuListItem = ({
         <ReviewStars
           shouldShowReviewsText
           textColor="darkText"
+          reviews={reviews}
           stars={stars}
-          reviews={12}
           small
         />
       </View>
