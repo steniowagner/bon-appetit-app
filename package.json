@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "build-android": "cd android && ./gradlew assembleRelease && cd .. && react-native run-android --variant=release",
+    "build-android": "cd android && ./gradlew assembleRelease && cd ..",
     "lint": "eslint '**/*.js'",
     "lint:fix": "prettier-eslint '**/*.js' --write",
     "test": "jest",
@@ -42,7 +42,6 @@
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
     "seamless-immutable": "^7.1.4",
-    "shorthash": "^0.0.2",
     "styled-components": "^4.1.3"
   },
   "devDependencies": {
