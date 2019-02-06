@@ -21,6 +21,7 @@ const Container = styled(View)`
 
 const Card = styled(View)`
   width: 100%;
+  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
   padding-vertical: ${({ theme }) => theme.metrics.smallSize}px;
   padding-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
   background-color: ${({ theme }) => theme.colors.defaultWhite};
@@ -52,8 +53,8 @@ const DistanceWrapper = styled(View)`
 const DistanceText = styled(Text)`
   color: ${({ theme }) => theme.colors.darkText}
   font-size: ${({ theme }) => {
-    const percentage = Platform.OS === 'ios' ? '2%' : '2.2%';
-    return theme.metrics.getHeightFromDP(percentage);
+    const percentage = Platform.OS === 'ios' ? '4%' : '4.3%';
+    return theme.metrics.getWidthFromDP(percentage);
   }}px;
   font-family: CircularStd-Medium;
   padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
@@ -61,7 +62,10 @@ const DistanceText = styled(Text)`
 
 const RestaurantDescriptionText = styled(Text)`
   color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.3%')}px;
+  font-size: ${({ theme }) => {
+    const percentage = Platform.OS === 'ios' ? '4%' : '4.3%';
+    return theme.metrics.getWidthFromDP(percentage);
+  }}px;
   font-family: CircularStd-Medium;
   padding-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
 `;
@@ -73,7 +77,10 @@ const RestaurantDescriptionWrapper = styled(View)`
 
 const RestaurantStatus = styled(Text)`
   color: ${({ color }) => color};
-  font-size: ${({ theme }) => theme.metrics.getHeightFromDP('2.4%')}px;
+  font-size: ${({ theme }) => {
+    const percentage = Platform.OS === 'ios' ? '4%' : '4.3%';
+    return theme.metrics.getWidthFromDP(percentage);
+  }}px;
   font-family: CircularStd-Medium;
 `;
 
@@ -157,7 +164,6 @@ type Props = {
   distance: number,
   isOpen: boolean,
   stars: number,
-  name: string,
   id: string,
 };
 
@@ -167,7 +173,6 @@ const RestaurantItemList = ({
   distance,
   isOpen,
   stars,
-  name,
   id,
 }: Props): Object => (
   <Container>

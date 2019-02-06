@@ -10,7 +10,6 @@ import RestaurantItemList from './RestaurantItemList';
 
 const ListWrapper = styled(View)`
   flex: 1;
-  padding-bottom: ${({ theme }) => theme.metrics.getHeightFromDP('1.5%')}px;
   position: absolute;
 `;
 
@@ -41,6 +40,12 @@ class RestaurantList extends Component<Props, {}> {
   }
 
   onChangeListIndex = (index: number): void => {
+    const { restaurants } = this.props;
+
+    if (index >= restaurants.length) {
+      return;
+    }
+
     this._restaurantListRef.scrollToIndex({ animated: true, index });
   };
 

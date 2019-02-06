@@ -55,7 +55,7 @@ class Map extends Component<Props, {}> {
     indexLocationSelected: number,
     restaurants: Array<Object>,
   ): void => {
-    if (restaurants.length === 0) {
+    if (!restaurants[indexLocationSelected] || restaurants.length === 0) {
       return;
     }
 
@@ -132,6 +132,7 @@ class Map extends Component<Props, {}> {
         ref={(ref) => {
           this._mapRef = ref;
         }}
+        showsPointsOfInterest={false}
         initialRegion={initialRegion}
         rotateEnabled={false}
       >
