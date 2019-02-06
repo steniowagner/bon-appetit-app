@@ -1,14 +1,23 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import { Platform, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import styled from 'styled-components';
+
+import AndroidCallout from './AndroidCallout';
 
 const MapContainer = styled(MapView)`
   width: 100%;
   height: 100%;
+`;
+
+const MarkerWrapper = styled(View)`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CustomMarker = styled(Icon).attrs(({ name }) => ({
@@ -102,9 +111,20 @@ class Map extends Component<Props, {}> {
             title={name}
             key={id}
           >
-            <CustomMarker
-              name={iconName}
-            />
+            <MarkerWrapper>
+              <CustomMarker
+                name={iconName}
+              />
+              {Platform.OS === 'android' && (
+                <Callout
+                  style={{ flex: 1, position: 'relative' }}
+                >
+                  <AndroidCallout
+                    restaurantName={name}
+                  />
+                </Callout>
+              )}
+            </MarkerWrapper>
           </Marker>
         );
       })}

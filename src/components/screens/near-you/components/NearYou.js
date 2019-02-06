@@ -11,7 +11,7 @@ import Loading from '~/components/common/Loading';
 import appStyles from '~/styles';
 
 import RestaurantsList from './restaurants-list';
-import Map from './Map';
+import Map from './map';
 
 const Container = styled(View)`
   flex: 1;
