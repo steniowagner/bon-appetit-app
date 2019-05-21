@@ -14,6 +14,8 @@ _"Show differents options of restaurants, dishes and gastronomic events in the c
 
 **PS:** There's a big market behind this context, and that can be extended to other areas (like music, parties, etc), and I'll be so glad if you could find any idea based on this project to build your own business!
 
+**On the Media 🤩:** An [interview](https://madewithreactnative.com/bon-appetit/) about this app.
+
 ## Why?
 
 This project is part of my personal portfolio, so, I'll be happy if you could provide me any feedback about the project, code, structure or anything that you can report that could make me a better developer!
