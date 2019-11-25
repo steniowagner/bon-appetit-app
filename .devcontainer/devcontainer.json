@@ -1,0 +1,10 @@
+{
+    "name": "expo-test",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "testexpo",
+    "workspaceFolder": "/home/dev/src/expotest",
+    "extensions": [
+        "esbenp.prettier-vscode"
+    ],
+    "shutdownAction": "stopCompose"
+}

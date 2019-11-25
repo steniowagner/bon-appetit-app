@@ -1,0 +1,22 @@
+version: '3.7'
+ 
+services:
+  testexpo:
+    environment:
+      - REACT_NATIVE_PACKAGER_HOSTNAME=10.0.0.2
+    image: sonyarouje/expo-buster:latest
+    extra_hosts:
+      - "devserver:10.0.0.2"
+    command: "--gitRepo sarouje.visualstudio.com/_git/expotest --pat z66cu5tlfasa7mbiqwrjpskia"
+    expose:
+      - "19000"
+      - "19001"
+      - "19002"
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    volumes:
+      - myexpo:/home/node/src
+volumes:
+  myexpo:
